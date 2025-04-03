@@ -1,26 +1,40 @@
-
-version: '3.8'
-
-services:
+version: "3.8"
+services: 
+  frontend:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8080:8080"
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app 
+      - /app/node_modules
+  
   backend:
     build: ./backend
     ports:
       - "8000:8000"
     depends_on:
       - redis
-
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+  
   worker:
     build: ./celery_worker
     volumes:
       - ./celery_worker:/tasks
     depends_on:
       - redis
-
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+  
   redis:
     image: redis:7
     ports:
       - "6379:6379"
-
+  
   ollama:
     image: ollama/ollama
     ports:
@@ -29,6 +43,9 @@ services:
       - OLLAMA_METAL=1
     volumes:
       - ollama_data:/root/.ollama
+    deploy: {} 
+    runtime: nvidia
+
 
   flower:
     image: mher/flower

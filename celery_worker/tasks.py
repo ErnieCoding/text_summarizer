@@ -6,10 +6,12 @@ import json
 import requests
 from celery import Celery
 import logging
+import re
+from tokenCounter import count_tokens
 
-# OLLAMA_URL = "http://ollama:11434/api/chat"
-# MODEL_NAME = "llama3.1:8b"
-OLLAMA_URL = "http://host.docker.internal:8003/v1/chat/completions"
+OLLAMA_URL = os.getenv("OLLAMA_HOST", "http://ollama:11434")
+MODEL_NAME = "llama3.1:8b"
+#OLLAMA_URL = "http://host.docker.internal:8003/v1/chat/completions"
 
 
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://redis:6379/0")
@@ -18,45 +20,89 @@ CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", "redis://redis:6
 celery = Celery("tasks", broker=CELERY_BROKER_URL, backend=CELERY_RESULT_BACKEND)
 r = redis.Redis(host='redis', port=6379, decode_responses=True)
 
-def split_text(text, chunk_size=1800, overlap=200):
+def split_text(text, chunk_size=1800, overlap=0.3):
+    """
+    Splits provided text by the number of tokens with overlapping regions.
+    """
+    sentences = re.split(r'(?<=[.!?])\s+', text)
+
     chunks = []
-    start = 0
-    while start < len(text):
-        end = start + chunk_size
-        chunk = text[start:end]
-        chunks.append(chunk)
-        start += chunk_size - overlap
+    curr_chunk = []
+    curr_length = 0
+
+    for sentence in sentences:
+        sentence_length = count_tokens(text=sentence)
+
+        if sentence_length + curr_length <= chunk_size:
+            curr_chunk.append(sentence)
+            curr_length += sentence_length
+        else:
+            chunks.append(" ".join(curr_chunk))
+
+            overlap_size = int(overlap * chunk_size)
+
+            retained_tokens = []
+            retained_length = 0
+            while curr_chunk and retained_length < overlap_size:
+                retained_sentence = curr_chunk.pop()
+                retained_tokens.insert(0, retained_sentence)
+                retained_length += count_tokens(text=retained_sentence)
+
+            curr_chunk = retained_tokens + [sentence]
+            curr_length = retained_length + sentence_length
+
+    if curr_chunk:
+        chunks.append(" ".join(curr_chunk))
+
     return chunks
 
-def estimate_tokens(text):
-    return int(len(text.split()) * 1.3)
-
-def generate_summary(text, temperature, max_tokens, custom_prompt=None):
+def generate_summary(text, temperature, max_tokens, custom_prompt=None, chunk_summary=False):
     if custom_prompt:
         prompt = custom_prompt.replace("{text}", text)
+    elif chunk_summary:
+        prompt = f"""Summarize this text chunk clearly and accurately. Include:
+
+1. Main plot developments — What happens in this section?
+2. Character progression and relationships — How do key characters act, change, reveal themselves, and interact with one another?
+3. Avoid unnecessary detail or repetition. Focus on what matters for understanding the story.
+
+{text}
+"""
     else:
-        prompt = f"Summarize the following text:\n\n{text}\n\nSummary:"
+        prompt = f"""Synthesize the following chunk summaries into a single, cohesive analysis of the text while ensuring no loss of critical details of the plot, characters, etc. Do not provide any other information in your answer except described above holistic summary of the whole text.
+- Eliminate redundant information and merge similar themes.
+- Identify overarching patterns and insights that emerge when considering the full text holistically.
+
+Provide a final summary that includes:
+1. The complete plot progression from start to finish, capturing all key events and details
+2. All character progression, interactions and relationships.
+
+{text}
+"""
+
     payload = {
-        # "model": MODEL_NAME,
-        "messages": [
-            {"role": "user", "content": prompt}
-        ],
+        "model": MODEL_NAME,
+        "prompt": prompt,
         "temperature": temperature,
-        "top_p": 0.9,
-        "max_tokens": max_tokens,
+        "num_ctx": 131072,
+        "num_predict": max_tokens,
         "stream": False
     }
+
     try:
-        logging.info("Запуск задачки")
+        logging.info("Starting summary generation via API")
         start_time = time.time()
-        response = requests.post(OLLAMA_URL, json=payload)
+        response = requests.post(f"{OLLAMA_URL}/api/generate", json=payload)
         response.raise_for_status()
-        logging.info(response.json())
-        result = response.json()
+
+        content = response.json()["response"].strip()
+
         elapsed = round(time.time() - start_time, 2)
-        return result["choices"][0]['message']['content'].strip(), elapsed
-    except Exception:
+        return content, elapsed
+    except Exception as e:
+        logging.exception(f"Summary generation failed: {e}")
         return "[SUMMARY_FAILED]", 0.0
+
 
 @celery.task(name="tasks.process_document")
 def process_document(task_id):
@@ -64,19 +110,25 @@ def process_document(task_id):
     params = json.loads(r.get(f"summarize:{task_id}:params") or "{}")
 
     chunk_size = params.get("chunk_size", 1800)
-    overlap = params.get("overlap", 200)
+    overlap = params.get("overlap", 0.3)
     temp_chunk = params.get("temp_chunk", 0.4)
     temp_final = params.get("temp_final", 0.6)
-    max_tokens_chunk = params.get("max_tokens_chunk", 800)
-    max_tokens_final = params.get("max_tokens_final", 2400)
+    max_tokens_chunk = params.get("max_tokens_chunk", 100)
+    max_tokens_final = params.get("max_tokens_final", 4000)
     chunk_prompt = params.get("chunk_prompt", None)
     final_prompt = params.get("final_prompt", None)
 
     chunks = split_text(text, chunk_size=chunk_size, overlap=overlap)
     progress = []
 
+    sum_token_responses = 0
+    chunk_summary_duration = 0
     for i, chunk in enumerate(chunks):
-        summary, duration = generate_summary(chunk, temp_chunk, max_tokens_chunk, chunk_prompt)
+        summary, duration = generate_summary(chunk, temp_chunk, max_tokens_chunk, chunk_prompt, chunk_summary=True)
+        
+        chunk_summary_duration += duration
+        sum_token_responses += count_tokens(text=summary)
+
         progress.append({"chunk": i + 1, "summary": summary, "duration": duration})
         msg = json.dumps({
             "type": "chunk",
@@ -96,8 +148,42 @@ def process_document(task_id):
 
     final_msg = json.dumps({
         "type": "final",
+        "model": MODEL_NAME,
+        "input_params": {
+            "chunk_prompt": chunk_prompt,
+            "final_summary_prompt": final_prompt,
+            "temp_chunk": temp_chunk,
+            "temp_final": temp_final,
+            "chunk_size": chunk_size,
+            "chunk_overlap": overlap, 
+            "chunk_output_limit(tokens)": max_tokens_chunk,
+            "final_output_limit(tokens)": max_tokens_final,
+        },
+        "output_params":{
+            "avg_chunk_output(tokens)": sum_token_responses // len(chunks),
+            "avg_chunk_summary_time(sec)": round(chunk_summary_duration / len(chunks), 2), 
+            "final_response(tokens)": count_tokens(text=final_summary),
+        },
         "summary": final_summary,
-        "duration": final_time,
-        "token_count": estimate_tokens(text)
-    })
+        "total_time(sec)": round(final_time + chunk_summary_duration, 2),
+        "text_token_count": count_tokens(text=text)
+    }, indent=2)
+
+    TESTS_DIR = "/tasks/tests"
+    os.makedirs(TESTS_DIR, exist_ok=True)
+
+    filename = f"final_{task_id}.json"
+    file_path = os.path.join(TESTS_DIR, filename)
+
+    logging.warning(f"[DEBUG] __file__ = {__file__}")
+    logging.warning(f"[DEBUG] TESTS_DIR = {TESTS_DIR}")
+    logging.warning(f"[DEBUG] Writing to file path: {file_path}")
+
+    try:
+        with open(file_path, "w+") as file:
+            file.write(final_msg)
+        logging.info(f"[WRITE] Final summary saved to {file_path}")
+    except Exception as e:
+        logging.exception(f"Failed to write final summary to file: {e}")
+
     r.publish(f"summarize:{task_id}:events", final_msg)

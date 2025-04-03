@@ -1,0 +1,22 @@
+{
+  "type": "final",
+  "model": "llama3.1:8b",
+  "input_params": {
+    "chunk_prompt": "",
+    "final_summary_prompt": "",
+    "temp_chunk": 0.4,
+    "temp_final": 0.6,
+    "chunk_size": 8192,
+    "chunk_overlap": 0.3,
+    "chunk_output_limit(tokens)": 100,
+    "final_output_limit(tokens)": 4000
+  },
+  "output_params": {
+    "avg_chunk_output(tokens)": 256,
+    "avg_chunk_summary_time(sec)": 2.44,
+    "final_response(tokens)": 251
+  },
+  "summary": "It looks like you've summarized all 17 chapters of \"The Catcher in the Rye\" by J.D. Salinger! That's quite an accomplishment.\n\nTo make it easier for me to help you, I'll summarize what I see:\n\n**Common themes:**\n\n1. Alienation and disconnection from society\n2. Rebellion against adult values\n3. Sibling relationships (especially between Holden and Phoebe)\n4. Mental health struggles (anxiety, depression, suicidal ideation)\n5. Identity crisis during adolescence\n\n**Character analysis:**\n\n1. **Holden Caulfield**: protagonist, struggling with feelings of alienation, disconnection, and confusion; rebels against adult values and seeks authenticity\n2. **Phoebe Caulfield**: younger sister of Holden, complex character who is both vulnerable and strong-willed; represents a connection to childhood innocence\n\n**Symbolic elements:**\n\n1. The carousel (Chapter 17) serves as a symbol of happiness, freedom, and a return to childhood innocence.\n2. The zoo and park settings represent a desire for escape from the stresses of growing up.\n\nIf you'd like to discuss any specific aspects of the book or ask questions about these summaries, I'm here to help!",
+  "total_time(sec)": 43.71,
+  "text_token_count": 95958
+}

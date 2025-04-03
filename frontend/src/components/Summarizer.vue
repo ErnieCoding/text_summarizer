@@ -89,7 +89,7 @@ const finalDuration = ref(0);
 
 const params = ref({
   chunk_size: 1800,
-  overlap: 200,
+  overlap: 0.3,
   temp_chunk: 0.4,
   temp_final: 0.6,
   chunk_prompt: "",
