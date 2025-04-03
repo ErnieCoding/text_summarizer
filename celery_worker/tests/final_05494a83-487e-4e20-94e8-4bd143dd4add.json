@@ -1,0 +1,23 @@
+{
+  "type": "final",
+  "model": "llama3.1:8b",
+  "input_params": {
+    "chunk_prompt": "Summarize this text chunk clearly and accurately. Include:\n\n1. Main plot developments \u2014 What happens in this section?\n2. Character progression and relationships \u2014 How do key characters act, change, reveal themselves, and interact with one another?\n3. Avoid unnecessary detail or repetition. Focus on what matters for understanding the story.",
+    "final_summary_prompt": "Synthesize the following chunk summaries into a single, cohesive analysis of the text while ensuring no loss of critical details of the plot, characters, etc. Do not provide any other information in your answer except described above holistic summary of the whole text.\n- Eliminate redundant information and merge similar themes.\n- Identify overarching patterns and insights that emerge when considering the full text holistically.\n\nProvide a final summary that includes:\n1. The complete plot progression from start to finish, capturing all key events and details\n2. All character progression, interactions and relationships.",
+    "temp_chunk": 0.4,
+    "temp_final": 0.6,
+    "chunk_size": 1800,
+    "chunk_overlap(tokens)": 540.0,
+    "chunk_output_limit(tokens)": 100,
+    "final_output_limit(tokens)": 4000
+  },
+  "output_params": {
+    "num_chunks": 77,
+    "avg_chunk_output(tokens)": 276,
+    "avg_chunk_summary_time(sec)": 2.5,
+    "final_response(tokens)": 430
+  },
+  "summary": "These summaries cover 8 chapters (Chunks) from the novel \"The Catcher in the Rye\" by J.D. Salinger. Here's a brief summary of each chunk:\n\n**Chunk 1-2:** The narrator, Holden Caulfield, reflects on his experiences and feelings about phoniness, relationships, and growing up.\n\n**Chunk 3:** Holden meets two kids who are interested in mummies at the museum, which leads to his musings about peace and tranquility. He also waits for Phoebe at the museum and becomes anxious that she might not come or that someone might have tampered with her message.\n\n**Chunk 4:** Phoebe finally arrives at the museum, and Holden is surprised to see that she has brought a large suitcase with her. She asks if she can go with him, but he rejects her request.\n\n**Chunk 5-6:** Holden and Phoebe engage in a series of arguments and rejections as they discuss whether or not she can join him on his trip. Despite their disagreements, they end up walking together to the zoo, where they become distracted by the sea lions' feeding.\n\n**Chunk 7:** The narrator and Phoebe are at odds with each other, but eventually warm up to each other at the zoo. They spend the afternoon together, and Phoebe gradually becomes more playful and carefree.\n\n**Chunk 8:** The narrator buys Phoebe a ticket to ride the carrousel and watches her enjoy herself. He feels happy seeing Phoebe have fun and doesn't join her on the ride.\n\nSome common themes that emerge from these summaries include:\n\n1. Holden's struggles with authenticity, phoniness, and relationships.\n2. His complex emotions towards his family members, particularly his sister Phoebe.\n3. The dynamic between Holden and Phoebe as older sibling and younger sister.\n4. The theme of identity, independence, and growing up.\n5. The importance of human connection and belonging.\n\nOverall, these summaries provide insight into the narrator's experiences and emotions as he navigates adolescence and grapples with complex relationships and themes.",
+  "total_time(sec)": 196.24,
+  "text_token_count": 95958
+}
