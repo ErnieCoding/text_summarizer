@@ -115,8 +115,20 @@ def process_document(task_id):
     temp_final = params.get("temp_final", 0.6)
     max_tokens_chunk = params.get("max_tokens_chunk", 100)
     max_tokens_final = params.get("max_tokens_final", 4000)
-    chunk_prompt = params.get("chunk_prompt", None)
-    final_prompt = params.get("final_prompt", None)
+    chunk_prompt = params.get("chunk_prompt", """Summarize this text chunk clearly and accurately. Include:
+
+1. Main plot developments — What happens in this section?
+2. Character progression and relationships — How do key characters act, change, reveal themselves, and interact with one another?
+3. Avoid unnecessary detail or repetition. Focus on what matters for understanding the story.
+""")
+    final_prompt = params.get("final_prompt", """Synthesize the following chunk summaries into a single, cohesive analysis of the text while ensuring no loss of critical details of the plot, characters, etc. Do not provide any other information in your answer except described above holistic summary of the whole text.
+- Eliminate redundant information and merge similar themes.
+- Identify overarching patterns and insights that emerge when considering the full text holistically.
+
+Provide a final summary that includes:
+1. The complete plot progression from start to finish, capturing all key events and details
+2. All character progression, interactions and relationships.
+""")
 
     chunks = split_text(text, chunk_size=chunk_size, overlap=overlap)
     progress = []
@@ -155,11 +167,12 @@ def process_document(task_id):
             "temp_chunk": temp_chunk,
             "temp_final": temp_final,
             "chunk_size": chunk_size,
-            "chunk_overlap": overlap, 
+            "chunk_overlap(tokens)": overlap * chunk_size, 
             "chunk_output_limit(tokens)": max_tokens_chunk,
             "final_output_limit(tokens)": max_tokens_final,
         },
         "output_params":{
+            "num_chunks": len(chunks),
             "avg_chunk_output(tokens)": sum_token_responses // len(chunks),
             "avg_chunk_summary_time(sec)": round(chunk_summary_duration / len(chunks), 2), 
             "final_response(tokens)": count_tokens(text=final_summary),
