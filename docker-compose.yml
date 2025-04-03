@@ -46,7 +46,6 @@ services:
     deploy: {} 
     runtime: nvidia
 
-
   flower:
     image: mher/flower
     ports:
