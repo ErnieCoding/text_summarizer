@@ -8,10 +8,14 @@ from celery import Celery
 import logging
 import re
 from tokenCounter import count_tokens
+import datetime
+import zoneinfo
 
 OLLAMA_URL = os.getenv("OLLAMA_HOST", "http://ollama:11434")
 MODEL_NAME = "llama3.1:8b"
 #OLLAMA_URL = "http://host.docker.internal:8003/v1/chat/completions"
+
+API_URL = "http://ai.rndl.ru:5017/api/data"
 
 
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://redis:6379/0")
@@ -148,6 +152,9 @@ def process_document(task_id):
 
     final_msg = json.dumps({
         "type": "final",
+        "Author": "ErnestSaak",
+        "date_time": datetime.datetime.now(zoneinfo.ZoneInfo('America/New_York')).strftime("%Y-%m-%d %H:%M:%S"),
+        "document_url": "https://drive.google.com/file/d/1pbcOsUMlzJD81rEjJ-g5_Uu1DPdlnADw/view?usp=sharing",
         "model": MODEL_NAME,
         "input_params": {
             "chunk_prompt": """Summarize this text chunk clearly and accurately. Include:
@@ -196,5 +203,16 @@ Provide a final summary that includes:
         logging.info(f"[WRITE] Final summary saved to {file_path}")
     except Exception as e:
         logging.exception(f"Failed to write final summary to file: {e}")
+
+    try:
+        response = requests.post(
+            API_URL,
+            headers={"Content-Type": "application/json"},
+            data=final_msg,
+        )
+        response.raise_for_status()
+        logging.info(f"[UPLOAD] Successfully sent summary to {API_URL}. Response: {response.text}")
+    except Exception as e:
+        logging.info(f"Error uploading data: {e}")
 
     r.publish(f"summarize:{task_id}:events", final_msg)
