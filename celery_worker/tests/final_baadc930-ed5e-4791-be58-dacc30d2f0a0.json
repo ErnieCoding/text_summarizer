@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-07 22:38:33",
+  "document_url": "https://drive.google.com/file/d/1pbcOsUMlzJD81rEjJ-g5_Uu1DPdlnADw/view?usp=sharing",
+  "chunk_model": "phi4:14b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": null,
+    "chunk_prompt": "Summarize this text chunk clearly and accurately. Include:\n\n1. Main plot developments \u2014 What happens in this section?\n2. Character progression and relationships \u2014 How do key characters act, change, reveal themselves, and interact with one another?\n3. Avoid unnecessary detail or repetition. Focus on what matters for understanding the story.",
+    "final_summary_prompt": "Synthesize the following chunk summaries into a single, cohesive analysis of the text while ensuring no loss of critical details of the plot, characters, etc. Do not provide any other information in your answer except described above holistic summary of the whole text.\n- Eliminate redundant information and merge similar themes.\n- Identify overarching patterns and insights that emerge when considering the full text holistically.\n\nProvide a final summary that includes:\n1. The complete plot progression from start to finish, capturing all key events and details\n2. All character progression, interactions and relationships.",
+    "temp_chunk": 0.3,
+    "temp_final": 0.7,
+    "chunk_size": 2000,
+    "chunk_overlap(tokens)": 100.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 51,
+    "avg_chunk_output(tokens)": 334,
+    "avg_chunk_summary_time(sec)": 37.49,
+    "final_response(tokens)": 664
+  },
+  "summary": "**Complete Plot Progression from Start to Finish:**\n\nThe story begins with Holden Caulfield reflecting on his disdain for sharing personal details about his family or past. He recounts being expelled from Pencey Prep due to poor academic performance and experiencing an embarrassing mishap with the fencing team's equipment. He also visits his history teacher, Mr. Spencer, who is ill, but ultimately won't return after Christmas vacation.\n\nHolden then narrates a series of events, including his interactions with various people at Pencey Prep, such as his roommate Stradlater, who he finds insincere and arrogant. Holden also reflects on his past experiences, including visiting Mr. Spencer's house, where he is initially welcomed but ultimately feels uncomfortable due to the old-fashioned values being imparted.\n\nAs the story progresses, Holden becomes increasingly disenchanted with the adult world around him, feeling like everyone is phony except for Phoebe, his younger sister. He interacts with other characters, including Jane Gallagher, whom he admires and cares about but struggles to connect with due to her involvement with Stradlater.\n\nHolden's emotional state becomes more turbulent as the story unfolds, particularly after a confrontation with Maurice, who physically intimidates him over a debt. This encounter leaves Holden feeling scared and vulnerable, leading him to seek comfort in his memories of Phoebe.\n\nThe narrative takes a poignant turn when Holden visits Phoebe at her school, where he is met with graffiti that offends him deeply. He then experiences a brief moment of physical weakness due to emotional intensity but feels better after Phoebe appears and wants to join him on his journey.\n\nHowever, their reunion is short-lived as Holden insists she stays home, leading to an emotional confrontation between the two siblings. Despite initial tension, they eventually reconnect through shared memories and simple acts of kindness during a visit to the zoo.\n\nThe story concludes with a heartwarming interaction at an open carousel during Christmas time between Holden and his Aunt Phoebe (Phoebe's mother), where he buys her a ticket for the ride and she initially hesitates but then becomes more open and affectionate. Their exchange culminates in a tender moment when Phoebe kisses him and fixes his red hunting hat on his head, signifying reconciliation and acceptance.\n\n**Character Progression, Interactions, and Relationships:**\n\nThroughout the story, Holden Caulfield's character evolves significantly as he grapples with various relationships and experiences. Initially portrayed as a rebellious teenager who dislikes authority figures, Holden gradually reveals his deep emotional vulnerability and sensitivity towards those around him.\n\nHis interactions with Stradlater are particularly telling of his inner conflict, where he struggles to express his feelings for Jane but ultimately feels betrayed by her involvement with Stradlater. Holden's relationship with Phoebe is a central theme throughout the narrative, highlighting their deep bond and mutual understanding.\n\nThe character development is also evident in Holden's interactions with other characters, such as Mr. Antolini, who serves as both a mentor figure and a source of internal conflict for Holden. The story showcases how these complex relationships shape Holden's worldview and contribute to his emotional growth.\n\nUltimately, the narrative suggests that Holden has undergone significant personal growth, particularly in his ability to connect with others on a deeper level and confront his own vulnerabilities.",
+  "total_time(sec)": 1932.45,
+  "text_token_count": 95958
+}

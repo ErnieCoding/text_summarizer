@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-07 20:28:14",
+  "document_url": "https://drive.google.com/file/d/1pbcOsUMlzJD81rEjJ-g5_Uu1DPdlnADw/view?usp=sharing",
+  "chunk_model": "phi4:14b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": null,
+    "chunk_prompt": "Summarize this text chunk clearly and accurately. Include:\n\n1. Main plot developments \u2014 What happens in this section?\n2. Character progression and relationships \u2014 How do key characters act, change, reveal themselves, and interact with one another?\n3. Avoid unnecessary detail or repetition. Focus on what matters for understanding the story.",
+    "final_summary_prompt": "Synthesize the following chunk summaries into a single, cohesive analysis of the text while ensuring no loss of critical details of the plot, characters, etc. Do not provide any other information in your answer except described above holistic summary of the whole text.\n- Eliminate redundant information and merge similar themes.\n- Identify overarching patterns and insights that emerge when considering the full text holistically.\n\nProvide a final summary that includes:\n1. The complete plot progression from start to finish, capturing all key events and details\n2. All character progression, interactions and relationships.",
+    "temp_chunk": 0.7,
+    "temp_final": 0.5,
+    "chunk_size": 2000,
+    "chunk_overlap(tokens)": 0.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 48,
+    "avg_chunk_output(tokens)": 351,
+    "avg_chunk_summary_time(sec)": 39.8,
+    "final_response(tokens)": 652
+  },
+  "summary": "**Comprehensive Summary**\n\nThe novel \"The Catcher in the Rye\" by J.D. Salinger follows the protagonist, Holden Caulfield, a teenager struggling with alienation and disillusionment with the world around him. The story is structured around Holden's interactions and reflections on various people and events during his temporary stay at the Edmont Hotel in New York City.\n\n**Plot Progression**\n\nThe novel begins with Holden being expelled from Pencey Prep due to poor academic performance. He decides to leave school early, feeling disenchanted with the phoniness of adult society. Throughout his journey, he grapples with feelings of loneliness and isolation, struggling to form meaningful connections with others.\n\nHolden's interactions are marked by his cynicism towards those around him, often perceiving them as insincere or pretentious. However, despite this facade, he reveals glimpses of vulnerability and sensitivity, particularly in his relationships with Phoebe and Jane Gallagher.\n\nPhoebe, Holden's younger sister, is a source of comfort and emotional support for him. He values her innocence and authenticity, often seeking refuge in their conversations. In contrast, his interactions with Jane are tinged with jealousy and possessiveness, reflecting his ongoing struggle to balance his desire for genuine connections with his fear of being hurt.\n\n**Character Progression**\n\nThroughout the novel, Holden undergoes significant emotional growth as he confronts his inner turmoil and grappling with complex emotions. He begins to recognize the phoniness in others but also starts to acknowledge his own flaws and vulnerabilities.\n\nPhoebe's character development is equally notable as she demonstrates independence and maturity by asserting herself against her brother's wishes. Her actions serve as a catalyst for Holden's growth, encouraging him to reevaluate his relationships and personal values.\n\n**Relationships**\n\nThe novel explores various relationships, including those between siblings (Holden and Phoebe), peers (Holden and Jane), and mentors (Mr. Antolini). These interactions reveal the complexities of human connections, highlighting themes of authenticity, trust, and vulnerability.\n\nHolden's relationships with adults are often marked by ambivalence and mistrust. His interactions with Mr. Antolini, in particular, raise questions about adult behavior and Holden's perception of it. The novel ultimately suggests that true understanding and connection can only be achieved through genuine, emotionally honest relationships.\n\n**Themes**\n\nThe novel explores several themes, including:\n\n1.  **Alienation and Disillusionment**: Holden's feelings of isolation and disconnection from the world around him serve as a backdrop for the story.\n2.  **Authenticity vs. Phoniness**: The novel highlights the tension between genuine connections and superficial relationships.\n3.  **Coming of Age**: Holden's struggles with identity, belonging, and emotional growth are characteristic of the coming-of-age genre.\n4.  **Vulnerability and Trust**: The novel emphasizes the importance of vulnerability and trust in forming meaningful relationships.\n\nIn conclusion, \"The Catcher in the Rye\" is a poignant exploration of adolescent angst, alienation, and the struggle for authenticity in a seemingly phony world. Holden's journey serves as a powerful reminder of the complexities and challenges of human connections, ultimately emphasizing the importance of genuine relationships and emotional vulnerability.",
+  "total_time(sec)": 1931.5,
+  "text_token_count": 95958
+}

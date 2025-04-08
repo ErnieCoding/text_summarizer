@@ -12,10 +12,8 @@ import datetime
 import zoneinfo
 
 OLLAMA_URL = os.getenv("OLLAMA_HOST", "http://ollama:11434")
-MODEL_NAME = "llama3.1:8b"
+MODEL_NAME = "phi4:14b"
 #OLLAMA_URL = "http://host.docker.internal:8003/v1/chat/completions"
-
-API_URL = "http://ai.rndl.ru:5017/api/data"
 
 
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://redis:6379/0")
@@ -60,7 +58,7 @@ def split_text(text, chunk_size=1800, overlap=0.3):
 
     return chunks
 
-def generate_summary(text, temperature, max_tokens, custom_prompt=None, chunk_summary=False):
+def generate_summary(text, temperature, max_tokens, custom_prompt=None, chunk_summary=False, final_summary = False):
     if custom_prompt:
         prompt = custom_prompt.replace("{text}", text)
     elif chunk_summary:
@@ -83,12 +81,14 @@ Provide a final summary that includes:
 
 {text}
 """
-
+    model_name = MODEL_NAME
+    if final_summary:
+        model_name = "llama3.1:8b"
+    
     payload = {
-        "model": MODEL_NAME,
+        "model": model_name,
         "prompt": prompt,
         "temperature": temperature,
-        "num_ctx": 131072,
         "num_predict": max_tokens,
         "stream": False
     }
@@ -106,6 +106,25 @@ Provide a final summary that includes:
     except Exception as e:
         logging.exception(f"Summary generation failed: {e}")
         return "[SUMMARY_FAILED]", 0.0
+    
+def get_context_length():
+    try:
+        response = requests.post(
+            f"{OLLAMA_URL}/api/show",
+            json={"name": MODEL_NAME}
+        )
+        response.raise_for_status()
+        model_info = response.json()
+
+        if "model_info" in model_info:
+            model_info_fields = model_info["model_info"]
+            if "llama.context_length" in model_info_fields:
+                return model_info_fields["llama.context_length"]
+            
+        return None
+    except Exception as e:
+        print(f"Failed to fetch model context length: {e}")
+        return None
 
 
 @celery.task(name="tasks.process_document")
@@ -117,8 +136,8 @@ def process_document(task_id):
     overlap = params.get("overlap", 0.3)
     temp_chunk = params.get("temp_chunk", 0.4)
     temp_final = params.get("temp_final", 0.6)
-    max_tokens_chunk = params.get("max_tokens_chunk", 100)
-    max_tokens_final = params.get("max_tokens_final", 4000)
+    max_tokens_chunk = params.get("max_tokens_chunk", 1500)
+    max_tokens_final = params.get("max_tokens_final", 5000)
     chunk_prompt = params.get("chunk_prompt", None)
     final_prompt = params.get("final_prompt", None)
 
@@ -148,15 +167,17 @@ def process_document(task_id):
         f"Chunk {i} Summary:\n{p['summary']}" for i, p in enumerate(valid_chunks, 1)
     ]) or "The document contains multiple summaries that need to be unified."
 
-    final_summary, final_time = generate_summary(combined_input, temp_final, max_tokens_final, final_prompt)
+    final_summary, final_time = generate_summary(combined_input, temp_final, max_tokens_final, final_prompt, final_summary=True)
 
     final_msg = json.dumps({
         "type": "final",
         "Author": "ErnestSaak",
         "date_time": datetime.datetime.now(zoneinfo.ZoneInfo('America/New_York')).strftime("%Y-%m-%d %H:%M:%S"),
         "document_url": "https://drive.google.com/file/d/1pbcOsUMlzJD81rEjJ-g5_Uu1DPdlnADw/view?usp=sharing",
-        "model": MODEL_NAME,
+        "chunk_model": MODEL_NAME,
+        "final_model": "llama3.1:8b",
         "input_params": {
+            "context_length": get_context_length(),
             "chunk_prompt": """Summarize this text chunk clearly and accurately. Include:
 
 1. Main plot developments — What happens in this section?
@@ -204,15 +225,6 @@ Provide a final summary that includes:
     except Exception as e:
         logging.exception(f"Failed to write final summary to file: {e}")
 
-    try:
-        response = requests.post(
-            API_URL,
-            headers={"Content-Type": "application/json"},
-            data=final_msg,
-        )
-        response.raise_for_status()
-        logging.info(f"[UPLOAD] Successfully sent summary to {API_URL}. Response: {response.text}")
-    except Exception as e:
-        logging.info(f"Error uploading data: {e}")
-
     r.publish(f"summarize:{task_id}:events", final_msg)
+
+    return final_msg

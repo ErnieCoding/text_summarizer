@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-07 21:33:11",
+  "document_url": "https://drive.google.com/file/d/1pbcOsUMlzJD81rEjJ-g5_Uu1DPdlnADw/view?usp=sharing",
+  "chunk_model": "phi4:14b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": null,
+    "chunk_prompt": "Summarize this text chunk clearly and accurately. Include:\n\n1. Main plot developments \u2014 What happens in this section?\n2. Character progression and relationships \u2014 How do key characters act, change, reveal themselves, and interact with one another?\n3. Avoid unnecessary detail or repetition. Focus on what matters for understanding the story.",
+    "final_summary_prompt": "Synthesize the following chunk summaries into a single, cohesive analysis of the text while ensuring no loss of critical details of the plot, characters, etc. Do not provide any other information in your answer except described above holistic summary of the whole text.\n- Eliminate redundant information and merge similar themes.\n- Identify overarching patterns and insights that emerge when considering the full text holistically.\n\nProvide a final summary that includes:\n1. The complete plot progression from start to finish, capturing all key events and details\n2. All character progression, interactions and relationships.",
+    "temp_chunk": 0.3,
+    "temp_final": 0.3,
+    "chunk_size": 2000,
+    "chunk_overlap(tokens)": 100.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 51,
+    "avg_chunk_output(tokens)": 347,
+    "avg_chunk_summary_time(sec)": 38.94,
+    "final_response(tokens)": 611
+  },
+  "summary": "Here is a comprehensive summary that combines all 51 chunks into one cohesive analysis:\n\nThe novel \"The Catcher in the Rye\" by J.D. Salinger follows the story of Holden Caulfield, a disillusioned teenager struggling to find his place in the world after being expelled from Pencey Prep. The narrative is told through Holden's perspective, providing an intimate look at his thoughts and feelings as he navigates the complexities of adolescence.\n\nThe novel begins with Holden reflecting on his expulsion from school due to poor academic performance. He recounts his experiences at Pencey, including his interactions with teachers like Mr. Spencer, who tries to offer guidance but comes across as disconnected and ineffective. Holden's relationships with his peers are also explored, particularly his roommate Stradlater, whom he perceives as superficial and arrogant.\n\nAs the story progresses, Holden's internal conflict becomes more apparent. He struggles with feelings of alienation and disconnection from the world around him, often feeling like an outsider looking in. This is evident in his interactions with people like Phoebe, his younger sister, who represents innocence and vulnerability. Despite his initial reluctance to form connections, Holden finds himself drawn to Phoebe's intelligence and affectionate nature.\n\nOne of the central themes of the novel is Holden's desire for authenticity and genuine human connection. He criticizes societal norms and expectations, particularly in relation to relationships between adults and children. His interactions with Mr. Antolini, a former teacher who has become a mentor figure, highlight his struggle to reconcile adult intentions with his own fears and past experiences.\n\nThroughout the novel, Holden's character evolves as he grapples with the complexities of growing up. He becomes increasingly aware of his own flaws and shortcomings, particularly in relation to his behavior towards others. Despite this, Holden remains determined to protect innocence and shield those he cares for from the negativity and superficiality he perceives in the world.\n\nThe novel's climax revolves around Holden's decision to leave Pencey Prep and start a new life as an anonymous \"deaf-mute\" working at a filling station. This fantasy reflects his desire to avoid connections and conversations, but ultimately, it is Phoebe who surprises him by expressing her desire to accompany him on his journey. Their interaction marks a pivotal moment in the narrative, highlighting their bond and offering a glimmer of hope amidst Holden's struggles.\n\nThe novel concludes with Holden and Phoebe visiting the zoo together, observing sea lions and bears before heading towards the carousel. This final scene captures the complexities of human relationships through shared experiences, emphasizing the narrator's deepening feelings for those around him.\n\nOverall, \"The Catcher in the Rye\" is a poignant exploration of mental health struggles set against mundane life events. Through Holden's narrative, Salinger offers a nuanced portrayal of adolescent anxiety, alienation, and the struggle to find one's place in the world. The novel remains a powerful commentary on the human condition, highlighting the importance of empathy, understanding, and genuine human connection in navigating the complexities of growing up.",
+  "total_time(sec)": 2006.51,
+  "text_token_count": 95958
+}

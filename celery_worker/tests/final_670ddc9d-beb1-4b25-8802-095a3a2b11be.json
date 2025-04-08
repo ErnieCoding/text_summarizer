@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-07 18:24:45",
+  "document_url": "https://drive.google.com/file/d/1pbcOsUMlzJD81rEjJ-g5_Uu1DPdlnADw/view?usp=sharing",
+  "chunk_model": "phi4:14b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": null,
+    "chunk_prompt": "Summarize this text chunk clearly and accurately. Include:\n\n1. Main plot developments \u2014 What happens in this section?\n2. Character progression and relationships \u2014 How do key characters act, change, reveal themselves, and interact with one another?\n3. Avoid unnecessary detail or repetition. Focus on what matters for understanding the story.",
+    "final_summary_prompt": "Synthesize the following chunk summaries into a single, cohesive analysis of the text while ensuring no loss of critical details of the plot, characters, etc. Do not provide any other information in your answer except described above holistic summary of the whole text.\n- Eliminate redundant information and merge similar themes.\n- Identify overarching patterns and insights that emerge when considering the full text holistically.\n\nProvide a final summary that includes:\n1. The complete plot progression from start to finish, capturing all key events and details\n2. All character progression, interactions and relationships.",
+    "temp_chunk": 0.5,
+    "temp_final": 0.3,
+    "chunk_size": 2000,
+    "chunk_overlap(tokens)": 0.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 48,
+    "avg_chunk_output(tokens)": 342,
+    "avg_chunk_summary_time(sec)": 38.49,
+    "final_response(tokens)": 580
+  },
+  "summary": "Here is a cohesive analysis that synthesizes all the chunk summaries into a single narrative:\n\nThe story revolves around Holden Caulfield, a 16-year-old who has been expelled from Pencey Prep, an elite school in Pennsylvania. The novel begins with Holden's narration of his experiences as he travels through New York City after leaving Pencey Prep. He reflects on his feelings about being expelled and the events leading up to it.\n\nHolden is portrayed as a critical and judgmental individual who struggles with relationships and authority figures. He has a strained relationship with his older brother, D.B., whom he perceives as having become too commercialized in Hollywood. Holden also expresses disdain for the superficiality of Pencey Prep and its students, highlighting his own feelings of alienation and disconnection.\n\nAs Holden navigates through New York City, he encounters various characters who contribute to his emotional turmoil. He interacts with Mr. Antolini, a former teacher who offers guidance but is rebuffed by Holden's fear of being vulnerable. Holden also visits Phoebe, his younger sister, who provides comfort and understanding in the midst of his turmoil.\n\nThroughout the novel, Holden grapples with feelings of depression, loneliness, and disconnection. He struggles to form meaningful relationships and finds himself at odds with authority figures and societal norms. Despite these challenges, Holden's interactions reveal a deep affection for his sister Phoebe and an intense desire for genuine connections.\n\nHolden's internal conflict is further exacerbated by his encounters with various characters, including Stradlater, Jane Gallagher, Sally Hayes, and Maurice. These relationships highlight the complexities of human dynamics and Holden's struggles to navigate them. His interactions also reveal a deep-seated insecurity and fear of rejection or abandonment.\n\nAs the novel progresses, Holden becomes increasingly despondent and disconnected from his surroundings. He reflects on past memories, particularly those involving Phoebe and his deceased brother Allie, which serve as a source of comfort and solace. However, these moments are often overshadowed by his feelings of despair and hopelessness.\n\nThe climax of the novel revolves around Holden's interactions with Phoebe at the zoo. Despite initial tension between them, they reconcile through their shared experience on the carousel. This moment of reconciliation serves as a turning point in their relationship, highlighting the complexities of human connections and the power of forgiveness.\n\nUltimately, the novel concludes with Holden feeling unexpectedly joyful after watching Phoebe ride the carousel. This moment marks a tentative reconciliation between Holden and his sister, underscoring the subtle complexities of human relationships and the importance of genuine connections.\n\nOverall, \"The Catcher in the Rye\" is a poignant exploration of adolescent angst, disconnection, and the struggle to form meaningful relationships. Through Holden's narrative, the novel highlights the challenges of navigating complex emotions and social dynamics while seeking authenticity and connection in a world perceived as phony and superficial.",
+  "total_time(sec)": 1866.81,
+  "text_token_count": 95958
+}

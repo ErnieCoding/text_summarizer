@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-08 02:32:44",
+  "document_url": "https://drive.google.com/file/d/1pbcOsUMlzJD81rEjJ-g5_Uu1DPdlnADw/view?usp=sharing",
+  "chunk_model": "phi4:14b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": null,
+    "chunk_prompt": "Summarize this text chunk clearly and accurately. Include:\n\n1. Main plot developments \u2014 What happens in this section?\n2. Character progression and relationships \u2014 How do key characters act, change, reveal themselves, and interact with one another?\n3. Avoid unnecessary detail or repetition. Focus on what matters for understanding the story.",
+    "final_summary_prompt": "Synthesize the following chunk summaries into a single, cohesive analysis of the text while ensuring no loss of critical details of the plot, characters, etc. Do not provide any other information in your answer except described above holistic summary of the whole text.\n- Eliminate redundant information and merge similar themes.\n- Identify overarching patterns and insights that emerge when considering the full text holistically.\n\nProvide a final summary that includes:\n1. The complete plot progression from start to finish, capturing all key events and details\n2. All character progression, interactions and relationships.",
+    "temp_chunk": 0.3,
+    "temp_final": 0.3,
+    "chunk_size": 2000,
+    "chunk_overlap(tokens)": 200.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 54,
+    "avg_chunk_output(tokens)": 343,
+    "avg_chunk_summary_time(sec)": 38.46,
+    "final_response(tokens)": 499
+  },
+  "summary": "Here's a holistic summary that includes all key events, details, character progression, and relationships:\n\nThe story follows Holden Caulfield, a young boy who has been expelled from Pencey Prep, as he navigates the complexities of growing up and trying to find his place in the world. Throughout the narrative, Holden grapples with feelings of alienation, disillusionment, and rebellion against the phoniness he perceives in others.\n\nThe story begins with Holden's expulsion from Pencey Prep due to poor grades and a lack of effort. He reflects on his experiences at the school, including his encounters with teachers like Mr. Spencer, who tries to understand him but fails to connect due to their differing perspectives.\n\nHolden's relationships with his peers are marked by tension and conflict, particularly with Stradlater, a classmate who represents everything Holden despises about adulthood. He also clashes with Ackley, a roommate who is annoyingly intrusive and hygienically challenged. Despite these struggles, Holden shows moments of vulnerability and empathy towards those around him.\n\nOne of the most significant relationships in the story is between Holden and Phoebe, his younger sister. Their interactions are filled with warmth, affection, and mutual understanding. Phoebe serves as a source of comfort and support for Holden, who often feels overwhelmed by the challenges he faces.\n\nThroughout the narrative, Holden struggles with identity and belonging. He feels disconnected from his family, particularly his brother D.B., who has moved to Hollywood and become a successful writer. Holden's interactions with Mr. Antolini, a former teacher, highlight his desire for guidance and understanding but also underscore his fear of being misunderstood or manipulated.\n\nHolden's journey is marked by moments of introspection and self-doubt. He grapples with feelings of depression, anxiety, and existential dread as he tries to make sense of the world around him. His interactions with Phoebe provide a rare moment of comfort and connection in an otherwise chaotic and uncertain environment.\n\nThe story concludes with Holden's decision to leave everything behind and start anew. He says goodbye to Phoebe, returns her Christmas money, and sets off on a journey westward, intent on becoming anonymous and starting fresh.\n\nOverall, the narrative is a poignant exploration of adolescent angst, rebellion, and the struggle for identity and belonging. Through Holden's experiences, Salinger offers a nuanced portrayal of the challenges and complexities of growing up, highlighting the importance of genuine human connections in navigating the difficulties of life.",
+  "total_time(sec)": 2100.47,
+  "text_token_count": 95958
+}
