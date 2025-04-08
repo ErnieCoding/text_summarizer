@@ -6,9 +6,9 @@ from itertools import product
 import uuid
 import json
 from rouge_score import rouge_scorer
-import pandas as pd
 import logging
 import requests
+import random
 
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://localhost:6379/0")
 CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", "redis://localhost:6379/0")
@@ -17,15 +17,16 @@ celery = Celery("tasks", broker=CELERY_BROKER_URL, backend=CELERY_RESULT_BACKEND
 r = redis.Redis(host='localhost', port=6379, decode_responses=True)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-TEXT_FILE = os.path.join(BASE_DIR, "Rye.txt")
+RYE_TEXT_FILE = os.path.join(BASE_DIR, "Rye.txt")
+TRANSCRIPT_TEXT_FILE = os.path.join(BASE_DIR, "transcript_translated.txt")
 
 DATA_URL = "http://ai.rndl.ru:5017/api/data"
 
 params = {
-    "chunk_size":[2000, 2500, 3000, 3500, 4000], 
-    "chunk_overlap": [0, 100, 200, 300], 
-    "temp_chunk": [0.3, 0.5, 0.7], 
-    "temp_final": [0.3, 0.5, 0.7]
+    "chunk_size":[1500, 2000, 5500, 6000, 6500, 7000, 7500, 8000], 
+    "chunk_overlap": [100, 200, 300], 
+    "temp_chunk": [0.3, 0.5], 
+    "temp_final": [0.5, 0.7]
     }
 
 combinations = list(product(
@@ -35,10 +36,13 @@ combinations = list(product(
     params["temp_final"]
 ))
 
-combinations = combinations[:20] # complete the first 20 tests
+#combinations = random.sample(combinations, 20) # complete random 20 tests
  
-with open(TEXT_FILE, "r", encoding="utf-8") as file:
-    TEXT = file.read()
+with open(RYE_TEXT_FILE, "r", encoding="utf-8") as file:
+    RYE_TEXT = file.read()
+
+with open(TRANSCRIPT_TEXT_FILE, "r", encoding="utf-8") as file:
+    TRANSCRIPT_TEXT = file.read()
 
 def run_eval(data):
     scorer = rouge_scorer.RougeScorer(['rougeL'], use_stemmer=True)
@@ -198,7 +202,7 @@ Through these techniques, Salinger creates a psychologically complex portrait of
     return rouge_l_f1
 
 
-def test_params(combinations):
+def test_params(combinations, text_name):
     for combination in combinations:
         chunk_size, chunk_overlap, temp_chunk, temp_final = combination
 
@@ -213,17 +217,19 @@ def test_params(combinations):
             "max_tokens_final": 5000
         }
 
-        r.set(f"summarize:{task_id}:text", TEXT)
+        if text_name == "Rye":
+            r.set(f"summarize:{task_id}:text", RYE_TEXT)
+            params_dict["Rye"] = True
+        else:
+            r.set(f"summarize:{task_id}:text", TRANSCRIPT_TEXT)
+            params_dict["Rye"] = False         
         r.set(f"summarize:{task_id}:params", json.dumps(params_dict))
 
         result = celery.send_task("tasks.process_document", args=[task_id])
 
         summary_output = result.get()
-
         summary_dict = json.loads(summary_output)
-
         f1_score = run_eval(summary_dict)
-
         summary_dict["f1_score"] = f1_score
 
         updated_final_output = json.dumps(summary_dict, indent=2)

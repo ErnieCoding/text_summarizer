@@ -12,7 +12,7 @@ import datetime
 import zoneinfo
 
 OLLAMA_URL = os.getenv("OLLAMA_HOST", "http://ollama:11434")
-MODEL_NAME = "phi4:14b"
+MODEL_NAME = "llama3.1:8b"
 #OLLAMA_URL = "http://host.docker.internal:8003/v1/chat/completions"
 
 
@@ -58,20 +58,24 @@ def split_text(text, chunk_size=1800, overlap=0.3):
 
     return chunks
 
-def generate_summary(text, temperature, max_tokens, custom_prompt=None, chunk_summary=False, final_summary = False):
+def generate_summary(text, temperature, max_tokens, rye, custom_prompt=None, chunk_summary=False, final_summary = False):
     if custom_prompt:
         prompt = custom_prompt.replace("{text}", text)
     elif chunk_summary:
-        prompt = f"""Summarize this text chunk clearly and accurately. Include:
+        if rye:
+            prompt = f"""Summarize this text chunk clearly and accurately. Include:
 
 1. Main plot developments — What happens in this section?
 2. Character progression and relationships — How do key characters act, change, reveal themselves, and interact with one another?
 3. Avoid unnecessary detail or repetition. Focus on what matters for understanding the story.
 
-{text}
-"""
+{text}"""
+        else:
+            prompt = f"""Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.
+{text}"""
     else:
-        prompt = f"""Synthesize the following chunk summaries into a single, cohesive analysis of the text while ensuring no loss of critical details of the plot, characters, etc. Do not provide any other information in your answer except described above holistic summary of the whole text.
+        if rye:
+            prompt = f"""Synthesize the following chunk summaries into a single, cohesive analysis of the text while ensuring no loss of critical details of the plot, characters, etc. Do not provide any other information in your answer except described above holistic summary of the whole text.
 - Eliminate redundant information and merge similar themes.
 - Identify overarching patterns and insights that emerge when considering the full text holistically.
 
@@ -79,8 +83,14 @@ Provide a final summary that includes:
 1. The complete plot progression from start to finish, capturing all key events and details
 2. All character progression, interactions and relationships.
 
-{text}
-"""
+{text}"""
+        else:
+            prompt = f"""Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:
+1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)
+2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them
+3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.
+{text}"""
+
     model_name = MODEL_NAME
     if final_summary:
         model_name = "llama3.1:8b"
@@ -140,6 +150,7 @@ def process_document(task_id):
     max_tokens_final = params.get("max_tokens_final", 5000)
     chunk_prompt = params.get("chunk_prompt", None)
     final_prompt = params.get("final_prompt", None)
+    rye = params.get("Rye")
 
     chunks = split_text(text, chunk_size=chunk_size, overlap=overlap)
     progress = []
@@ -147,7 +158,7 @@ def process_document(task_id):
     sum_token_responses = 0
     chunk_summary_duration = 0
     for i, chunk in enumerate(chunks):
-        summary, duration = generate_summary(chunk, temp_chunk, max_tokens_chunk, chunk_prompt, chunk_summary=True)
+        summary, duration = generate_summary(chunk, temp_chunk, max_tokens_chunk, rye, chunk_prompt, chunk_summary=True)
         
         chunk_summary_duration += duration
         sum_token_responses += count_tokens(text=summary)
@@ -167,29 +178,32 @@ def process_document(task_id):
         f"Chunk {i} Summary:\n{p['summary']}" for i, p in enumerate(valid_chunks, 1)
     ]) or "The document contains multiple summaries that need to be unified."
 
-    final_summary, final_time = generate_summary(combined_input, temp_final, max_tokens_final, final_prompt, final_summary=True)
+    final_summary, final_time = generate_summary(combined_input, temp_final, max_tokens_final, rye, final_prompt, final_summary=True)
 
     final_msg = json.dumps({
         "type": "final",
         "Author": "ErnestSaak",
         "date_time": datetime.datetime.now(zoneinfo.ZoneInfo('America/New_York')).strftime("%Y-%m-%d %H:%M:%S"),
-        "document_url": "https://drive.google.com/file/d/1pbcOsUMlzJD81rEjJ-g5_Uu1DPdlnADw/view?usp=sharing",
+        "document_url": "https://drive.google.com/file/d/1pbcOsUMlzJD81rEjJ-g5_Uu1DPdlnADw/view?usp=sharing" if rye else "https://drive.google.com/file/d/1bNJKEKimk2nkAKNEj7JJqNKxGzwqC2_G/view?usp=sharing",
         "chunk_model": MODEL_NAME,
         "final_model": "llama3.1:8b",
         "input_params": {
-            "context_length": get_context_length(),
+            "context_length": 32768,
             "chunk_prompt": """Summarize this text chunk clearly and accurately. Include:
 
 1. Main plot developments — What happens in this section?
 2. Character progression and relationships — How do key characters act, change, reveal themselves, and interact with one another?
-3. Avoid unnecessary detail or repetition. Focus on what matters for understanding the story.""",
+3. Avoid unnecessary detail or repetition. Focus on what matters for understanding the story.""" if rye else "Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.",
             "final_summary_prompt": """Synthesize the following chunk summaries into a single, cohesive analysis of the text while ensuring no loss of critical details of the plot, characters, etc. Do not provide any other information in your answer except described above holistic summary of the whole text.
 - Eliminate redundant information and merge similar themes.
 - Identify overarching patterns and insights that emerge when considering the full text holistically.
 
 Provide a final summary that includes:
 1. The complete plot progression from start to finish, capturing all key events and details
-2. All character progression, interactions and relationships.""",
+2. All character progression, interactions and relationships.""" if rye else """Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:
+1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)
+2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them
+3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.""",
             "temp_chunk": temp_chunk,
             "temp_final": temp_final,
             "chunk_size": chunk_size,
