@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-08 17:14:18",
+  "document_url": "https://drive.google.com/file/d/1bNJKEKimk2nkAKNEj7JJqNKxGzwqC2_G/view?usp=sharing",
+  "chunk_model": "llama3.1:8b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": 32768,
+    "chunk_prompt": "Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.",
+    "final_summary_prompt": "Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:\n1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.",
+    "temp_chunk": 0.3,
+    "temp_final": 0.7,
+    "chunk_size": 1500,
+    "chunk_overlap(tokens)": 300.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 10,
+    "avg_chunk_output(tokens)": 341,
+    "avg_chunk_summary_time(sec)": 2.75,
+    "final_response(tokens)": 703
+  },
+  "summary": "**Meeting Report: Business Developments and Partnerships**\n\n**Participants:** Oksana Sorenkova, Max, Artem, Lena, Dobrotsen, KP (Kuznetsov), Maxim, Sasha, Zharikov, Oleg, Lawyers\n\n**10 Key Points of the Meeting:**\n\n1. Agreements and contracts with various clients were discussed, including Alfa Bank, MHI (Mass Selection), Bialowiezh Cheeses (SoftLine contract), and Museum of St. Petersburg History.\n2. The company will proceed with investments through Max, estimated cost around 500,000.\n3. SoftLine contract with Belovezhsky cheeses is agreed and paid by SoftLine.\n4. Museum of St. Petersburg history extension negotiations reduced the initial amount to 115,000.\n5. Invoice prepared for Joint Institutes for Nuclear Research, payment expected before New Year's.\n6. The company aims to create a \"turnkey\" solution for hiring, making it easier and more efficient.\n7. Several pilot projects are underway, including those with companies like Rostex, Panther, and Cherkizovo.\n8. The team discussed the limitations of their current voice assistant implementation and decided to implement a chat-like interface as the first version.\n9. Ircon was mentioned as a client who had received an activation letter from Olya.\n10. The parties agreed on mutual termination of the contract with a client due to ambiguous Technical Specifications (TK) and will clarify the TK through a joint commission or mutual decision.\n\n**Decisions Made, Assigned Tasks, and Deadlines:**\n\n1. **Asus Lite Partnership:** Start working with Asus Lite in the new year, conditional on a pilot project.\n\t* Responsible Person: Max\n\t* Deadline: Not specified\n2. **Pilot Projects:** Coordinate with lawyers for the pilot projects.\n\t* Responsible Person: KP (Kuznetsov)\n\t* Deadline: December 21\n3. **MTS Meeting:** Schedule a meeting with MTS recruiting leaders for tomorrow at 12:30 PM.\n\t* Responsible Person: Dobrotsen\n\t* Deadline: Tomorrow, 12:30 PM\n4. **Feedback Collection:** Collect feedback from the pilot projects and use it to make adjustments.\n\t* Responsible Person: Team\n\t* Deadline: Not specified\n5. **Regional Directors Assessment:** Accompany the assessment of regional directors on December 19-20.\n\t* Responsible Person: Maxim\n\t* Deadline: December 19-20\n6. **Voice Assistant Implementation:** Implement a chat-like interface as the first version of the voice assistant.\n\t* Responsible Person: Oleg\n\t* Deadline: Not specified\n7. **Mutual Termination of Contract:** Prepare a letter for mutual termination of the contract.\n\t* Responsible Person: Len\n\t* Deadline: Implied to be soon, but not specified\n\n**Urgent Tasks and Decisions:**\n\n1. **Payment Expected before New Year's:** Payment expected from Joint Institutes for Nuclear Research by December 31st.\n2. **Pilot Project with Cherkizovo:** Enter the pilot project with Cherkizovo by January 1st.\n\t* Responsible Person: Sasha\n\t* Deadline: January 1st\n3. **Assessment of Regional Directors:** Accompany the assessment of regional directors on December 19-20.\n\t* Responsible Person: Maxim\n\t* Deadline: December 19-20",
+  "total_time(sec)": 34.59,
+  "text_token_count": 11508
+}

@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-08 17:27:40",
+  "document_url": "https://drive.google.com/file/d/1bNJKEKimk2nkAKNEj7JJqNKxGzwqC2_G/view?usp=sharing",
+  "chunk_model": "llama3.1:8b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": 32768,
+    "chunk_prompt": "Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.",
+    "final_summary_prompt": "Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:\n1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.",
+    "temp_chunk": 0.5,
+    "temp_final": 0.7,
+    "chunk_size": 5500,
+    "chunk_overlap(tokens)": 300.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 3,
+    "avg_chunk_output(tokens)": 345,
+    "avg_chunk_summary_time(sec)": 4.04,
+    "final_response(tokens)": 770
+  },
+  "summary": "**Meeting Report**\n\n**Participants:**\nArtem, Max, Oksana Sorenkova (Alfa Bank), Sasha, Dobrotsen, Assessors, Len, and others whose names are not specified in the summaries.\n\n**10 Key Points of the Meeting:**\n\n1. The status of negotiations with Alfa Bank is stable, with two stages planned.\n2. Astra has shown positive results in a pilot project, potentially increasing prices from $1,600 to $2 per user.\n3. The company agreed to meet with MHI tomorrow to discuss a contract for their users.\n4. SoftLine and Bialowiezh cheeses want to extend their contracts.\n5. The Museum of St. Petersburg History wants to extend its contract, but there is no feedback on the results.\n6. The company has decided to proceed with the pilot project with RConf and provide support tools and resources.\n7. A plan for promoting the pilot offer and making it more appealing to potential customers needs to be developed.\n8. Artem needs to meet with Max at 2 pm today to coordinate the Technical Specification (TZ) for technology-related tasks.\n9. The company is still waiting for feedback from Bialowiezh cheeses and MHI, which may affect their decision to extend or change contracts.\n10. There are concerns about market competition and the need to differentiate product offerings.\n\n**Decisions Made:**\n\n1. Proceed with the pilot project with RConf and provide support tools and resources.\n2. Evaluate the potential for using Astra in a more prominent way, such as making it available as a teaser to other companies.\n3. Develop a plan for promoting the pilot offer and making it more appealing to potential customers.\n\n**Assigned Tasks:**\n\n1. Artem:\n\t* Meet with Max at 2 pm today to coordinate the Technical Specification (TZ) for technology-related tasks.\n\t* Develop part of the recruiting process, including coordination with 30 recruiters under his command.\n2. Unknown Person:\n\t* Evaluate and adjust the price based on MHI's request for a more flexible pricing structure.\n\n**Deadlines:**\n\n1. **24th-26th:** Meeting with Oksana Sorenkova and Alfa Bank to discuss further cooperation.\n2. **End of February:** Deadline for implementing the agreed-upon plans with RConf.\n3. **New Year:** Deadline for providing feedback on pilot project results.\n\n**Urgent Tasks and Decisions:**\n\nThe most urgent tasks are:\n\n1. Meeting with MHI tomorrow to discuss a contract for their users (assigned to Artem).\n2. Developing a plan for promoting the pilot offer and making it more appealing to potential customers (assigned to Artem).\n3. Evaluating and adjusting the price based on MHI's request for a more flexible pricing structure (assigned to an unknown person).\n\n**Additional Notes:**\n\n1. The company is still waiting for feedback from Bialowiezh cheeses and MHI, which may affect their decision to extend or change contracts.\n2. There are concerns about market competition and the need to differentiate product offerings.\n\n**Meeting Minutes:**\n\nThe meeting discussed various topics, including the pilot program, user experience, technical implementation, and contract issues with a second party. The parties agreed to terminate the contract due to ambiguities in the Technical Requirements Document (TK). A mutually beneficial solution was proposed, where the first party would provide a new solution that meets the second party's needs.\n\n**Action Items:**\n\n1. Len:\n\t* Prepare a letter explaining the reasons for terminating the contract and proposing a mutually beneficial solution.\n2. Second Party:\n\t* Prepare a motivated refusal to terminate the contract.\n\nNote: There is no clear deadline mentioned in the transcript, but it appears that Len is tasked with preparing a letter before sending it through unofficial channels.",
+  "total_time(sec)": 18.92,
+  "text_token_count": 11508
+}

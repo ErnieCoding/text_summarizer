@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-08 17:24:08",
+  "document_url": "https://drive.google.com/file/d/1bNJKEKimk2nkAKNEj7JJqNKxGzwqC2_G/view?usp=sharing",
+  "chunk_model": "llama3.1:8b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": 32768,
+    "chunk_prompt": "Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.",
+    "final_summary_prompt": "Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:\n1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.",
+    "temp_chunk": 0.5,
+    "temp_final": 0.5,
+    "chunk_size": 5500,
+    "chunk_overlap(tokens)": 100.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 3,
+    "avg_chunk_output(tokens)": 421,
+    "avg_chunk_summary_time(sec)": 4.81,
+    "final_response(tokens)": 774
+  },
+  "summary": "**Meeting Report**\n\n**Participants:** \n\n1. Artem\n2. Max\n3. Artyom\n4. Oleg\n5. Len (mentioned in Chunk 3)\n\n**Key Points and Decisions:**\n\n1. **Alfa Bank:** The status quo is satisfactory, with two stages planned (24th meeting with Oksana Sorenkova and coordination with IT security). No need for further agreements or meetings.\n2. **MHI (Mass Selection):** A separate track has been prepared for negotiation, but it's not clear what will happen next. Artem should prepare a response to MHI's request by tomorrow.\n3. **Technodrone:** Revenue generated 120,000 rubles last week.\n4. **Bialowiezh Cheeses (SoftLine) and Museum of St. Petersburg History:** Both want to extend their contracts. SoftLine contract already signed. Artyom should coordinate with SoftLine and Bialowiez on contract extensions.\n5. **Institute for Nuclear Research (JINR):** Invoice prepared for payment before the New Year.\n6. **Pilot Project:** The pilot project for assessing regional directors was deemed successful, with a goal to run it again in the new year.\n7. **Employee Training:** A corporate university evaluation was conducted, with positive feedback from participants. Plans were discussed to continue the program and make adjustments based on feedback.\n8. **Client Contracts:** Natusi requested termination of their contract due to unclear technical specifications (TK). The company offered three options:\n\t* Terminate the contract and clarify TK\n\t* Appeal to FAS (Russian Federal Antimonopoly Service) for a complaint about competition violation\n\t* Provide a fully working solution that meets Natusi's needs\n9. **Competition Laws:** The company's lawyers have concluded that they can send a complaint to the FAS regarding the violation of competition laws.\n10. **Client Contract Termination:** If the client does not respond, the company will appeal the FAS tender itself as a violation of competition laws.\n\n**Decisions Made:**\n\n1. Run the pilot project again in the new year.\n2. Continue employee training and evaluation programs.\n3. Offer three options for Natusi client contract termination.\n4. Prepare a complaint to the FAS regarding the violation of competition laws.\n5. Mutually terminate the contract with Natusi if possible.\n\n**Assigned Tasks with Deadlines:**\n\n1. Artem:\n\t* Prepare a response to MHI's request by tomorrow (Chunk 1)\n\t* Follow up on Natusi contract termination discussion (Chunk 2, no deadline specified)\n2. Max:\n\t* Meet with Oksana Sorenkova on the 24th and discuss next steps (Chunk 1)\n3. Artyom:\n\t* Coordinate with SoftLine and Bialowiez on contract extensions (Chunk 1)\n4. Len:\n\t* Prepare a letter for the client confirming their decision to provide a fully working solution (Chunk 3)\n\t* Prepare a motivated refusal letter to be sent to the client if they do not accept the proposed solution (Chunk 3)\n5. Oleg:\n\t* Clarify TK with Natusi client (Chunk 2, no deadline specified)\n\n**Urgent Tasks and Decisions:**\n\n1. **Artem:** Respond to MHI's request by tomorrow.\n2. **Max:** Meet with Oksana Sorenkova on the 24th to discuss next steps for Alfa Bank.\n3. **Len:** Prepare a motivated refusal letter to be sent to Natusi client if they do not accept the proposed solution.\n\nNote that some tasks and deadlines are not explicitly mentioned, but the meeting leader emphasized the importance of setting clear goals and timelines.",
+  "total_time(sec)": 21.3,
+  "text_token_count": 11508
+}

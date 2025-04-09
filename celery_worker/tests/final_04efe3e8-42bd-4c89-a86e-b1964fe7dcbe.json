@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-08 17:42:41",
+  "document_url": "https://drive.google.com/file/d/1bNJKEKimk2nkAKNEj7JJqNKxGzwqC2_G/view?usp=sharing",
+  "chunk_model": "llama3.1:8b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": 32768,
+    "chunk_prompt": "Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.",
+    "final_summary_prompt": "Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:\n1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.",
+    "temp_chunk": 0.5,
+    "temp_final": 0.5,
+    "chunk_size": 7500,
+    "chunk_overlap(tokens)": 200.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 2,
+    "avg_chunk_output(tokens)": 386,
+    "avg_chunk_summary_time(sec)": 5.21,
+    "final_response(tokens)": 589
+  },
+  "summary": "**Meeting Report**\n\n**Date:** [Insert Date]\n**Attendees:** Artem, Max, Dobrotsen, Len, and other relevant team members.\n\n**1. Key Points of the Meeting:**\n\n1. Alfa Bank's status is good, with two stages in the process.\n2. MHI wants to agree on the total amount for their users.\n3. Technodrone has expanded twice in the last week.\n4. SoftLine and Belovezhsky Cheeses are signing a contract.\n5. The Museum of St. Petersburg History wants to extend their agreement.\n6. The Institute for Nuclear Research needs to pay before the New Year.\n7. RConf pilot is going well, but the customer wants a ready-made solution rather than developing it themselves.\n8. Assessment Process aims to reduce time spent on report preparation by assessors and assistants.\n9. Voice Assistant development allows users to ask questions without logging in every time.\n10. Contract termination with M2C due to ambiguities in TK and potential competition issues.\n\n**2. Decisions Made:**\n\n1. Sign a contract with SoftLine.\n2. Prepare an offer invoice for the Institute for Nuclear Research.\n3. Continue RConf pilot, focusing on showing a ready-made solution rather than developing it themselves.\n4. Provide a fully working solution to M2C, which would cover their needs and serve them faithfully.\n5. If M2C does not want this option, they may choose to mutually terminate the contract or allow the company to appeal FAS on competition issues.\n\n**3. Assigned Tasks with Deadlines:**\n\n1. Artem:\n\t* Finalize RConf configuration (Deadline: Immediate)\n\t* Adjust templates to meet customer's needs (Deadline: Within 24 hours)\n2. Max:\n\t* Improve API phones for Technodrone (Deadline: Before the next meeting)\n\t* Come up with options for implementing Voice Assistant (Deadline: Within 3 days)\n3. Dobrotsen:\n\t* Complete tasks during assessment process within allocated time (Deadline: Within 7-8 hours per day for two days)\n4. Len:\n\t* Prepare a letter for M2C regarding contract termination and potential FAS appeal (Deadline: Within 24 hours)\n\n**Urgent Tasks and Decisions:**\n\n1. **Most Urgent:** Pay by Belovezhsky Cheeses before the New Year (Deadline: December 31st)\n2. **High Priority:** Complete tasks during assessment process within allocated time (Deadline: Within 7-8 hours per day for two days)\n3. **Important but Not Time-Sensitive:** Sign a contract with Alfa Bank once agreed (Deadline: As soon as possible)\n\nNote: The meeting's duration and the tasks assigned were not explicitly stated, but based on the conversation, it seems like the team was trying to finalize decisions and assign tasks to team members within the same meeting.",
+  "total_time(sec)": 15.72,
+  "text_token_count": 11508
+}

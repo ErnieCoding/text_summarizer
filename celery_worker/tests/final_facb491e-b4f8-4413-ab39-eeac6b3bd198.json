@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-08 17:47:14",
+  "document_url": "https://drive.google.com/file/d/1bNJKEKimk2nkAKNEj7JJqNKxGzwqC2_G/view?usp=sharing",
+  "chunk_model": "llama3.1:8b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": 32768,
+    "chunk_prompt": "Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.",
+    "final_summary_prompt": "Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:\n1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.",
+    "temp_chunk": 0.5,
+    "temp_final": 0.7,
+    "chunk_size": 8000,
+    "chunk_overlap(tokens)": 200.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 2,
+    "avg_chunk_output(tokens)": 484,
+    "avg_chunk_summary_time(sec)": 6.36,
+    "final_response(tokens)": 644
+  },
+  "summary": "**Meeting Report: Business Meeting Summary**\n\n**1. Key Points of the Meeting (10)**\n\n1. The team discussed the status of Alfa Bank's project, which is proceeding according to plan.\n2. Artem mentioned that the client has agreed on the terms and conditions, but there are still some minor issues to be addressed before signing commercial contracts.\n3. The team discussed the technical aspects of the project with Oksana Sorenkova from Alfa Bank.\n4. There was a discussion about the possibility of adjusting the price for the client's request to add more features.\n5. Artem mentioned that he has already agreed on the contract terms and conditions with the client, and now it's just a matter of signing.\n6. The team discussed the progress of other projects, including Bialowieza Cheeses, Museum of St. Petersburg History, and Institute for Nuclear Research.\n7. Artem needs to finalize the contract agreement with Alfa Bank.\n8. He also needs to get approval for the offer invoice from the Institute for Nuclear Research before the end of the year.\n9. The team will meet with Rostec next week to discuss their progress and provide feedback on their pilot project.\n10. The meeting concluded with an agreement on a specific text for a letter to be sent to clients, offering a mutually beneficial solution.\n\n**2. Decisions Made, Assigned Tasks, and Deadlines**\n\n**Decisions:**\n\n1. Proceed with the Alfa Bank project as planned.\n2. Adjust the price for the client's request to add more features.\n3. Terminate the contract due to ambiguity in the Technical Specification (TK) or provide a fully working solution that meets the client's needs.\n\n**Assigned Tasks and Deadlines:**\n\n1. Artem:\n\t* Finalize the contract agreement with Alfa Bank\n\t* Get approval for the offer invoice from the Institute for Nuclear Research before December 31st\n2. Max:\n\t* Think about options to improve the voice assistant's functionality and create a conditional ChatGPT-like system with preinstalled prompts\n3. Len:\n\t* Send the activation letter to clients (Deadline: Not specified)\n4. Someone (not specified):\n\t* Write a letter confirming mutual dissolution of the contract, which will be sent through unofficial channels\n\n**Urgent Tasks and Decisions:**\n\n1. Finalize the contract agreement with Alfa Bank (Artem, Deadline: December 31st)\n2. Get approval for the offer invoice from the Institute for Nuclear Research before December 31st (Artem)\n3. Send the activation letter to clients (Len, Deadline: Not specified)\n\n**Meeting Schedule:**\n\n1. Next week: Meeting with Rostec to discuss their progress and provide feedback on their pilot project\n2. December 26th: Meeting with Oksana Sorenkova from Alfa Bank to discuss technical aspects of the project\n3. December 27th (or 28th): Meeting at MTS Linky to discuss the results of the pilot project\n\nNote: Some tasks and deadlines are not explicitly mentioned, but it is assumed that they should be completed promptly to move forward with the projects.",
+  "total_time(sec)": 18.74,
+  "text_token_count": 11508
+}

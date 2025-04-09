@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-08 17:31:15",
+  "document_url": "https://drive.google.com/file/d/1bNJKEKimk2nkAKNEj7JJqNKxGzwqC2_G/view?usp=sharing",
+  "chunk_model": "llama3.1:8b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": 32768,
+    "chunk_prompt": "Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.",
+    "final_summary_prompt": "Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:\n1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.",
+    "temp_chunk": 0.3,
+    "temp_final": 0.7,
+    "chunk_size": 6000,
+    "chunk_overlap(tokens)": 300.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 2,
+    "avg_chunk_output(tokens)": 383,
+    "avg_chunk_summary_time(sec)": 3.83,
+    "final_response(tokens)": 728
+  },
+  "summary": "**Meeting Minutes**\n\n**Attendees:**\n- Alfa Bank team members\n- Oksana Sorenkova\n- Artem\n- Max\n- Artyom\n- Sasha\n- KP (KP)\n- Dobrotsen\n- Maxim\n- Oleg\n- Len\n\n**Key Points and Decisions:**\n\n1. The meeting involved discussions on ongoing projects with Alfa Bank, MHI, and other clients.\n2. A meeting schedule was agreed upon with Oksana Sorenkova from Alfa Bank.\n3. Review of project status, including pricing packages for 2.5 thousand users with VKS plus a limit on report generation for MHI.\n4. Artem discussed his experience with Astra, highlighting its ease of use and potential to reduce workload in hiring top specialists.\n5. Pilot programs were reviewed with Rostex, Panther, and SoftLine companies.\n6. Contracts for MHI's technical part should be agreed upon before the new year.\n7. Prices for MHI will be adjusted based on their request to grow and potentially reduce artificial intelligence knocks.\n8. A pilot offer was prepared with specific goals and deadlines to increase engagement from interested parties.\n9. Pilot programs were tied to tangible results, such as awards or reports.\n10. Feedback on Astra's use was requested.\n\n**Decisions Made:**\n\n1. To agree on contracts for MHI's technical part before the new year.\n2. To adjust prices for MHI based on their request to grow and potentially reduce artificial intelligence knocks.\n3. To prepare a pilot offer with specific goals and deadlines to increase engagement from interested parties.\n4. To tie the pilot program to tangible results, such as awards or reports.\n\n**Urgent Tasks and Decisions:**\n\n1. **Immediate:** KP will send an email to Zharikova about the maximum number of recruiters needed (263).\n2. **December 19-20:** Dobrotsen will conduct training.\n3. **December 21:** Sasha will set up a pilot project with the goal of raising 30%.\n4. **Next year conditionally through the pilot:** The next year's projects are dependent on successful completion of the pilot program.\n\n**Action Items and Deadlines:**\n\n1. **Artem:** Continue working with Astra, provide feedback on its use.\n\t* Deadline: No specific deadline mentioned\n2. **Team:** Finalize contracts for MHI's technical part.\n\t* Deadline: Before the new year\n3. **Max:** Coordinate Technology Zone (TZ) for MHI.\n\t* Deadline: Before the new year\n4. **Artyom:** Interview top positions in Head of Recruitment and HRD, starting with 5-10 interviews.\n\t* Deadline: No specific deadline mentioned\n5. **Artem:** Lead the recruitment process for Rostex and Panther.\n\t* Deadline: No specific deadline mentioned\n6. **KP:** Send an email to Zharikova about the maximum number of recruiters needed (263).\n\t* Deadline: Immediate\n7. **Dobrotsen:** Conduct training on December 19-20.\n\t* Deadline: December 19-20\n8. **Maxim:** Work on creating a chat-based voice assistant.\n\t* Deadline: No specific deadline mentioned\n9. **Oleg:** Review and prepare a draft for training or safety concept.\n\t* Deadline: No specific deadline mentioned\n10. **Len:** Send an activation letter to Natusi (M2C) through unofficial channels.\n\t* Deadline: No specific deadline mentioned",
+  "total_time(sec)": 13.98,
+  "text_token_count": 11508
+}

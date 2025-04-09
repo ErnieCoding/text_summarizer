@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-08 17:42:22",
+  "document_url": "https://drive.google.com/file/d/1bNJKEKimk2nkAKNEj7JJqNKxGzwqC2_G/view?usp=sharing",
+  "chunk_model": "llama3.1:8b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": 32768,
+    "chunk_prompt": "Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.",
+    "final_summary_prompt": "Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:\n1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.",
+    "temp_chunk": 0.3,
+    "temp_final": 0.7,
+    "chunk_size": 7500,
+    "chunk_overlap(tokens)": 200.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 2,
+    "avg_chunk_output(tokens)": 439,
+    "avg_chunk_summary_time(sec)": 6.01,
+    "final_response(tokens)": 718
+  },
+  "summary": "**Business Meeting Report**\n\n**Attendees:** (Participants' names are mentioned in the chunk summaries)\n\n1. Dobrotsen\n2. Maxim\n3. Len\n4. Olya\n5. Zharikov\n6. SB (Department/Team)\n7. Lawyers for Rostec's pilot project\n8. Recruits leaders\n9. Alexei Yurchin (M2C Client)\n\n**Key Points:**\n\n1. The team discussed their projects and progress with Alfa Bank, MHI, Rostex, and other clients.\n2. They also talked about the Astra pilot project and its potential to reduce workload for highly qualified specialists in hiring processes.\n3. The team agreed on a plan to start implementing the Astra tool in certain companies, starting with Cherkizovo and Rostec.\n4. Client (M2C) has an ambiguous term of service (TK), which is causing issues.\n5. The company wants to clarify the TK and provide a revised solution that meets M2C's needs or mutually terminate the contract if agreed by M2C.\n\n**Decisions Made:**\n\n1. Proceed with the pilot projects in Cherkizovo and Rostec.\n2. Coordinate with SB (Department/Team) and lawyers for Rostec's pilot project.\n3. Schedule a meeting at MTS Linky for tomorrow at 12:30, including Zharikov, three recruiting leaders, and other stakeholders.\n4. Prepare a letter to send to M2C outlining their proposal for mutual termination or providing a revised solution.\n\n**Assigned Tasks and Deadlines:**\n\n1. Dobrotsen (Training on December 21)\n\t* Assessment of four regional directors\n\t* Tasks for each day of the assessment process\n\t* Deadline: Not specified\n2. Maxim and colleagues from development\n\t* Helping with the assessment process and technical aspects\n\t* Deadline: Not specified\n3. Len\n\t* Prepare a letter to send to M2C outlining their proposal for mutual termination or providing a revised solution\n\t* Deadline: December 20th\n4. Olya\n\t* Send an activation letter to Natusi\n\t* Deadline: Not specified\n\n**Urgent Tasks and Decisions:**\n\n1. Mutual termination of the contract with M2C due to ambiguous terms of service.\n2. Provide a revised solution that meets M2C's needs or appeal to the FAS for a violation of competition law if refused by M2C.\n\n**Meeting Minutes:**\n\n* The team emphasized the importance of having clear deadlines and goals for each project to ensure progress and success.\n* Feedback and communication throughout the pilot projects are crucial to make adjustments and improvements as needed.\n\n**Action Items:**\n\n1. Max will explore options for improving the voice assistant feature.\n2. Len will prepare a letter to send to M2C outlining their proposal.\n3. Olya will send an activation letter to Natusi.\n4. The company will follow up with M2C regarding their proposal and next steps.\n\n**Open Issues:**\n\n1. Feedback from Zharikov on the MTS pilot project is still pending.\n2. The team needs to come prepared with ready-made proposals for the meeting at MTS Linky.\n3. The assessment process for Dobrotsen's training has been planned, but there are some technical aspects to be worked out.\n\nNote: Some parts of the conversation may not be directly related to the key points, decisions made, or assigned tasks.",
+  "total_time(sec)": 18.9,
+  "text_token_count": 11508
+}

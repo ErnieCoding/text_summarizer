@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-08 17:40:11",
+  "document_url": "https://drive.google.com/file/d/1bNJKEKimk2nkAKNEj7JJqNKxGzwqC2_G/view?usp=sharing",
+  "chunk_model": "llama3.1:8b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": 32768,
+    "chunk_prompt": "Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.",
+    "final_summary_prompt": "Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:\n1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.",
+    "temp_chunk": 0.5,
+    "temp_final": 0.7,
+    "chunk_size": 7000,
+    "chunk_overlap(tokens)": 300.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 2,
+    "avg_chunk_output(tokens)": 436,
+    "avg_chunk_summary_time(sec)": 5.53,
+    "final_response(tokens)": 867
+  },
+  "summary": "**Meeting Minutes**\n\n**Date:** [Not Specified]\n\n**Attendees:**\n\n* Dobrotsen\n* KP (no first name mentioned)\n* Claude\n* Artem (or Sasha)\n* Max\n* Len\n\n**Summary:**\n\nThe business meeting covered various topics, including Alfa Bank, Bialowiezh cheeses (SoftLine), the Museum of St. Petersburg History, and RConf. The team discussed their active projects, such as Astra, and potential pilot programs with companies like Cherkizovo, Rostec, MTS, and RConf.\n\n**10 Key Points:**\n\n1. Alfa Bank is moving forward, but concerns exist about the project's scope and timelines.\n2. Bialowiezh cheeses (SoftLine) have a lost contract that will be re-signed soon.\n3. The Museum of St. Petersburg History wants to extend their contract without a reduction in payment.\n4. RConf is interested in using Astra for hiring and evaluation purposes, potentially reducing workload on recruiters.\n5. Cherkizovo, Rostec, MTS, and RConf are potential pilot program participants.\n6. The team will focus on smaller companies first, starting with Cherkizovo.\n7. The next step for the MTS pilot is to meet with recruiting leaders tomorrow at 12:30 PM.\n8. The team will work on getting feedback from Zharikov and other pilots.\n9. An assessment event will take place on December 19-20 for four regional directors, where tasks will be prepared by the development team.\n10. A contract with M2C may be terminated due to unclear Technical Specification.\n\n**Decisions Made:**\n\n1. The team will work on smaller companies first, starting with Cherkizovo.\n2. Meet with recruiting leaders at MTS tomorrow at 12:30 PM for the next step of the pilot program.\n3. Prepare proposals for the next meeting with MTS.\n4. Accompany the assessment event and help process pictures, graphs, or photos.\n\n**Assigned Tasks and Deadlines:**\n\n1. Fill out a checklist for PERS data and pass it to Rostec and Cherkizovo (no specific deadline mentioned).\n2. Prepare proposals for the next meeting with MTS.\n3. Accompany the assessment event on December 19-20, where four regional directors will be evaluated.\n4. Dobrotsen is responsible for training at 12 PM today.\n5. KP sent an email to Zharikova with a maximum of 100 recruiters needed for the MTS pilot.\n6. Claude will accompany the assessment event and help process pictures, graphs, or photos.\n7. The development team will work on preparing tasks for the assessment event.\n8. Artem (or Sasha) will work on creating individual files for presentations by next meeting or before the assessment event on December 19-20.\n9. Max is tasked with developing a voice assistant interface allowing users to ask questions without streaming, no specific deadline mentioned.\n10. Len will send a letter to M2C regarding contract termination, prepared in accordance with the team's discussion, within a few days of the meeting.\n\n**Urgent Tasks and Decisions:**\n\nBased on deadlines, the most urgent tasks are:\n\n1. Meet with recruiting leaders at MTS tomorrow at 12:30 PM for the next step of the pilot program ( Deadline: Tomorrow, 12:30 PM)\n2. Send a letter to M2C regarding contract termination (Deadline: Within a few days of the meeting)\n3. Accompany the assessment event and help process pictures, graphs, or photos on December 19-20 (Deadline: December 19-20)\n\n**Responsibilities:**\n\n1. Dobrotsen - Training at 12 PM today\n2. KP - Email to Zharikova with maximum of 100 recruiters needed for MTS pilot\n3. Claude - Accompany assessment event and help process pictures, graphs, or photos\n4. Artem (or Sasha) - Create individual files for presentations by next meeting or before the assessment event on December 19-20\n5. Max - Develop voice assistant interface allowing users to ask questions without streaming\n6. Len - Send letter to M2C regarding contract termination",
+  "total_time(sec)": 15.89,
+  "text_token_count": 11508
+}

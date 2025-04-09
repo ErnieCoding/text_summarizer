@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-08 17:34:16",
+  "document_url": "https://drive.google.com/file/d/1bNJKEKimk2nkAKNEj7JJqNKxGzwqC2_G/view?usp=sharing",
+  "chunk_model": "llama3.1:8b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": 32768,
+    "chunk_prompt": "Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.",
+    "final_summary_prompt": "Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:\n1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.",
+    "temp_chunk": 0.5,
+    "temp_final": 0.5,
+    "chunk_size": 6500,
+    "chunk_overlap(tokens)": 200.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 2,
+    "avg_chunk_output(tokens)": 378,
+    "avg_chunk_summary_time(sec)": 3.56,
+    "final_response(tokens)": 709
+  },
+  "summary": "**Meeting Minutes**\n\n**Date:** [Not specified]\n**Attendees:**\n1. Artem\n2. KP (Ksenia Petrova)\n3. Dobrotsen\n4. Max\n5. Zharikov (initiator)\n\n**10 Key Points of the Meeting**\n\n1. The team discussed ongoing projects and pilot implementations with various companies, including Alfa Bank and MHI.\n2. Artem reported that the Alfa Bank project was proceeding as planned, with two stages: one on the 26th and another on the 24th-26th.\n3. The team agreed to start the pilot with Cherkizovo in January for RConf.\n4. A contract issue with SoftLine was resolved, and payment was confirmed.\n5. The Joint Institutes for Nuclear Research were expected to pay 285,000 before the New Year.\n6. Feedback from Nezvanov (from the Institute) about their experience with the product was discussed.\n7. Artem will continue working on the RConf pilot implementation.\n8. A deadline of December 21st for the pilot was set, and if it's not met, they can take it next time.\n9. The team decided to terminate the contract with M2C due to ambiguity in their technical specification (TK).\n10. The team will hold an assessment of four regional directors on December 19-20.\n\n**Decisions Made, Assigned Tasks, and Deadlines**\n\n1. Artem will continue working on the RConf pilot implementation.\n\t* Deadline: No specific deadline mentioned; however, a deadline of December 21st for the pilot was set if it's not met, they can take it next time.\n2. Artem will develop part of the recruiting process for RConf.\n\t* Deadline: Not specified\n3. A meeting with Zharikov (initiator) and three recruiting leaders from MTS is scheduled for tomorrow at 12:30 PM.\n\t* Assigned task: Artem needs to fill out the checklist for PERS data and pass it on to MTS, The team should come prepared with ready-made proposals for the meeting with Zharikov.\n4. KP will send an activation letter to M2C.\n\t* Deadline: Not specified\n5. Dobrotsen will prepare a report by the end of December.\n\t* Deadline: End of December\n6. Max will come up with options for improving the user experience of the voice assistant.\n\t* Deadline: Not specified\n\n**Urgent Tasks and Decisions**\n\n1. **Termination of Contract with M2C**: The team decided to terminate the contract due to ambiguity in their TK, and a friendly dissolution of the contract is proposed instead.\n2. **RConf Pilot Implementation**: Artem will continue working on the RConf pilot implementation, and a deadline of December 21st for the pilot was set if it's not met, they can take it next time.\n3. **Assessment Process**: The team will hold an assessment of four regional directors on December 19-20, and Dobrotsen will be responsible for preparing a report by the end of December.\n\n**Most Urgent Tasks**\n\n1. Artem needs to fill out the checklist for PERS data and pass it on to MTS (by tomorrow).\n2. Dobrotsen needs to prepare a report by the end of December.\n3. The team should come prepared with ready-made proposals for the meeting with Zharikov (tomorrow at 12:30 PM).",
+  "total_time(sec)": 13.25,
+  "text_token_count": 11508
+}

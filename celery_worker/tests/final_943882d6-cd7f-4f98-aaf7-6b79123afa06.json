@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-08 17:40:32",
+  "document_url": "https://drive.google.com/file/d/1bNJKEKimk2nkAKNEj7JJqNKxGzwqC2_G/view?usp=sharing",
+  "chunk_model": "llama3.1:8b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": 32768,
+    "chunk_prompt": "Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.",
+    "final_summary_prompt": "Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:\n1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.",
+    "temp_chunk": 0.3,
+    "temp_final": 0.5,
+    "chunk_size": 7500,
+    "chunk_overlap(tokens)": 100.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 2,
+    "avg_chunk_output(tokens)": 369,
+    "avg_chunk_summary_time(sec)": 4.89,
+    "final_response(tokens)": 651
+  },
+  "summary": "**Meeting Report**\n\n**Attendees:**\n\n* Oksana Sorenkova\n* Director of IT Security\n* Artem\n* Max\n* Dobrotsen\n* Artyom (or Artem)\n\n**Key Points:**\n\n1. The team is discussing ongoing projects with Alfa Bank, MHI, and Rostex.\n2. Two main stages need to be completed before signing commercial contracts:\n\t* Coordination with Oksana Sorenkova and Director of IT Security\n\t* Finalizing the technical part\n3. Waiting for a response from Alfa Bank regarding their proposal.\n4. MHI has expressed interest in a customized solution, and the team is discussing pricing options.\n5. Rostex has not provided any feedback on the pilot project.\n6. A meeting with Zharikov from MTS will be held tomorrow at 12:30 PM.\n7. The assessment process optimization was discussed, including using artificial intelligence to create reports for assessors.\n8. Implementing a voice assistant feature in the platform was also discussed.\n\n**Decisions Made:**\n\n1. The team agreed to enter the pilot stage in Cherkizovo in January, pending coordination with SB and lawyers.\n2. Allow assessors to use artificial intelligence to generate reports, saving them time and effort.\n3. Implement a voice assistant feature in the platform.\n\n**Assigned Tasks with Deadlines:**\n\n1. **Urgent Tasks**\n\t* Artem (or Artyom): Finalize the checklist for PERS data and pass it to Rostex by **December 15th**.\n\t* Max: Coordinate with Dobrotsen regarding the training schedule, deadline not specified.\n\t* Len: Prepare a letter for the M2C team regarding mutual termination of the contract and providing a solution that meets their needs, deadline not specified.\n\t* Oleg: Write notes on the meeting discussion, deadline not specified.\n2. **Ongoing Tasks**\n\t* Dobrotsen: Conduct training on December 20th using a customized competency model.\n\t* Max: Think about options for implementing a voice assistant feature and come up with solutions, no deadline specified.\n\t* Artem and Sasha: Entrust tasks to participants, rather than doing them themselves, no deadline specified.\n\n**Decisions Made with Urgent Deadlines:**\n\n1. Enter the pilot stage in Cherkizovo in January (pending coordination) - **January**\n2. Training for regional directors on December 20th using a customized competency model - **December 20th**\n3. Assessment process completion by the end of December - **December 31st**\n\n**Action Items:**\n\n* Artem and Sasha to entrust tasks to participants rather than doing them themselves.\n* Max to think about options for implementing a voice assistant feature and come up with solutions.\n* Len to prepare a letter for the M2C team regarding mutual termination of the contract and providing a solution that meets their needs.\n\n**Notes:**\n\n* The Technical Specification (TK) for the M2C project is ambiguous and needs clarification.\n* The team considered terminating the contract with M2C due to the ambiguity in the TK and providing a new solution that meets their needs.",
+  "total_time(sec)": 15.41,
+  "text_token_count": 11508
+}

@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-08 17:21:00",
+  "document_url": "https://drive.google.com/file/d/1bNJKEKimk2nkAKNEj7JJqNKxGzwqC2_G/view?usp=sharing",
+  "chunk_model": "llama3.1:8b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": 32768,
+    "chunk_prompt": "Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.",
+    "final_summary_prompt": "Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:\n1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.",
+    "temp_chunk": 0.3,
+    "temp_final": 0.5,
+    "chunk_size": 2000,
+    "chunk_overlap(tokens)": 300.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 7,
+    "avg_chunk_output(tokens)": 355,
+    "avg_chunk_summary_time(sec)": 3.13,
+    "final_response(tokens)": 897
+  },
+  "summary": "Here is the synthesized report:\n\n**Meeting Report**\n\n**Participants:**\n\n1. Oksana Sorenkova\n2. Artem\n3. Max\n4. Nezvanov\n5. Artyom\n6. Lena\n7. Sasha\n8. Dobrotsen\n9. Claude\n10. Alexei\n11. Maxim\n12. KP (no last name mentioned)\n13. Zharikov\n\n**Key Points:**\n\n1. The Alfa Bank meeting is scheduled for the 24th-26th, where Oksana Sorenkova will attend.\n2. Discussions with MHI (Mobile Handset Institute) are ongoing about providing messenger and VKS services for 2.5 thousand users at a cost of 4 million rubles.\n3. The status of negotiations with Alfa Bank remains unchanged, with a possible increase in total amount from 1.6 million to 2 million rubles.\n4. SoftLine has already paid for the Bialowiezh cheeses contract, and now they need to pay us.\n5. The Museum of St. Petersburg History wants to extend their contract, but there is a 25% price increase.\n6. The Institute for Nuclear Research (Joint Institutes) needs to pay 285,000 rubles within two years, with an invoice prepared by Artem.\n\n**Decisions Made:**\n\n1. The meeting will wait until the 24th-26th for Oksana Sorenkova's arrival.\n2. Discussions with Alfa Bank can proceed on technical details without requiring attendance from Artem or others.\n3. The team will not collect special fees from AGI and other scientific institutions.\n4. The team will work with Nezvanov to discuss their needs and requirements.\n\n**Assigned Tasks:**\n\n1. **Artem**: Wait for the 24th-26th for further instructions regarding Alfa Bank discussions.\n2. **Max**: Meet with the team at 2 pm to coordinate the Technical Zone (TZ).\n3. **Nezvanov**: Discuss quotes from the Institute's employees with Artyom.\n4. **Artyom**: Conduct 5-10 interviews for top positions, aiming to have a digital profile ready by the end of the year (with a possible one-week extension if needed).\n5. **Lena**: Add Nezvanov to HRD's supervisor office yesterday.\n6. **Alexei**: Connect the team members to the development server.\n\n**Urgent Tasks and Decisions:**\n\n1. Pay 285,000 RUB in two years (Institute for Nuclear Research).\n2. Pay before the New Year (Institute for Nuclear Research).\n3. Confirm whether the first main goal is to write down everything properly on the first day of assessment (Dobrotsen).\n4. Process pictures, graphs, or photos into a written format according to their schedule (Claude).\n5. Sort out room division and determine which tasks are assigned for each day (Alexei).\n\n**Meeting Minutes:**\n\n1. The team discussed several issues with the pilot program and came up with possible solutions to make it more engaging and successful.\n2. They agreed to start the next year's activities through the pilot program.\n3. Four companies (Cherkizovo, Rostec, MTS, and Asus Lite) will participate in the pilot.\n\n4. The team discussed a contract issue with Ircon, where they are requesting clarification on the Technical Specification (TK) and considering terminating the contract.\n\n5. The team presented three options:\n\t1. Mutually terminate the contract to clarify the TK and fulfill Ircon's needs.\n\t2. Appeal to the FAS (Federal Antimonopoly Service) for a violation of competition laws, citing that the technical specification is identical to others used in other organizations.\n\t3. Provide a fully working solution that meets Ircon's needs.\n\n6. The team will send an activation letter to Ircon, confirming their readiness to provide a full-featured solution and offering to consider terminating the contract due to ambiguity in the TK.\n\n7. If Ircon does not accept this offer, the team's lawyers will prepare a complaint to be submitted to the FAS.\n\n**Meeting Schedule:**\n\n* The Alfa Bank meeting is scheduled for the 24th-26th.\n* A meeting at MTS Linky is scheduled for tomorrow at 12:30.",
+  "total_time(sec)": 27.66,
+  "text_token_count": 11508
+}

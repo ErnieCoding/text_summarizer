@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-08 17:26:27",
+  "document_url": "https://drive.google.com/file/d/1bNJKEKimk2nkAKNEj7JJqNKxGzwqC2_G/view?usp=sharing",
+  "chunk_model": "llama3.1:8b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": 32768,
+    "chunk_prompt": "Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.",
+    "final_summary_prompt": "Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:\n1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.",
+    "temp_chunk": 0.3,
+    "temp_final": 0.5,
+    "chunk_size": 5500,
+    "chunk_overlap(tokens)": 300.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 3,
+    "avg_chunk_output(tokens)": 349,
+    "avg_chunk_summary_time(sec)": 4.11,
+    "final_response(tokens)": 618
+  },
+  "summary": "Here's a synthesized report of the business meetings:\n\n**Meeting Minutes**\n\nAttendees:\n- Oksana Sorenkova (Alfa Bank)\n- Elizabeth\n- Max\n- Artyom\n- Artem\n- Sasha\n- Olya\n- Len\n- Other participants from SoftLine, Nezvanov, and Natusi\n\n**10 Key Points of the Meeting:**\n\n1. The team is working on several ongoing projects, including Alfa Bank's project.\n2. Coordination delays have been caused by Oksana Sorenkova's unavailability until after a week.\n3. An API for SoftLine users will be offered at a cost of 4 million rubles, depending on the package chosen.\n4. The team will help Belovezhsky cheeses (SoftLine) extend their contract.\n5. A potential project with Nezvanov needs to discuss the timeline.\n6. The pilot project is struggling due to unclear goals and deadlines.\n7. A competency model has been created for the assessment process, which will evaluate four regional directors over two days.\n8. The voice assistant needs improvement in terms of context and prompt handling.\n9. Natusi's contract may be terminated due to unclear TK.\n10. The company is willing to terminate contracts if they are ambiguous or unclear.\n\n**Decisions Made:**\n\n1. Continue working on Alfa Bank project despite coordination delays.\n2. Offer SoftLine an API for their users.\n3. Help Belovezhsky cheeses (SoftLine) extend their contract.\n4. Discuss potential project with Nezvanov and determine a timeline.\n5. Set up joint commission with Natusi to clarify TK before terminating the contract.\n\n**Assigned Tasks and Deadlines:**\n\n1. **Elizabeth**: Meet with Alfa Bank on December 24th to coordinate the project.\n2. **Artem**: Prepare an invoice for the Institute of Nuclear Research (285,000 rubles).\n3. **Max**: Work with Artem to improve the API for SoftLine.\n4. **Artyom**: Develop a package for Nezvanov and determine a timeline for the potential project.\n5. **Sasha**: Prioritize Cherkizovo's pilot project for January entry.\n6. **Olya**: Send an activation letter to Natusi.\n7. **Len**: Prepare a letter confirming termination of contract with Natusi.\n\n**Urgent Tasks and Decisions:**\n\n1. **Elizabeth**: Meet with Alfa Bank on December 24th (Deadline: December 24th)\n2. **Artem**: Complete invoice preparation for the Institute of Nuclear Research (No deadline specified)\n3. **Sasha**: Prioritize Cherkizovo's pilot project for January entry (Deadline: Before New Year's)\n\nNote that the deadlines for some tasks are not explicitly mentioned in the summary, so I have assumed based on the context and content. Additionally, some minor tasks and side discussions were omitted from this report to focus on the main points and decisions made during the meeting.",
+  "total_time(sec)": 15.01,
+  "text_token_count": 11508
+}

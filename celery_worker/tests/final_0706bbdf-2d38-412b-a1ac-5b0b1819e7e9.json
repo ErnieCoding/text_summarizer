@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-08 17:37:27",
+  "document_url": "https://drive.google.com/file/d/1bNJKEKimk2nkAKNEj7JJqNKxGzwqC2_G/view?usp=sharing",
+  "chunk_model": "llama3.1:8b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": 32768,
+    "chunk_prompt": "Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.",
+    "final_summary_prompt": "Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:\n1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.",
+    "temp_chunk": 0.5,
+    "temp_final": 0.7,
+    "chunk_size": 7000,
+    "chunk_overlap(tokens)": 100.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 2,
+    "avg_chunk_output(tokens)": 385,
+    "avg_chunk_summary_time(sec)": 3.62,
+    "final_response(tokens)": 681
+  },
+  "summary": "**Meeting Report**\n\n**Date:** [Insert Date]\n\n**Attendees:**\n\n* Artem\n* Max\n* Dobrotsen\n* Oksana Sorenkova (involved via coordination)\n* Nezvanov (involved via coordination)\n\n**Key Points of the Meeting:**\n\n1. **Artem's Team and Alfa Bank Project**: Artem's team is working with Alfa Bank on an AI-powered recruitment tool, with two stages to complete before a decision.\n2. **Pilot Programs**: Four companies are participating in the pilot program (Cherkizovo, Rostec, Mine, and MTS), with feedback from Zharikov pending for the MTS pilot.\n3. **Assessment Process**: The team agreed on a plan for evaluating tasks using a competency model with scores, to be completed by December 20th.\n4. **Product Development**: Implementing a chat-like voice assistant feature in their product, allowing users to ask questions without re-registering.\n5. **Contract Termination**: Terminating the contract with M2C due to ambiguity in technical specification (TK), and offering a friendly dissolution.\n6. **Client Communication**: Creating letters to clients explaining reasons for terminating contracts.\n7. **Project Status**: The team is waiting for confirmation from Alfa Bank to proceed, and preparing numbers and costs for the next step in the pilot program with MTS.\n8. **Task Coordination**: Max will coordinate with Oksana Sorenkova on December 24th-26th.\n9. **Nezvanov's Involvement**: The team will coordinate with Nezvanov to get quotes from the Joint Institutes for Nuclear Research.\n10. **Next Steps**: Preparing an offer invoice for the Institute of Nuclear Research, testing the hypothesis that adding a deadline to the pilot program will increase participation.\n\n**Decisions Made:**\n\n* Artem will prepare an offer invoice for the Institute of Nuclear Research and coordinate with Nezvanov on getting quotes.\n* Max will create a letter to the client explaining the reasons for terminating the contract with M2C.\n* The team will work together to create a report based on the assessment results by December 20th.\n\n**Assigned Tasks and Deadlines:**\n\n1. **Artem**: Prepare an offer invoice for the Institute of Nuclear Research, coordinate with Nezvanov on getting quotes (Deadline: ASAP)\n2. **Max**:\n\t* Create a letter to M2C explaining reasons for terminating contract (Deadline: Within 1 week)\n\t* Coordinate with Oksana Sorenkova on December 24th-26th\n3. **Dobrotsen**: Prepare numbers and costs for the next step in the pilot program with MTS (Deadline: ASAP)\n4. **Olya**: Send out an activation letter to M2C after the meeting (Deadline: Within 1 week)\n\n**Urgent Tasks and Decisions:**\n\n* Complete the offer invoice for the Institute of Nuclear Research (Artem)\n* Coordinate with Oksana Sorenkova on December 24th-26th (Max)\n* Prepare numbers and costs for the next step in the pilot program with MTS (Dobrotsen)\n\nNote that while there are several other minor tasks mentioned, these are the main ones identified as assigned tasks with deadlines.",
+  "total_time(sec)": 13.1,
+  "text_token_count": 11508
+}

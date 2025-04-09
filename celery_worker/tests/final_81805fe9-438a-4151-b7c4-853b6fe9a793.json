@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-08 17:24:32",
+  "document_url": "https://drive.google.com/file/d/1bNJKEKimk2nkAKNEj7JJqNKxGzwqC2_G/view?usp=sharing",
+  "chunk_model": "llama3.1:8b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": 32768,
+    "chunk_prompt": "Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.",
+    "final_summary_prompt": "Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:\n1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.",
+    "temp_chunk": 0.5,
+    "temp_final": 0.7,
+    "chunk_size": 5500,
+    "chunk_overlap(tokens)": 100.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 3,
+    "avg_chunk_output(tokens)": 371,
+    "avg_chunk_summary_time(sec)": 4.26,
+    "final_response(tokens)": 883
+  },
+  "summary": "**Meeting Minutes**\n\n**Date:** [Insert Date]\n**Attendees:** Artyom, Max, Nezvanov, Len, Alexei Yurchin, Dobrotsen, Sasha, Oleg\n\n**Key Points:**\n\n1. The team discussed the current status with Alfa Bank and agreed to meet on January 26th to discuss further details.\n2. There are two stages to the deal, and if everything goes as planned, they will have a fundamental decision on amounts by January.\n3. Astra is being used for recruitment, and the team is waiting for feedback from the pilot project.\n4. The technodrone expanded twice last week, with licenses paid 120,000 in total.\n5. SoftLine has signed an agreement with Bialowiezh cheeses and will pay 200,000.\n6. The team decided to implement a pilot project with a deadline to test the effectiveness of their product.\n7. They reviewed the progress of the pilot project with four companies (Cherkizovo, Rostec, MTS, and Nornickel).\n8. The discussion also included the development of a voice assistant tool and its potential integration with other features.\n9. The company has decided to either ship a fully working solution or appeal to FAS if no agreement is reached with Nornickel.\n10. The team discussed the possibility of reducing prices for RConf based on user growth.\n\n**Decisions Made:**\n\n1. To proceed with the meeting on January 26th with Alfa Bank.\n2. To wait for feedback from the Astra pilot project before moving forward.\n3. To continue using Astra for recruitment.\n4. To implement a pilot project with a deadline to test the effectiveness of their product.\n5. To provide a fully working solution to one of the companies (Nornickel) if they are unable to clarify their Technical Requirements Specification (TK).\n\n**Assigned Tasks:**\n\n1. Artyom is responsible for coordinating with Max to develop a technology plan (deadline: ASAP).\n2. The team will meet with Alfa Bank on January 26th to discuss further details.\n3. Max will improve the API phones to make them more efficient.\n4. Dobrotsen was assigned to prepare reports and provide feedback on the assessment process (deadline: December 20th).\n5. Maxim was tasked with developing a checklist for PERS data and passing it on to the client.\n6. Sasha was responsible for coordinating the SB and lawyers' involvement in the pilot project.\n7. Oleg was asked to think about implementing voice assistance and come up with options.\n8. Preparing a letter confirming the company's decision to provide a full working solution (Len, ASAP).\n9. Preparing a motivated refusal letter (Alexei Yurchin, ASAP).\n\n**Urgent Tasks:**\n\n1. The team needs to provide feedback on the assessment process by December 20th.\n2. Dobrotsen will have a week to report on the assessment results.\n3. Filing a complaint with FAS if no agreement is reached and termination of the contract cannot be agreed upon.\n\n**Next Steps:**\n\n1. Schedule meetings with Alfa Bank, SoftLine, and Bialowiezh cheeses to discuss further details.\n2. Continue monitoring progress on Astra's pilot project and use it as a reference point for future clients.\n3. Review the technodrone expansion and its impact on revenue.\n4. Follow up with Nezvanov on gathering quotes from satisfied clients.\n5. Develop a more engaging pilot offer to encourage potential clients to participate.\n\n**Action Items:**\n\n1. Artyom will coordinate with Max to develop a technology plan (deadline: ASAP).\n2. Len will prepare a letter confirming the company's decision to provide a full working solution (deadline: ASAP).\n3. Alexei Yurchin will prepare a motivated refusal letter (deadline: ASAP).\n4. Dobrotsen will provide feedback on the assessment process by December 20th.\n5. Maxim will develop a checklist for PERS data and pass it on to the client.\n\n**Deadlines:**\n\n1. January 26th - Meeting with Alfa Bank\n2. December 20th - Provide feedback on the assessment process\n3. ASAP - Prepare letters confirming the company's decision to provide a full working solution and motivated refusal letter",
+  "total_time(sec)": 20.56,
+  "text_token_count": 11508
+}

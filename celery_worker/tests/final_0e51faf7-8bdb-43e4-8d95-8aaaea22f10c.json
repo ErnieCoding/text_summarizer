@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-08 17:31:55",
+  "document_url": "https://drive.google.com/file/d/1bNJKEKimk2nkAKNEj7JJqNKxGzwqC2_G/view?usp=sharing",
+  "chunk_model": "llama3.1:8b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": 32768,
+    "chunk_prompt": "Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.",
+    "final_summary_prompt": "Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:\n1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.",
+    "temp_chunk": 0.5,
+    "temp_final": 0.7,
+    "chunk_size": 6000,
+    "chunk_overlap(tokens)": 300.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 2,
+    "avg_chunk_output(tokens)": 429,
+    "avg_chunk_summary_time(sec)": 5.49,
+    "final_response(tokens)": 611
+  },
+  "summary": "**Meeting Report**\n\n**Participants:**\n- Artem\n- Max\n- Len\n- Nezvanov (remote)\n\n**Key Points:**\n1. The team discussed ongoing projects, including Alfa Bank's implementation of their product and the pilot with MHI (Mobile Hardware Integration).\n2. The contract issue with Bialowie\u017c cheeses (SoftLine) has been resolved, and they need to pay the amount agreed upon.\n3. The Museum of St. Petersburg History is interested in extending their contract at a decreased rate.\n4. An invoice for 285,000 rubles needs to be paid by the Joint Institutes for Nuclear Research before the New Year.\n5. Artem discussed the concept of Astra with Nezvanov and is seeking feedback on how it can be used in their company.\n6. The team will develop a recruitment tool for RConf (a recruiting platform) and provide support to the client.\n7. The pilot program for Nornickel, MTS, and Cherkizovo are ongoing projects being discussed by the team.\n8. The contract with M2C needs to be terminated on a friendly basis due to issues with their technical specification (TK).\n9. Artem is working on a pilot mode for Astra but unclear about next steps.\n\n**Decisions Made:**\n\n1. To continue working with Alfa Bank according to their original agreement.\n2. To wait for MHI's response regarding the price increase to $2,000 per user.\n3. To resolve the contract issue with Bialowie\u017c cheeses (SoftLine) and receive payment from them.\n4. To prepare an invoice for the Joint Institutes for Nuclear Research and await payment.\n\n**Urgent Tasks:**\n- Payment from Joint Institutes for Nuclear Research due before the New Year\n- Meeting with Oksana Sorenkova (Alfa Bank) on December 24th\n\n**Assigned Tasks:**\n\n1. Artem needs to follow up with Nezvanov regarding the Astra concept.\n2. Artem will develop a recruitment tool for RConf and provide support to the client.\n3. The team will work on creating a pilot mode for Astra, but it's unclear what the next steps are.\n4. Max: Prepare a motivated refusal letter for M2C.\n5. Len: Send the termination letter to M2C via Telegram in a peaceful spirit.\n\n**Deadlines:**\n\n1. December 24th - Meeting with Oksana Sorenkova (Alfa Bank)\n2. December 25-26th - Follow-up meeting with Alfa Bank regarding price increase\n3. Before the New Year - Payment from Joint Institutes for Nuclear Research\n4. End of December - M2C should receive the activation letter and confirmation of their decision to terminate the contract\n\n**Other Notes:**\nThe team discussed the need for a more user-friendly voice assistant that allows users to ask questions without logging in every time, and the importance of clarifying technical specifications (TK) to provide accurate solutions.",
+  "total_time(sec)": 13.54,
+  "text_token_count": 11508
+}

@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-08 17:16:52",
+  "document_url": "https://drive.google.com/file/d/1bNJKEKimk2nkAKNEj7JJqNKxGzwqC2_G/view?usp=sharing",
+  "chunk_model": "llama3.1:8b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": 32768,
+    "chunk_prompt": "Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.",
+    "final_summary_prompt": "Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:\n1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.",
+    "temp_chunk": 0.3,
+    "temp_final": 0.7,
+    "chunk_size": 2000,
+    "chunk_overlap(tokens)": 100.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 7,
+    "avg_chunk_output(tokens)": 340,
+    "avg_chunk_summary_time(sec)": 2.97,
+    "final_response(tokens)": 788
+  },
+  "summary": "Here is the synthesized report of the business meeting:\n\n**Meeting Minutes**\n\nDate: [Not specified]\n\nAttendees: Various participants, including Artem, Max, Oksana Sorenkova, Nezvanov, Lena, Artyom, Sasha, KP, Dobrotsen, and others.\n\n**Key Points and Decisions Made**\n\n1. **Alfa Bank Contract**: The team has agreed on the total price of $2 million for Alfa Bank, which is an increase from their initial offer.\n\t* Status: Negotiations are ongoing, with a need to resolve outstanding issues.\n\t* Next Steps: Artem will coordinate with Oksana Sorenkova and the director of IT security to confirm the status of the negotiations (by 24th or 26th).\n2. **Mass Selection Track**: The team is working on this track, with Max providing technical support.\n\t* Status: In progress\n3. **Astra Tool Development**: The speaker suggests showing Astra as a teaser to potential clients to gauge their interest.\n\t* Status: In development\n4. **Pilot Program with Cherkizovo**: A new pilot program will start in January, focusing on integrating with their hand flow and other specific features.\n\t* Status: Scheduled for January\n5. **Voice Assistant Development**: Max is working on implementing a voice assistant in the form of a chat, similar to GPT.\n\t* Status: In progress\n6. **Termination of Contract with M2C (Alexei Yurchin)**: The team is discussing possible ways to terminate the contract amicably due to ambiguities in the Technical Specification (TK) and the client's needs not being fully met by the current solution.\n\t* Status: Proposal to terminate the contract mutually\n\n**Assigned Tasks**\n\n1. **Artem**: Coordinate with Oksana Sorenkova and the director of IT security to confirm the status of the negotiations (by 24th or 26th).\n2. **Max**: Provide technical support for Mass Selection track; implement voice assistant in the form of a chat.\n3. **Dobrotsen**: Ensure that assessors have a clear understanding of the task and documentation; coordinate with lawyers to ensure necessary documents are in order.\n4. **KP**: Confirm with Zharikov about the number of recruiters needed for the pilot program; provide an answer on how much it will cost to implement integration features.\n5. **Len (or possibly another team member)**: Prepare a letter confirming the decision to terminate the contract amicably and send it to the client via unofficial channels.\n\n**Deadlines**\n\n1. By the end of February: Complete implementation and drawing up of contracts with Alfa Bank and other clients.\n2. Before the New Year: Joint Institutes for Nuclear Research (JINR) must pay their owed amount of 285,000 rubles to the company.\n3. December 20th: Prepare reports; complete assessment process for four regional directors.\n\n**Urgent Tasks and Decisions**\n\n1. **Appeal to FAS**: An appeal will be filed due to a violation of competition law.\n2. **Termination of Contract with M2C (Alexei Yurchin)**: The team is working on terminating the contract amicably, citing ambiguities in the TK.\n\n**Open Issues and Next Steps**\n\n1. **Astra Tool Development**: The group wants to develop this tool further and create a more comprehensive evaluation system for hiring candidates.\n2. **Pilot Program with Cherkizovo**: KP needs to confirm with Zharikov about the number of recruiters needed for the pilot program.\n3. **Termination of Contract with M2C (Alexei Yurchin)**: The exact wording of the termination letter is still pending, with Len agreeing to prepare a draft based on the meeting's discussion.",
+  "total_time(sec)": 28.34,
+  "text_token_count": 11508
+}

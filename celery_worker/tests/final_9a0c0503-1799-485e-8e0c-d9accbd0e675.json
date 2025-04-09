@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-08 17:34:37",
+  "document_url": "https://drive.google.com/file/d/1bNJKEKimk2nkAKNEj7JJqNKxGzwqC2_G/view?usp=sharing",
+  "chunk_model": "llama3.1:8b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": 32768,
+    "chunk_prompt": "Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.",
+    "final_summary_prompt": "Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:\n1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.",
+    "temp_chunk": 0.5,
+    "temp_final": 0.7,
+    "chunk_size": 6500,
+    "chunk_overlap(tokens)": 200.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 2,
+    "avg_chunk_output(tokens)": 387,
+    "avg_chunk_summary_time(sec)": 5.04,
+    "final_response(tokens)": 844
+  },
+  "summary": "Here is the synthesized report based on the two chunk summaries:\n\n**Meeting Minutes:**\n\n**Participants:**\n- Artem\n- Max\n- Lena\n- Sasha\n- Oksana Sorenkova (mentioned in Chunk 1)\n- Zharikov (mentioned in Chunk 1)\n\n**Key Points:**\n\n1. The team discussed various projects and their status:\n\t* Alfa Bank: Everything is in place for two stages of implementation.\n\t* MHI (Mass Selection): Waiting for approval from Oksana Sorenkova, with potential price adjustments based on demand.\n\t* Technodrone: Expanded its licenses to 30 users, paid a total of 120,000 rubles.\n2. The team also discussed other projects:\n\t* Bialowiezh cheeses and Museum of St. Petersburg history want to extend their contracts.\n\t* Joint Institutes for Nuclear Research (JINR) need to pay before the New Year.\n3. Recruiting pilot programs are ongoing with several companies, including Cherkizovo, Rostec, MTS, and SoftLine.\n4. The team discussed issues with previous pilots:\n\t* Feedback was lacking from clients after the first week of implementation.\n\t* Some clients had difficulty understanding how to use the system.\n5. Nornickel wants to implement a voice assistant chat that can handle multiple questions without requiring users to re-register each time, and possibly a streaming feature in the future.\n6. The team will work on implementing the voice assistant chat with context and prompts to handle user requests for Nornickel.\n\n**Decisions Made:**\n\n1. Alfa Bank's implementation will proceed in two stages, starting on the 26th.\n2. MHI (Mass Selection) pilot will require coordination with Oksana Sorenkova and potential price adjustments based on demand.\n3. Cherkizovo will enter the pilot program in January, followed by Rostec and SoftLine.\n4. The team will focus on providing a clear deadline for each pilot program to increase client engagement.\n5. Nornickel's implementation of a voice assistant chat is approved with context and prompts.\n\n**Assigned Tasks:**\n\n1. Artem will prepare an offer invoice for JINR and pass it quickly.\n2. Max will coordinate with the director of IT security at Alfa Bank, and come up with options for implementing a voice assistant chat that can handle user requests without re-registration for Nornickel.\n3. Lena will add the person in charge of recruiting at SoftLine to HRD's supervisor's office.\n4. Sasha will prepare a checklist for PERS data to share with Rostec and MTS.\n5. Oleg will write a letter to Nornickel explaining their decision and proposal.\n\n**Deadlines:**\n\n1. Alfa Bank implementation will start on the 26th (Chunk 1).\n2. Cherkizovo pilot program will begin in January (Chunk 1).\n3. Meeting at MTS Linky is scheduled for tomorrow (12:30) (Chunk 1).\n4. Next meeting with Zharikov to discuss feedback from the second week of the pilot (Chunk 1).\n5. Nornickel wants a fully working solution by December 20th, 2023.\n6. Oleg should send the letter to Nornickel through unofficial channels after the meeting.\n\n**Urgent Tasks and Decisions:**\n\nBased on deadlines:\n\n- **Immediate Task:** Artem will prepare an offer invoice for JINR and pass it quickly (Deadline: ASAP).\n- **High Priority:** Max needs to come up with options for implementing a voice assistant chat that can handle user requests without re-registration for Nornickel, and Oleg needs to write a letter explaining the decision and proposal to Nornickel (Deadline: December 20th, 2023).\n- **Next Task:** Lena will add the person in charge of recruiting at SoftLine to HRD's supervisor's office (No specific deadline mentioned).\n\nNote: The meeting with MTS Linky is scheduled for tomorrow (12:30) and is considered urgent.",
+  "total_time(sec)": 14.65,
+  "text_token_count": 11508
+}

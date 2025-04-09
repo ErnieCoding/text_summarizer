@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-08 17:39:08",
+  "document_url": "https://drive.google.com/file/d/1bNJKEKimk2nkAKNEj7JJqNKxGzwqC2_G/view?usp=sharing",
+  "chunk_model": "llama3.1:8b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": 32768,
+    "chunk_prompt": "Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.",
+    "final_summary_prompt": "Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:\n1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.",
+    "temp_chunk": 0.3,
+    "temp_final": 0.5,
+    "chunk_size": 7000,
+    "chunk_overlap(tokens)": 300.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 2,
+    "avg_chunk_output(tokens)": 377,
+    "avg_chunk_summary_time(sec)": 5.0,
+    "final_response(tokens)": 663
+  },
+  "summary": "**Meeting Report**\n\n**Date:** [Insert Date]\n\n**Participants:**\n\n1. Max\n2. Dobrotsen\n3. Claude\n4. Len\n5. Team ( collective entity)\n\n**Key Points and Decisions:**\n\n1. The team discussed the status with Alfa Bank, with a focus on progress.\n2. They agreed on a price for MHI (Messenger + VKS): 4 million rubles, plus separately 1-2 million rubles depending on the package chosen.\n3. The team will meet with Max tomorrow to coordinate the technology part of the project.\n4. Bialowiezh cheeses and Museum of St. Petersburg history expressed a desire to extend their contracts, but there is uncertainty around the amount and payment terms.\n5. The Institute for Nuclear Research agreed to pay 285,000 rubles in two years, subject to confirmation before the New Year.\n6. A pilot project with Rostex and MTS is not moving forward as expected.\n7. They are planning to implement a pilot project with Cherkizovo, starting in January.\n\n**Key Points and Decisions (Continued):**\n\n1. The team will use a competency model that combines assessors' reports and AI scores for verification.\n2. An AI system will assist assessors in preparing reports, reducing the time spent on this task.\n3. The client has agreed to provide feedback on the report within a week of receiving it.\n\n**Decisions Made:**\n\n1. Price agreement for MHI (Messenger + VKS)\n2. Meeting with Max tomorrow to coordinate technology\n3. Following up with Bialowiezh cheeses and Museum of St. Petersburg history regarding contract extensions\n4. Using competency model that combines assessors' reports and AI scores for verification\n5. Implementing the AI system to assist assessors in preparing reports\n\n**Assigned Tasks:**\n\n1. Max:\n\t* Coordinate technology part of project with team tomorrow (Deadline: Tomorrow)\n\t* Create prompt for each task based on client documentation (Deadline: Not specified)\n\t* Develop voice assistant that can handle multiple questions without requiring re-registration (Deadline: Not specified)\n2. Dobrotsen:\n\t* Prepare checklist for PERS data to pass on to Rostec (Deadline: Not specified)\n3. Claude:\n\t* Review and prepare report on assessment process, including AI and assessors' feedback (Deadline: End of December)\n4. Len:\n\t* Prepare letter to client confirming their decision to provide full working solution (Deadline: End of December)\n\n**Urgent Tasks and Decisions:**\n\nBased on the deadlines provided, the most urgent tasks are:\n\n1. Max's task to create a prompt for each task based on client documentation\n2. Claude's report on assessment process\n3. Len's letter to client confirming their decision\n\n**Deadlines:**\n\n1. January (start date for pilot project with Cherkizovo)\n2. December 20th (assessment event, assessors have access to records for one week after the event)\n3. End of December (client expected to prepare report on assessment process)\n\nNote that some deadlines are not specified in the provided chunk summaries, and this meeting report attempts to fill those gaps with reasonable assumptions based on the context.",
+  "total_time(sec)": 15.77,
+  "text_token_count": 11508
+}

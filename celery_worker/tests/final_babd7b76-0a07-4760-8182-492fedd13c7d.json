@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-08 17:26:54",
+  "document_url": "https://drive.google.com/file/d/1bNJKEKimk2nkAKNEj7JJqNKxGzwqC2_G/view?usp=sharing",
+  "chunk_model": "llama3.1:8b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": 32768,
+    "chunk_prompt": "Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.",
+    "final_summary_prompt": "Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:\n1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.",
+    "temp_chunk": 0.3,
+    "temp_final": 0.7,
+    "chunk_size": 5500,
+    "chunk_overlap(tokens)": 300.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 3,
+    "avg_chunk_output(tokens)": 387,
+    "avg_chunk_summary_time(sec)": 4.47,
+    "final_response(tokens)": 841
+  },
+  "summary": "**Meeting Report**\n\n**Attendees:**\n\n1. Artem\n2. Max\n3. Artyom\n4. Oksana Sorenkova\n5. Dobrotsen\n6. Len\n7. Alexei Yurchin (M2C)\n8. Olya\n\n**Key Points of the Meeting:**\n\n1. **Alfa Bank and SoftLine Agreements:** Waiting for a meeting on December 24-26 to finalize the contract with Alfa Bank. A contract with SoftLine was lost, but will be signed soon after payment.\n2. **MHI (Mass Selection):** Offered MHI a deal with VKS and messenger, but price is uncertain.\n3. **Pilot Projects:** Piloting Rostex and Panther projects, but they are slow in responding.\n4. **Astra and Hard Skills Evaluation:** Using Astra for hard skills evaluation could significantly reduce workload on recruiters.\n5. **Pilot Projects (Cherkizovo, Rostec, MTS):** Discussion about pilot projects with Cherkizovo, Rostec, and MTS. Concerns about lack of clear deadlines and need to make them more engaging.\n6. **Voice Assistant:** Introduction of a voice assistant for answering questions and providing information.\n7. **Contract Termination (Ircon and Natusi):** The company wants to terminate the contract due to ambiguity in the Technical Specification (TK) and provide a new solution that meets the client's needs.\n\n**Decisions Made:**\n\n1. Waiting for a meeting with Alfa Bank from December 24-26.\n2. Signing a contract with SoftLine after payment.\n3. Offering MHI a deal with VKS and messenger.\n4. Piloting Rostex and Panther projects, but they are slow in responding.\n5. Focusing on implementing a chat function in the voice assistant.\n6. Mutual termination of the contract is possible between Ircon and Natusi.\n\n**Assigned Tasks with Deadlines:**\n\n1. Artem to coordinate with Oksana Sorenkova on December 24-26.\n2. Max to improve API for MHI.\n3. Artyom to prepare a product for Rostex and Panther pilots.\n4. Interviewing top positions at Rostex (5-10 interviews) by the end of the year.\n5. Max needs to create options for improving the voice assistant, including making it easier to ask questions without having to register each time.\n6. Olya will send an activation letter to the participants of the pilot project.\n7. Dobrotsen needs to prepare a report on the assessment of four regional directors by December 20th.\n8. Len needs to send an activation letter to the client immediately.\n\n**Urgent Tasks and Decisions:**\n\n1. **December 24-26:** Waiting for a meeting with Alfa Bank, coordinating between Artem and Oksana Sorenkova.\n2. **End of December:** Interviewing top positions at Rostex (5-10 interviews), preparing report by Dobrotsen.\n3. **Immediately:** Sending activation letter to the client by Len.\n\n**Action Items:**\n\n1. Max needs to implement improvements to the voice assistant and provide options for improving it.\n2. Olya will send an activation letter to the participants of the pilot project.\n3. The team will clarify and interpret the TK for the contract between Ircon and Natusi.\n4. Dobrotsen needs to prepare a report on the assessment of four regional directors.\n\n**Next Steps:**\n\n1. Testing the voice assistant with a new feature that allows users to ask questions without having to register each time.\n2. Implementing a chat function in the voice assistant.\n3. Continuing work on clarifying and interpreting the TK for the contract between Ircon and Natusi.\n4. Preparing motivated refusal letter (if necessary).\n5. Sending client an activation letter to confirm their decision.\n\nNote: The above report combines all key points, decisions made, assigned tasks with deadlines, urgent tasks and decisions, action items, and next steps from the given chunks of summaries.",
+  "total_time(sec)": 20.84,
+  "text_token_count": 11508
+}

@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-08 17:28:21",
+  "document_url": "https://drive.google.com/file/d/1bNJKEKimk2nkAKNEj7JJqNKxGzwqC2_G/view?usp=sharing",
+  "chunk_model": "llama3.1:8b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": 32768,
+    "chunk_prompt": "Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.",
+    "final_summary_prompt": "Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:\n1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.",
+    "temp_chunk": 0.3,
+    "temp_final": 0.7,
+    "chunk_size": 6000,
+    "chunk_overlap(tokens)": 100.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 2,
+    "avg_chunk_output(tokens)": 377,
+    "avg_chunk_summary_time(sec)": 4.98,
+    "final_response(tokens)": 804
+  },
+  "summary": "**Meeting Report: Business Meeting Summary**\n\n**Participants:**\n\n* Artem (responsible for coordinating with Max to implement the AI-powered recruitment tool for MHI)\n* Sasha (responsible for sending a message to the corporate university coaches to schedule the next meeting)\n\n**Key Points:**\n\n1. The team discussed their plans with Alfa Bank and the status of negotiations, waiting for a decision on amounts until at least January.\n2. A meeting is scheduled for December 24th to discuss further.\n3. The team will provide technical support to Alfa Bank during the pilot phase.\n4. Another client, MHI, was discussed, and an offer was made to implement their AI-powered recruitment tool.\n5. Progress with several clients was reviewed, including Bialowiez cheeses (SoftLine), Institute for Nuclear Research, and corporate university.\n6. The team is waiting for feedback from the MTS pilot project by December 23rd.\n7. Clarification on technical specifications (TK) for a specific project is needed due to its ambiguity.\n8. A potential complaint to the FAS (Federal Antimonopoly Service) regarding competition laws is mentioned if the situation with the TK does not resolve amicably.\n9. The pilot project for Rostex is behind schedule due to lack of interest and availability.\n10. The team needs to re-evaluate their approach to the pilot offer to make it more appealing and relevant to clients' interests.\n\n**Decisions Made:**\n\n1. To continue negotiations with Alfa Bank until January.\n2. To provide technical support to Alfa Bank during the pilot phase.\n3. To offer MHI an AI-powered recruitment tool and negotiate a contract.\n4. To move forward with the pilot project for corporate university.\n5. To mutually terminate the contract and clarify the TK.\n6. To provide an alternative solution for the client.\n\n**Assigned Tasks with Deadlines:**\n\n1. Artem is responsible for coordinating with Max to implement the AI-powered recruitment tool for MHI by December 26th.\n2. The team will meet with MHI on December 23rd to discuss further details.\n3. Sasha will send a message to the corporate university coaches to schedule the next meeting in January.\n4. The speaker will prepare a letter to clarify the TK and provide an alternative solution for the client.\n5. The team expects feedback from MTS pilot project by tomorrow.\n\n**Urgent Tasks:**\n\n1. Finalize the contract with MHI by December 26th (assigned task: Artem)\n2. Schedule a meeting with corporate university coaches in January (assigned task: Sasha)\n3. Review progress with Rostex and Panther companies and adjust their approach accordingly\n4. Clarify TK for the specific project and provide an alternative solution to the client\n\n**Next Steps:**\n\n1. Schedule a meeting with MHI on December 23rd to discuss further details.\n2. Send a message to corporate university coaches in January to schedule the next meeting.\n3. Review progress with Rostex and Panther companies and adjust their approach accordingly.\n\n**Action Items and Deadlines:**\n\n| Task | Responsible Person | Deadline |\n| --- | --- | --- |\n| 1. Coordinate with Max to implement AI-powered recruitment tool for MHI | Artem | December 26th |\n| 2. Meet with MHI on December 23rd | Team | December 23rd |\n| 3. Send a message to corporate university coaches | Sasha | January (exact date not specified) |\n| 4. Prepare letter to clarify TK and provide alternative solution | Speaker | ASAP |\n\n**Open Issues:**\n\n1. The pilot project for Rostex is behind schedule due to lack of interest and availability.\n2. The team needs to re-evaluate their approach to the pilot offer to make it more appealing and relevant to clients' interests.\n\nNote: Some tasks and deadlines may not be explicitly mentioned in the original summaries, but were inferred based on the context provided.",
+  "total_time(sec)": 14.23,
+  "text_token_count": 11508
+}

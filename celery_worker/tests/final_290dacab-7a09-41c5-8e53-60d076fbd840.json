@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-08 17:29:26",
+  "document_url": "https://drive.google.com/file/d/1bNJKEKimk2nkAKNEj7JJqNKxGzwqC2_G/view?usp=sharing",
+  "chunk_model": "llama3.1:8b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": 32768,
+    "chunk_prompt": "Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.",
+    "final_summary_prompt": "Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:\n1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.",
+    "temp_chunk": 0.3,
+    "temp_final": 0.5,
+    "chunk_size": 6000,
+    "chunk_overlap(tokens)": 200.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 2,
+    "avg_chunk_output(tokens)": 415,
+    "avg_chunk_summary_time(sec)": 4.0,
+    "final_response(tokens)": 878
+  },
+  "summary": "**Meeting Report**\n\n**Participants:**\n\n1. Artem\n2. Sasha\n3. Oksana Sorenkova (Alfa Bank representative)\n4. Max (Rostex representative)\n\n**Key Points:**\n\n1. The meeting discussed ongoing projects with Alfa Bank, Bialowieza cheeses (SoftLine), the Museum of St. Petersburg history, and Rostex.\n2. Updates on pilot projects were shared for each company:\n\t* Alfa Bank: Waiting for a final decision on pricing after a meeting with Oksana Sorenkova on December 24th.\n\t* SoftLine (Bialowieza cheeses): Contract has been lost but will be signed soon.\n\t* Museum of St. Petersburg history: Still in negotiations, but may not generate reports.\n\t* Rostex: Internal meeting scheduled for the new year, and they have expressed interest in piloting Astra.\n3. Discussion on how to make the pilot proposal more attractive and engaging:\n\t* Setting deadlines for each company to complete their pilot project.\n\t* Offering a \"teaser\" of Astra's capabilities to demonstrate its potential benefits.\n4. The team discussed various projects and agreements with clients, including Asus Lite, Rostec, Cherkizovo, MTS, and Nornickel.\n5. The team agreed to start next year's pilot program conditionally through the pilot project.\n6. A checklist for PERS data needs to be filled out and passed on to the client by a certain deadline.\n7. The meeting with MTS is scheduled for tomorrow at 12:30, and three recruiting leaders will attend in addition to Zharikov.\n8. Feedback from the second week of the pilot was not received, but it's expected that information will be available soon.\n9. The team discussed the need to clarify the TK (Technical Specification) with M2C, as it was ambiguous and caused issues with the project.\n10. The lawyers have concluded that there is reason to appeal to the FAS (Federal Antimonopoly Service) for a violation of competition if a mutually agreed dissolution of the contract cannot be reached.\n\n**Decisions Made:**\n\n1. Oksana Sorenkova will meet with Alfa Bank representatives on December 24th, and the final decision on pricing will be made after this meeting.\n2. SoftLine will sign their contract soon, and payment terms will follow.\n3. The Museum of St. Petersburg history may not generate reports, but an offer was still made to pilot Astra.\n4. Rostex has expressed interest in piloting Astra during the new year.\n5. The team decided to start next year's pilot program conditionally through the pilot project.\n6. A mutual dissolution of the contract with M2C is being considered due to issues with the Technical Specification (TK).\n\n**Assigned Tasks and Deadlines:**\n\n1. Artem:\n\t* Coordinate MTZ with Max\n\t* Ensure technical issues are resolved before signing commercial contracts (Deadline: ASAP)\n2. Sasha:\n\t* Follow up with companies on their pilot projects, setting deadlines for completion and regular check-ins (Deadline: Ongoing)\n3. Team:\n\t* Create a \"teaser\" of Astra's capabilities to demonstrate its potential benefits (Deadline: ASAP)\n4. Dobrotsen:\n\t* Prepare for assessment process on December 19-20 (Deadline: December 19-20)\n5. Oleg:\n\t* Think about options for a voice assistant that can remember users' information without requiring them to re-enter their credentials each time (No deadline specified)\n6. Len:\n\t* Send a letter to M2C regarding mutual dissolution of the contract (Deadline: ASAP)\n\n**Urgent Tasks and Decisions:**\n\n1. Meeting with MTS tomorrow at 12:30\n2. Mutual dissolution of the contract with M2C due to issues with the Technical Specification (TK)\n3. Dobrotsen's assessment process on December 19-20\n\n**Note:** The most urgent tasks are:\n\n* Completing the mutual dissolution of the contract with M2C by considering a complaint to the FAS\n* Preparing for the meeting with MTS tomorrow at 12:30\n* Dobrotsen's assessment process on December 19-20",
+  "total_time(sec)": 15.64,
+  "text_token_count": 11508
+}

@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-08 17:25:22",
+  "document_url": "https://drive.google.com/file/d/1bNJKEKimk2nkAKNEj7JJqNKxGzwqC2_G/view?usp=sharing",
+  "chunk_model": "llama3.1:8b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": 32768,
+    "chunk_prompt": "Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.",
+    "final_summary_prompt": "Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:\n1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.",
+    "temp_chunk": 0.3,
+    "temp_final": 0.7,
+    "chunk_size": 5500,
+    "chunk_overlap(tokens)": 200.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 3,
+    "avg_chunk_output(tokens)": 435,
+    "avg_chunk_summary_time(sec)": 4.02,
+    "final_response(tokens)": 912
+  },
+  "summary": "Here is a synthesized report of the business meeting:\n\n**Meeting Minutes**\n\n**Attendees:** (List of participants was not provided)\n\n**Date:** Not specified\n\n**Time:** Not specified\n\n**Location:** Not specified\n\n**Summary:**\n\nThe meeting discussed various topics related to the company's projects and partnerships. The key points include:\n\n* Updates on Alfa Bank project:\n\t+ Status: awaiting decision from Oksana Sorenkova\n\t+ Next steps: meeting with Oksana on 24th, coordination with IT security director\n\t+ Goal: reach a fundamental decision on amounts by the end of January\n* Update on MHI (Mass Selection) project:\n\t+ Discussion of pricing and technical requirements\n\t+ Offered to reduce price based on specific needs\n* Updates on other projects:\n\t+ Bialowieza Cheeses contract: lost, but SoftLine is willing to sign a new one\n\t+ Museum of St. Petersburg History extension: 115,000 rubles for the first year, then 130,000\n\t+ Joint Institutes for Nuclear Research: offered an invoice for payment before New Year's\n* Discussion on Astra:\n\t+ Pilot mode: showing promising results\n\t+ Plan to develop the tool further and demonstrate it to customers\n\n**Key Points (10)**\n\n1. Alfa Bank project is awaiting decision from Oksana Sorenkova.\n2. MHI (Mass Selection) project discussed pricing and technical requirements.\n3. Bialowieza Cheeses contract was lost, but a new one is being considered.\n4. Museum of St. Petersburg History extension costs 115,000 rubles for the first year.\n5. Joint Institutes for Nuclear Research offered an invoice for payment before New Year's.\n6. Astra pilot mode is showing promising results.\n7. Astra tool development will continue and be demonstrated to customers soon.\n8. Rostex project lacks progress due to time constraints.\n9. Panther project is experiencing slow progress but hopes for improvement soon.\n10. The company wants to clarify Technical Specifications (TK) that were used for the project.\n\n**Decisions Made, Assigned Tasks, and Deadlines**\n\n* Alfa Bank project:\n\t+ Meeting with Oksana Sorenkova on 24th\n\t+ Coordination with IT security director\n\t+ Decision expected by the end of January\n* MHI (Mass Selection) project:\n\t+ Discussion of pricing and technical requirements ongoing\n* Joint Institutes for Nuclear Research:\n\t+ Payment before New Year's\n* Astra pilot mode:\n\t+ Demonstration to customers soon\n* Rostex project:\n\t+ Lack of progress due to time constraints\n* Panther project:\n\t+ Slow progress, but hopes for improvement soon\n\n**Urgent Tasks and Decisions**\n\n1. **Most Urgent:** Alfa Bank project - decision expected by the end of January.\n2. **Second Most Urgent:** Joint Institutes for Nuclear Research - payment before New Year's.\n3. **Next Urgent:** Astra pilot mode - demonstration to customers soon.\n\n**Decisions Made, Assigned Tasks, and Deadlines (Specific)**\n\n* Artem:\n\t+ Coordinate with Max for the mass selection track\n\t+ Adjust templates and dashboards for SoftLine's use\n\t+ Follow up on Alfa Bank project with Oksana Sorenkova\n\t+ Deadline: End of January\n* Artyom:\n\t+ Interview top positions at Astra pilot mode\n\t+ Help develop the tool further\n\t+ Demonstrate it to customers\n\t+ Deadline: Soon\n* Max:\n\t+ Provide improvements to API phones for Joint Institutes for Nuclear Research\n\t+ Deadline: Before New Year's\n* Elizabeth:\n\t+ Coordinate with HRD and supervisors' offices on Astra implementation\n\t+ Adjust templates and dashboards for SoftLine's use\n\t+ Deadline: Soon\n\n**Urgent Tasks and Decisions (Specific)**\n\n1. **Most Urgent:** Artem - follow up on Alfa Bank project with Oksana Sorenkova by the end of January.\n2. **Second Most Urgent:** Max - provide improvements to API phones for Joint Institutes for Nuclear Research before New Year's.\n\n**Additional Notes:**\n\n* The company will terminate the contract if necessary, citing ambiguity in the TK as the reason.\n* If the client refuses, the company may appeal to the FAS for a violation of competition laws.",
+  "total_time(sec)": 20.12,
+  "text_token_count": 11508
+}

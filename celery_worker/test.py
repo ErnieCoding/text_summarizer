@@ -44,10 +44,10 @@ with open(RYE_TEXT_FILE, "r", encoding="utf-8") as file:
 with open(TRANSCRIPT_TEXT_FILE, "r", encoding="utf-8") as file:
     TRANSCRIPT_TEXT = file.read()
 
-def run_eval(data):
+def run_eval(data, text_name):
     scorer = rouge_scorer.RougeScorer(['rougeL'], use_stemmer=True)
-
-    reference = """# The Catcher in the Rye - Comprehensive Analysis
+    if text_name == "Rye":
+        reference = """# The Catcher in the Rye - Comprehensive Analysis
 
 I've reviewed the iconic novel "The Catcher in the Rye" by J.D. Salinger. What follows is a detailed analysis that preserves the integrity and nuance of the original text.
 
@@ -196,6 +196,69 @@ Salinger employs several key techniques:
 
 Through these techniques, Salinger creates a psychologically complex portrait of adolescent alienation that continues to resonate with readers despite its specific mid-20th century cultural context.
 """
+    else:
+        reference = """# Meeting minutes
+
+## 1. Key points of the meeting:
+1. On Alfa-Bank: the status is positive, the information security specialists have approved the proposal, approval by the management is expected on December 24-26. The expected contract amount is 1.6-2 million rubles.
+2. On OMS: a commercial proposal has been prepared for 2,500 users in messenger and videoconferencing mode with a limitation on report generation for 4 million rubles, plus a separate track for mass recruitment (about 500 thousand rubles).
+3. Technodrone has expanded licenses from 10 to 30, having paid 120 thousand rubles.
+4. On Astra: a pilot is starting with the Head of Recruitment and HRD, who will test the system in top positions. Prompts have been prepared to assess the candidates' compliance with the company's cultural values.
+5. On MTS: the pilot has ended, a meeting has been scheduled to discuss the results with the heads of recruitment. Potential volume - 263 recruiters.
+6. On Dobrotsen: a pilot assessment of four regional directors is planned for December 19-20. Prompts have been prepared taking into account their documentation and cases.
+7. On Norilsk Nickel: a demo module has been prepared consisting of three autotests, two interviews to assess skills and a voice assistant.
+8. Technical improvements for the voice assistant were discussed - simplifying authorization and saving user data.
+9. The problem with group rooms on Russian servers has been solved by using the default presentation.
+10. On the situation with MTUCI: an activation letter and a negotiation strategy with three possible scenarios have been prepared.
+
+## 2. Decisions made, responsible persons, deadlines:
+1. **Artem**:
+- Wait for the results of the approval with Alfa-Bank by December 26
+- Meet with OMS on the CP (deadline: tomorrow)
+- Agree the TOR for mass recruitment with OMS (deadline: today at [14:00]
+)
+- Conduct training for Astra (deadline: today at [12:00]
+)
+- Prepare 30 questions for profile processing (deadline: today)
+
+2. **Sasha**:
+- Conduct a meeting with MTS on the pilot results (deadline: tomorrow at [12:30]
+)
+- Prepare a specific CP for MTS taking into account their needs
+- Conduct training for Dobrotsen (deadline: today at [12:00]
+)
+- Accompany the assessment at Dobrotsen on December 19-20
+- Clarify with Dobrotsen the time that they are putting it on reporting
+
+3. **Max**:
+- Refine the voice assistant for Norilsk Nickel - implement saving user data in the browser (deadline: today)
+- Continue working on stabilizing the server infrastructure
+
+4. **Lena**:
+- Send an activation letter to MTUCI (deadline: today after the meeting)
+- Prepare and agree on an informal letter for MTUCI with a proposal for solutions to the situation
+
+## 3. Next steps:
+1. **Urgent (today):**
+- Artem conducts training for Astra at [12:00]
+
+- Sasha conducts training for Dobrotsen at [12:00]
+
+- Artem coordinates the terms of reference for mass recruitment with OMS at [14:00]
+
+- Lena sends an activation letter to MTUCI
+- Max implements improvements to the voice assistant
+
+2. **Tomorrow:**
+- Artem meets with OMS on CP
+- Sasha holds a meeting with MTS on the results of the pilot at [12:30]
+
+- Preparation for the assessment in Dobrotsen on December 19-20
+
+3. **By the end of the week:**
+- Prepare a specific CP for MTS taking into account their needs and scale (263 recruiters)
+- Complete preparation for the assessment in Dobrotsen
+- Monitor the situation with MTUCI after sending letters"""
     scores = scorer.score(reference, data['summary'])
     rouge_l_f1 = scores['rougeL'].fmeasure
     
@@ -229,7 +292,7 @@ def test_params(combinations, text_name):
 
         summary_output = result.get()
         summary_dict = json.loads(summary_output)
-        f1_score = run_eval(summary_dict)
+        f1_score = run_eval(summary_dict, text_name)
         summary_dict["f1_score"] = f1_score
 
         updated_final_output = json.dumps(summary_dict, indent=2)
@@ -248,4 +311,4 @@ def test_params(combinations, text_name):
         time.sleep(5)
 
 if __name__ == "__main__":
-    test_params(combinations)
+    test_params(combinations, text_name="Transcript")

@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-08 17:38:46",
+  "document_url": "https://drive.google.com/file/d/1bNJKEKimk2nkAKNEj7JJqNKxGzwqC2_G/view?usp=sharing",
+  "chunk_model": "llama3.1:8b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": 32768,
+    "chunk_prompt": "Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.",
+    "final_summary_prompt": "Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:\n1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.",
+    "temp_chunk": 0.5,
+    "temp_final": 0.7,
+    "chunk_size": 7000,
+    "chunk_overlap(tokens)": 200.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 2,
+    "avg_chunk_output(tokens)": 383,
+    "avg_chunk_summary_time(sec)": 5.01,
+    "final_response(tokens)": 698
+  },
+  "summary": "**Meeting Report**\n\n**Date:** [Insert Date]\n**Time:** [Insert Time]\n**Attendees:**\n- Artem\n- Dobrotsen (Dob)\n- Max\n- Olya\n- Sasha\n- Len\n\n**Key Points:**\n\n1. The team discussed ongoing projects with Alfa Bank, Bialowieza Cheeses (SoftLine), and Museum of St. Petersburg History.\n2. New opportunities were explored with Rostex, MTS, Cherkizovo, and other companies.\n3. Artem reported on the status of Astra, their AI-powered recruiting tool.\n4. The team discussed entering a pilot project with Cherkizovo in January.\n5. Rostec needs further coordination after meeting with SB and lawyers.\n6. MTS has completed its pilot project, and an invitation is scheduled for tomorrow at 12:30 PM.\n7. A new pilot project with Zharikov's company was discussed, but the outcome was unclear.\n8. The team will come prepared with ready-made proposals for the MTS meeting tomorrow.\n9. Artem needs to fill out a checklist for PERS data and pass it on to Rostec before the next meeting.\n10. Dobrotsen has a training session today at 12 PM, which is an assessment of four regional directors' skills.\n\n**Decisions Made:**\n\n- Enter a pilot project with Cherkizovo in January.\n- Coordinate further with Rostec after meeting with SB and lawyers.\n- Complete MTS's pilot project with ready-made proposals for the next meeting.\n\n**Assigned Tasks and Deadlines:**\n\n1. **Artem:** Fill out a checklist for PERS data and pass it on to Rostec by the next meeting.\n2. **Team:** Prepare ready-made proposals for the MTS meeting tomorrow at 12:30 PM.\n3. **Dobrotsen:** Attend a training session today at 12 PM.\n\n**Urgent Tasks and Decisions:**\n\n- **Most Urgent (Deadline: Tomorrow, 12:30 PM):** Complete MTS's pilot project with ready-made proposals.\n- **High Priority (Deadline: January 1st):** Enter a pilot project with Cherkizovo in January.\n- **Medium Priority (No Deadline Provided):** Coordinate further with Rostec after meeting with SB and lawyers.\n\n**Agreements and Next Steps:**\n\n1. Len will send the text for the letter to M2C via Telegram, exclusively through unofficial channels.\n2. The team will provide more information about their proposed solution and how it addresses the client's needs.\n3. The competency model is digital, making it easy to evaluate and track progress.\n\n**Decisions Made:**\n\n- The team will work in verification mode for tasks using artificial intelligence to generate reports.\n- The competency model has scores and is digital, making it easy to evaluate and track progress.\n\n**Assigned Tasks:**\n\n1. **Max:** Think about options for creating a personal account or storage within the browser.\n2. **Artem and Sasha:** Entrust Max with making files individualized for each user.\n3. **Olya:** Send the activation letter to M2C after the meeting.\n4. **Len:** Prepare a text for the letter to M2C, based on Alexei Yurchin's stipulation.\n\n**Note:** The next steps and assigned tasks have deadlines that need to be adhered to.",
+  "total_time(sec)": 13.36,
+  "text_token_count": 11508
+}

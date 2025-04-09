@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-08 17:44:20",
+  "document_url": "https://drive.google.com/file/d/1bNJKEKimk2nkAKNEj7JJqNKxGzwqC2_G/view?usp=sharing",
+  "chunk_model": "llama3.1:8b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": 32768,
+    "chunk_prompt": "Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.",
+    "final_summary_prompt": "Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:\n1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.",
+    "temp_chunk": 0.5,
+    "temp_final": 0.7,
+    "chunk_size": 7500,
+    "chunk_overlap(tokens)": 300.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 2,
+    "avg_chunk_output(tokens)": 344,
+    "avg_chunk_summary_time(sec)": 3.4,
+    "final_response(tokens)": 805
+  },
+  "summary": "**Meeting Minutes: Business Meeting Report**\n\n**Attendees:**\n- Dobrotsen\n- Max\n- Alexei Yurchin\n- Olya\n\n**Key Points and Decisions:**\n\n1. **Pilot Projects:** The team is focusing on one company at a time for the pilot projects, starting from less complex to more complex ones. The pilot project with Cherkizovo will start in January.\n2. **Alfa Bank, Rostex, MTS, and Others:** Ongoing projects and initiatives were discussed, including concerns about some pilots' success and the need to revisit engaging potential clients.\n3. **Assessment Process and AI Tool:** Discussions included improving the effectiveness of the AI-powered hiring tool for soft skills assessment and exploring ways to enhance engagement from potential clients through a more effective pilot proposal with clear goals and deadlines.\n4. **MTS Linky Meeting:** A meeting is scheduled for tomorrow at 12:30, including three recruiting leaders to discuss next steps for the pilot project.\n5. **Pilot Project with Cherkizovo:** The team will work on this project in January, focusing on one company at a time.\n6. **Assessment Process:** All four assessors will work together for approximately 7-8 hours per day over two days to complete their reports by December 20th.\n7. **Contractual Issues:** A potential issue arose with a contract between two parties due to ambiguities in the Technical Specification (TK). The parties involved are considering mutual termination or appealing to the FAS if they cannot come to an agreement.\n8. **Voice Assistant Feature:** The team agreed to simplify this feature by allowing users to register once and access their account without needing re-enter credentials for each question.\n9. **Technical Aspects:** Discussions included implementing a voice assistant feature, quasi-personal account system, and simplifying the registration process.\n10. **Reports and Documentation:** Reports on the assessment process and feedback from assessors and artificial intelligence will be prepared by the team after completion.\n\n**Decisions Made and Tasks Assigned:**\n\n1. Dobrotsen - Fill out a checklist for PERS data and pass it to Rostec by today.\n2. The Team - Prepare a report on the assessment process, including feedback from assessors and AI.\n3. Dobrotsen and the team - Complete the pilot project with Cherkizovo in January, focusing on one company at a time.\n4. Max:\n\t* Explore options for simplifying the voice assistant feature.\n\t* Consider implementing a quasi-personal account system.\n5. Alexei Yurchin:\n\t* Prepare a motivated refusal letter if mutual termination of the contract is not agreed upon.\n6. Olya - Send an activation letter to the other party.\n\n**Urgent Tasks and Decisions:**\n\n1. **Mutual Termination or FAS Appeal:** The parties involved are considering mutual termination or appealing to the FAS due to contractual issues.\n2. **Contractual Clarification:** A joint commission may be set up to clarify the Technical Specification (TK) in the contract.\n3. **Assessment Process Reports:** All assessors need to complete their reports by December 20th.\n4. **MTS Linky Meeting:** The meeting scheduled for tomorrow at 12:30 is crucial for discussing next steps for the pilot project.\n\n**Deadlines:**\n\n1. **Today:** Dobrotsen must fill out a checklist for PERS data and pass it to Rostec by today.\n2. **December 20th:** Assessors aim to complete their reports on the assessment process.\n3. Unspecified deadline: The parties involved are considering appealing to the FAS if they cannot come to an agreement on the contract.\n\n**Action Items:**\n\n- Complete pilot project with Cherkizovo in January\n- Finalize assessments and reports by December 20th\n- Simplify voice assistant feature\n- Clarify Technical Specification (TK) in the contract",
+  "total_time(sec)": 14.3,
+  "text_token_count": 11508
+}

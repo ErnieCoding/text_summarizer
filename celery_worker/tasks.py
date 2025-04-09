@@ -75,7 +75,7 @@ def generate_summary(text, temperature, max_tokens, rye, custom_prompt=None, chu
 {text}"""
     else:
         if rye:
-            prompt = f"""Synthesize the following chunk summaries into a single, cohesive analysis of the text while ensuring no loss of critical details of the plot, characters, etc. Do not provide any other information in your answer except described above holistic summary of the whole text.
+            prompt = f"""Synthesize the following chunk summaries into a single, cohesive report of the text while ensuring no loss of critical details of the plot, characters, etc. Do not provide any other information in your answer except described above holistic summary of the whole text.
 - Eliminate redundant information and merge similar themes.
 - Identify overarching patterns and insights that emerge when considering the full text holistically.
 
@@ -85,7 +85,7 @@ Provide a final summary that includes:
 
 {text}"""
         else:
-            prompt = f"""Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:
+            prompt = f"""Synthesize the following chunk summaries of a business meeting into a single, cohesive report, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create meeting minutes based on the following format:
 1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)
 2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them
 3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.

@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-08 17:38:27",
+  "document_url": "https://drive.google.com/file/d/1bNJKEKimk2nkAKNEj7JJqNKxGzwqC2_G/view?usp=sharing",
+  "chunk_model": "llama3.1:8b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": 32768,
+    "chunk_prompt": "Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.",
+    "final_summary_prompt": "Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:\n1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.",
+    "temp_chunk": 0.5,
+    "temp_final": 0.5,
+    "chunk_size": 7000,
+    "chunk_overlap(tokens)": 200.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 2,
+    "avg_chunk_output(tokens)": 360,
+    "avg_chunk_summary_time(sec)": 3.39,
+    "final_response(tokens)": 583
+  },
+  "summary": "**Meeting Report**\n\n**Attendees:**\n- Artem (Astra)\n- Dobrotsen\n- Zharikov\n- Recruiting leaders from MTS\n- Max\n- Len\n\n**Key Points of the Meeting (10):**\n\n1. The team discussed various projects and meetings related to Alfa Bank, MHI, Bialowiezh cheeses (SoftLine), Institute for Nuclear Research, Rostex, MTS, Cherkizovo, and corporate university.\n2. A pilot project was agreed upon with Rostex and MTS to be implemented in January.\n3. The team explored the potential of Astra technology to evaluate hard skills in job interviews.\n4. It was decided to focus on small-scale pilots with 5-10 companies before scaling up.\n5. An assessment process for regional directors will involve verification by both human assessors and AI, set to take place on December 19-20.\n6. The competency model has scores and indicators for each score, making it digital.\n7. The team is discussing how to make the voice assistant work more efficiently, with a focus on simplifying the process for users.\n8. A pilot project checklist was decided to be created for Cherkizovo.\n9. Meetings were scheduled: one with Zharikov and recruiting leaders from MTS on December 22nd at 12:30 PM, and an assessment day for regional directors on December 19-20.\n10. Artem (Astra) is responsible for preparing the next steps for the pilot projects, including setting up meetings and providing feedback.\n\n**Decisions Made and Assigned Tasks with Deadlines:**\n\n1. **Pilot Project with Rostex and MTS:** To start in January. Assigned to Artem (Astra), deadline January.\n2. **Pilot Project Checklist with Cherkizovo:** To be created by the team, no specific person assigned but due soon.\n3. **Assessment Process for Regional Directors:** Scheduled for December 19-20. No specific tasks assigned.\n4. **Voice Assistant Efficiency:** Max tasked with coming up with options to make it work more efficiently.\n5. **Contract Termination Letter:** Len is asked to send the activation letter through unofficial channels, no deadline given but it should be done soon.\n6. **Meeting with Zharikov and Recruiting Leaders from MTS:** Scheduled for December 22nd at 12:30 PM, assigned to the team.\n\n**Urgent Tasks and Decisions:**\n\nBased on deadlines, urgent tasks include:\n1. The assessment process is scheduled for December 19-20.\n2. Max needs to come up with options for making the voice assistant work more efficiently soon.\n3. Len should prepare the contract termination and explanation letter as soon as possible.\n\nLet me know if you'd like me to clarify any points or make any adjustments!",
+  "total_time(sec)": 11.84,
+  "text_token_count": 11508
+}

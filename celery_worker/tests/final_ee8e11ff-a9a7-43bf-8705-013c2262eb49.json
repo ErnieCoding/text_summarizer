@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-08 17:32:35",
+  "document_url": "https://drive.google.com/file/d/1bNJKEKimk2nkAKNEj7JJqNKxGzwqC2_G/view?usp=sharing",
+  "chunk_model": "llama3.1:8b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": 32768,
+    "chunk_prompt": "Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.",
+    "final_summary_prompt": "Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:\n1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.",
+    "temp_chunk": 0.3,
+    "temp_final": 0.7,
+    "chunk_size": 6500,
+    "chunk_overlap(tokens)": 100.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 2,
+    "avg_chunk_output(tokens)": 340,
+    "avg_chunk_summary_time(sec)": 3.16,
+    "final_response(tokens)": 808
+  },
+  "summary": "Here are the synthesized meeting minutes:\n\n**Meeting Minutes:**\n\n1. **Participating Members:** Max, Artem, Sasha, Lena, Oleg, Alexei Yurchin\n2. **Key Points:**\n\t* Negotiations with Alfa Bank are progressing positively and a meeting is scheduled for December 24th to finalize details.\n\t* Two stages of coordination are required: Oksana Sorenkova's team and IT security director approval.\n\t* No final decision on amounts will be made until the new year.\n\t* Contract with Alfa Bank can be signed soon.\n3. **Ongoing Projects:**\n\t* Interviews for top positions to be conducted by Head of Recruitment and HRD itself.\n\t* Pilot program setup for Rostex, Cherkizovo, and MTS.\n4. **New Developments:**\n\t* Voice assistant tool being developed to assist in answering questions and providing information.\n\t* Team will work on improving voice assistant functionality.\n\n**10 Key Points of the Meeting:**\n\n1. Negotiations with Alfa Bank are positive, but a meeting is needed on December 24th to finalize details.\n2. Two stages of coordination required for contract approval.\n3. No final decision on amounts until the new year.\n4. Contract with Alfa Bank can be signed soon.\n5. Interviews for top positions to be conducted by Head of Recruitment and HRD itself.\n6. Pilot program setup for Rostex, Cherkizovo, and MTS.\n7. Voice assistant tool being developed to assist in answering questions and providing information.\n8. Team will work on improving voice assistant functionality.\n9. Feedback from pilot program at MTS needs to be reviewed and ready-made proposals prepared.\n10. A joint commission may be set up to clarify Technical Specification (TK) with the client.\n\n**Decisions Made, Assigned Tasks, and Deadlines:**\n\n1. **Artem:** Set up a meeting with Nezvanov from the Institute of Nuclear Research (December 20th).\n2. **Sasha:** Prepare an offer invoice for the Institute of Nuclear Research and pass it quickly.\n3. **Artem:** Prepare a template for Rostex to test pilot program.\n4. **Lena:** Add herself to HRD's supervisor's office yesterday.\n5. **Max:** Coordinate Technical Zone (TZ) at 2 pm on December 17th.\n6. **Oleg:** Help Max with voice assistant tool development.\n7. **Alexei Yurchin:** Prepare a letter for the client regarding contract termination.\n8. **Deadlines:**\n\t* December 17th, 2 pm - Meeting with Max to coordinate TZ.\n\t* January (approximately) - Enter pilot program at Cherkizovo.\n\t* Before the New Year - Pay Institute of Nuclear Research for services rendered.\n\t* December 20th - Complete assessment of four regional directors.\n\n**Urgent Tasks and Decisions:**\n\n1. **Most Urgent Task:** Set up a meeting with Nezvanov from the Institute of Nuclear Research (Artem, December 20th).\n2. **Next Most Urgent Task:** Prepare an offer invoice for the Institute of Nuclear Research and pass it quickly (Sasha, deadline not specified).\n3. **Other Urgent Tasks:**\n\t* Review feedback from pilot program at MTS.\n\t* Prepare ready-made proposals for next meeting.\n\n**Follow-up Tasks:**\n\n1. Review feedback from pilot program and prepare ready-made proposals for the next meeting.\n2. Prepare an updated promo for the second week of the pilot program at MTS.\n3. Find a way to make voice assistant more user-friendly and efficient, possibly by creating personal account or storage system.\n\n**Meetings Scheduled:**\n\n1. Meeting with Max to coordinate Technical Zone (TZ) - December 17th, 2 pm\n2. Meeting with Nezvanov from the Institute of Nuclear Research - December 20th",
+  "total_time(sec)": 13.3,
+  "text_token_count": 11508
+}

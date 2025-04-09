@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-08 17:30:55",
+  "document_url": "https://drive.google.com/file/d/1bNJKEKimk2nkAKNEj7JJqNKxGzwqC2_G/view?usp=sharing",
+  "chunk_model": "llama3.1:8b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": 32768,
+    "chunk_prompt": "Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.",
+    "final_summary_prompt": "Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:\n1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.",
+    "temp_chunk": 0.3,
+    "temp_final": 0.5,
+    "chunk_size": 6000,
+    "chunk_overlap(tokens)": 300.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 2,
+    "avg_chunk_output(tokens)": 418,
+    "avg_chunk_summary_time(sec)": 5.36,
+    "final_response(tokens)": 781
+  },
+  "summary": "**Meeting Report**\n\n**Participants:**\nArtyom, Dobrotsen, KP (Khristina), Max, Alexei Yurchin\n\n**Key Points and Decisions Made:**\n\n1. **Alfa Bank Project**: The team has a good relationship with Alfa Bank and proposed a solution that meets their needs. Next steps involve IT security coordination and a meeting on the 24th-26th.\n2. **MHI (Messaging and IT) Agreement**: A meeting is scheduled for tomorrow to finalize the agreement, which includes Messenger, VKS, and limited report generation for all users at a cost of 4 million rubles plus additional fees based on package selection.\n3. **Bialowieza Cheeses (SoftLine) Contract**: A contract is being signed between SoftLine and Bialowieza Cheeses, with the total amount remaining unchanged, but with an offer to pay less than expected.\n4. **Museum of St. Petersburg History**: The team needs feedback from this client regarding their interest in the product.\n5. **Joint Institutes for Nuclear Research (JINR)**: An offer invoice is being prepared for JINR, and payment before the New Year is expected.\n6. **Astra Pilot Project**: The team discussed Astra with a client who expressed interest but needs help setting up a road map for implementation.\n7. **Pilot Program**: The team decided to start next year's projects through a pilot program.\n8. **M2C Contract Termination**: The contract with M2C is being terminated due to ambiguity in the Technical Specification (TK).\n9. **Voice Assistant Chatbot**: The team discussed the need for better user experience and simplification of the system.\n10. **User Experience Simplification**: Max is tasked with thinking about options for simplifying the voice assistant chatbot's user experience.\n\n**Decisions Made, Assigned Tasks, and Deadlines:**\n\n1. **Alfa Bank Project**: Proceed to next stage after 24th-26th meeting (Oksana Sorenkova).\n2. **MHI Agreement**: Finalize agreement after tomorrow's meeting.\n3. **Bialowieza Cheeses Contract**: Complete contract signing process.\n4. **Astra Pilot Project**: Set up road map for implementation and establish deadlines (assign responsible person).\n5. **Pilot Program**: Start next year's projects through pilot program.\n6. **M2C Contract Termination**: Write letter to M2C in response to their request for termination of the contract (Alexei Yurchin).\n\n**Urgent Tasks and Decisions:**\n\n* **Meeting Preparation**: Artyom (no specific deadline)\n* **Astra Pilot Project**: Set up road map for implementation, assign responsible person, and establish deadlines.\n* **MHI Agreement**: Finalize agreement after tomorrow's meeting (deadline: 12:30 PM).\n* **Bialowieza Cheeses Contract**: Complete contract signing process.\n* **Pilot Program**: Start next year's projects through pilot program.\n* **M2C Contract Termination**: Write letter to M2C in response to their request for termination of the contract (Alexei Yurchin, deadline: today or soon after the meeting).\n* **Assessment of Regional Directors**: Dobrotsen will prepare a report on assessment by December 19-20.\n* **Translation of Pilot Program**: KP needs to translate pilot program into specific discussion mode and create map with numbers and costs by tomorrow's meeting at 12:30 PM.\n\n**Additional Notes:**\n\n* The team has not experienced significant issues with hardskills in Astra pilot projects.\n* Recruiters often don't need to assess hard skills; they focus on soft skills, experience, and role fit.\n* The team is aiming for a fully turnkey solution for hiring complex elements.",
+  "total_time(sec)": 17.52,
+  "text_token_count": 11508
+}

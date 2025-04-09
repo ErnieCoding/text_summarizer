@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-08 17:45:45",
+  "document_url": "https://drive.google.com/file/d/1bNJKEKimk2nkAKNEj7JJqNKxGzwqC2_G/view?usp=sharing",
+  "chunk_model": "llama3.1:8b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": 32768,
+    "chunk_prompt": "Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.",
+    "final_summary_prompt": "Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:\n1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.",
+    "temp_chunk": 0.5,
+    "temp_final": 0.7,
+    "chunk_size": 8000,
+    "chunk_overlap(tokens)": 100.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 2,
+    "avg_chunk_output(tokens)": 393,
+    "avg_chunk_summary_time(sec)": 3.92,
+    "final_response(tokens)": 739
+  },
+  "summary": "**Meeting Report**\n\n**Date:** [Not specified]\n\n**Attendees:**\n\n1. Artem\n2. Dobrotsen\n3. Maxim\n4. Oksana Sorenkova (to be invited for a meeting on December 24th)\n5. Client (340,000)\n6. Max\n7. Oleg\n8. Len\n\n**Key Points and Decisions Made:**\n\n1. **Alfa Bank Contract:** The team discussed their status on the contract with Alfa Bank, which was agreed upon by both parties. They decided to move forward with the contract and wait for Oksana Sorenkova's feedback.\n2. **Pilot Project with MTS:** Despite technical issues, the team decided to focus on implementing a pilot project with MTS. Artem will follow up with Rostex to discuss their internal issues and find a solution for implementing a pilot project.\n3. **Regional Directors Assessment:** Dobrotsen was tasked with conducting an assessment of four regional directors using AI-powered evaluation tools by December 20th (Deadline: Complete the assessment within two days, December 19-20).\n4. **Voice Assistant for Client Nornickel:** The team discussed improving the voice assistant's functionality and decided not to implement streaming mode yet.\n5. **Contract Termination with M2C:** The team agreed to terminate the contract with M2C due to ambiguity in their Technical Specification (TK) and identical solution to others.\n\n**Decisions, Assigned Tasks, and Deadlines:**\n\n1. **Dobrotsen:**\n\t* Conduct an assessment of four regional directors using AI-powered evaluation tools\n\t* Deadline: Complete the assessment within two days (December 19-20)\n2. **Artem:**\n\t* Follow up with Rostex to discuss their internal issues and find a solution for implementing a pilot project\n\t* No specific deadline mentioned\n3. **Maxim:**\n\t* Assist in conducting an assessment of four regional directors using AI-powered evaluation tools\n\t* Deadline: Complete the assessment within two days (December 19-20)\n4. **Client (340,000):**\n\t* Prepare a report by December 31st (or January 7th if extended)\n5. **Max:**\n\t* Explore options to improve the voice assistant's functionality\n\t* Create a draft for training or safety concept (related to regulatory documents)\n6. **Oleg:**\n\t* Prepare a letter to M2C, confirming their decision to terminate the contract on friendly terms\n7. **Len:**\n\t* Confirm with M2C that they received the activation letter and are ready to provide a fully working solution\n\n**Urgent Tasks and Decisions:**\n\n1. **Termination of Contract with M2C:** The team decided to offer a mutually friendly dissolution of the contract, allowing both parties to clarify TK and fulfill each other's needs.\n2. **Voice Assistant Improvement:** Max was tasked with exploring options to improve the voice assistant's functionality on an immediate basis (same day).\n3. **Regional Directors Assessment:** Dobrotsen must complete the assessment within two days (December 19-20).\n\n**Next Steps:**\n\n1. Meet with Oksana Sorenkova on December 24th to discuss further coordination regarding Alfa Bank contract.\n2. Follow up with Rostex and MTS for progress on pilot project implementation.\n\nThis report summarizes the key points, decisions made, assigned tasks, and deadlines from both meeting summaries. It is essential to complete all urgent tasks and meet the deadlines to move forward with the discussed projects and contracts.",
+  "total_time(sec)": 14.73,
+  "text_token_count": 11508
+}

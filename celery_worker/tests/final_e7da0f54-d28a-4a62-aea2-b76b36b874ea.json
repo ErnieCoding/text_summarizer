@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-08 17:46:52",
+  "document_url": "https://drive.google.com/file/d/1bNJKEKimk2nkAKNEj7JJqNKxGzwqC2_G/view?usp=sharing",
+  "chunk_model": "llama3.1:8b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": 32768,
+    "chunk_prompt": "Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.",
+    "final_summary_prompt": "Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:\n1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.",
+    "temp_chunk": 0.5,
+    "temp_final": 0.5,
+    "chunk_size": 8000,
+    "chunk_overlap(tokens)": 200.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 2,
+    "avg_chunk_output(tokens)": 383,
+    "avg_chunk_summary_time(sec)": 5.07,
+    "final_response(tokens)": 823
+  },
+  "summary": "Here's a synthesized report based on the two chunk summaries:\n\n**Meeting Minutes:**\n\n**Attendees:**\nArtem, Dobrotsen, Alexei, Team members from Rostec and Cherkizovo, Max, Oleg, Team lead\n\n**Key Points:**\n\n1. The meeting discusses ongoing projects with various companies, including Alfa Bank, Rostec, MTS, Cherkizovo, and Nornickel.\n2. The team is working on implementing their product (Astra) in these companies to improve their hiring process and reduce workload.\n3. Concerns were raised about the pilot project's progress, with some teams not showing enthusiasm or interest.\n4. The team aims to create a \"wow effect\" by demonstrating the benefits of Astra.\n5. The team is working on creating a voice assistant for Nornickel, which includes three auto tests, two interviews, and a soft skill test.\n6. A demo of this voice assistant has been created using information provided by Nornickel.\n7. The team decided to focus on creating a single, multifaceted product rather than multiple products with blurred value propositions.\n8. Options for implementing a chat-like feature in the voice assistant are being explored.\n9. The contract with M2C is to be terminated due to ambiguity in the Technical Specification (TK).\n10. A decision was made to send an activation letter and confirm willingness to provide a full solution on a friendly basis.\n\n**Decisions Made:**\n\n1. Artem will lead the implementation of Astra at Rostec and Cherkizovo.\n2. A deadline will be set for the pilot project to increase enthusiasm and motivation among team members.\n3. The team will focus on one company per week to demonstrate the benefits of Astra.\n4. To implement a chat-like feature in the voice assistant to allow users to ask questions without re-registering each time.\n\n**Assigned Tasks with Responsible People and Deadlines:**\n\n1. Artem:\n\t* Lead implementation at Rostec and Cherkizovo\n\t* Coordinate with teams to set up a deadline for the pilot project (Deadline: [insert date])\n2. Dobrotsen:\n\t* Prepare report on assessment process for Nornickel (Deadline: [insert date])\n3. Alexei:\n\t* Assist in preparing for the assessment event (Deadline: [insert date])\n4. Max:\n\t* Think about options for implementing the chat-like feature in the voice assistant (Deadline: [insert date])\n5. Oleg:\n\t* Duplicate link to the last voice assistant given to the team lead and remind him to test it (Immediate)\n6. Team members from Rostec and Cherkizovo:\n\t* Complete assessments and prepare reports (Deadline: [insert date])\n\n**Urgent Tasks and Decisions:**\n\n1. **Termination of Contract with M2C:** The contract is to be terminated due to ambiguity in the Technical Specification (TK).\n2. **Voice Assistant for Nornickel:** Implement a chat-like feature in the voice assistant to allow users to ask questions without re-registering each time.\n3. **Pilot Project Deadline:** Set a deadline for the pilot project to increase enthusiasm and motivation among team members.\n\n**Action Items:**\n\n1. Artem will coordinate with teams to set up a deadline for the pilot project.\n2. Dobrotsen will prepare a report on the assessment process for Nornickel.\n3. Alexei will assist in preparing for the assessment event.\n4. Max will think about options for implementing the chat-like feature in the voice assistant.\n5. Oleg will duplicate the link to the last voice assistant given to the team lead and remind him to test it.\n\n**Open Issues:**\n\n1. Feedback from clients is still pending, particularly from Rostec and Cherkizovo.\n2. Concerns about the pilot project's progress need to be addressed.\n3. The team needs to work on setting up deadlines for the pilot project to increase enthusiasm and motivation among team members.",
+  "total_time(sec)": 17.35,
+  "text_token_count": 11508
+}

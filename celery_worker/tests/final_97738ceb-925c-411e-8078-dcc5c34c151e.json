@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-08 17:44:00",
+  "document_url": "https://drive.google.com/file/d/1bNJKEKimk2nkAKNEj7JJqNKxGzwqC2_G/view?usp=sharing",
+  "chunk_model": "llama3.1:8b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": 32768,
+    "chunk_prompt": "Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.",
+    "final_summary_prompt": "Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:\n1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.",
+    "temp_chunk": 0.5,
+    "temp_final": 0.5,
+    "chunk_size": 7500,
+    "chunk_overlap(tokens)": 300.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 2,
+    "avg_chunk_output(tokens)": 389,
+    "avg_chunk_summary_time(sec)": 5.29,
+    "final_response(tokens)": 701
+  },
+  "summary": "**Meeting Report**\n\n**Attendees:**\n\n1. Artem\n2. Sasha\n3. Dobrotsen\n4. MTS (represented by multiple individuals)\n5. Oleg\n6. Max\n7. Len\n\n**10 Key Points of the Meeting:**\n\n1. The meeting discussed ongoing projects and pilots with various companies, including Alfa Bank, Rostex, and MTS.\n2. Artem mentioned the need for clarity on the timing of one project, and Sasha suggested setting a deadline for completion.\n3. Four pilots are currently in progress, requiring coordination with SB and lawyers to move forward.\n4. MTS has completed their pilot, and a meeting is scheduled for tomorrow at 12:30.\n5. Dobrotsen will undergo training on December 19th and 20th, where four regional directors will be assessed.\n6. The assessment process involves verifying the results of artificial intelligence against the report of assessors.\n7. A voice assistant tool is being developed to simplify the process of asking questions and receiving answers.\n8. Oleg discussed terminating the contract with Natusi due to issues with the Technical Specification (TK).\n9. Three alternatives for handling the contract termination were proposed: mutual termination, appealing the FAS tender, or providing a fully working solution that meets Natusi's needs.\n10. The team agreed to send a joint letter to Natusi, confirming their decision and offering a mutually respectful approach.\n\n**Decisions Made, Assigned Tasks, and Deadlines:**\n\n1. **Set Deadline for Completion:** Set a deadline for completion of one project (no specific date mentioned).\n\t* Task assigned: Sasha will work on setting up the pilot with Cherkizovo, aiming to start in January.\n2. **Coordinate with SB and Lawyers:** Coordinate with SB and lawyers to move forward with pilots.\n3. **Schedule Meeting at MTS Linky:** Schedule a meeting at MTS Linky for tomorrow at 12:30.\n4. **Assessment Process:** The assessors will work together for 2 days (7-7.5 hours each day) to complete their tasks. The assessment itself should be completed by December 20th.\n\t* Task assigned: Dobrotsen will undergo training on December 19th and 20th, where four regional directors will be assessed.\n5. **Voice Assistant Tool:** Max was tasked with exploring options for improving the voice assistant tool.\n6. **Natusi Contract Termination:** The team agreed to send a joint letter to Natusi, confirming their decision and offering a mutually respectful approach.\n\t* Task assigned: Oleg will prepare the joint letter, while Len will send the activation letter to Natusi.\n\n**Urgent Tasks and Decisions:**\n\n1. **MTS Meeting:** A meeting is scheduled for tomorrow at 12:30 at MTS Linky.\n2. **Assessment Process Deadline:** The assessment process should be completed by December 20th.\n3. **Natusi Contract Termination:** The team must send a joint letter to Natusi, confirming their decision and offering a mutually respectful approach.\n\n**Other Notes:**\n\n* Artem mentioned that they need to get clarity on the timing of one project and suggests setting a deadline for completion.\n* Sasha will work on setting up the pilot with Cherkizovo, aiming to start in January.\n* The team will prepare for the meeting at MTS Linky tomorrow.",
+  "total_time(sec)": 16.76,
+  "text_token_count": 11508
+}

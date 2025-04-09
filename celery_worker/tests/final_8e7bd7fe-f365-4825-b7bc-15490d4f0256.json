@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-08 17:27:18",
+  "document_url": "https://drive.google.com/file/d/1bNJKEKimk2nkAKNEj7JJqNKxGzwqC2_G/view?usp=sharing",
+  "chunk_model": "llama3.1:8b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": 32768,
+    "chunk_prompt": "Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.",
+    "final_summary_prompt": "Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:\n1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.",
+    "temp_chunk": 0.5,
+    "temp_final": 0.5,
+    "chunk_size": 5500,
+    "chunk_overlap(tokens)": 300.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 3,
+    "avg_chunk_output(tokens)": 365,
+    "avg_chunk_summary_time(sec)": 4.27,
+    "final_response(tokens)": 780
+  },
+  "summary": "Here's a synthesized report of the business meeting, ensuring no loss of critical details:\n\n**Meeting Report**\n\n**Participants:**\nMax, Artyom, Lena, and other team members (not specified)\n\n**Date:** Not mentioned in the summaries, but can be inferred from the deadlines given.\n\n**Key Points (10):**\n\n1. The team discussed their current projects and collaborations with clients.\n2. They reviewed progress on contracts with Alfa Bank and MHI (Museum of St. Petersburg History).\n3. There was a discussion about extending contracts with SoftLine and Bialowiezh cheeses.\n4. The team also talked about the development of a new tool for hiring and evaluating candidates, using artificial intelligence.\n5. Pilot project with Cherkizovo: It's agreed that the pilot will start in January.\n6. Pilot project with Rostec and other companies: The team needs to coordinate with SB (System of records) and lawyers before moving forward.\n7. MTS Linky: A meeting is scheduled for tomorrow at 12:30, where three recruiting leaders from MTS will be present.\n8. Feedback from pilots: There's a lack of feedback from the pilot in the second week, including from Zharikov.\n9. Competency model and scoring system: The team will evaluate competencies using a scoring system that has digital indicators and additional criteria.\n10. Voice assistant: The team is working on implementing a voice assistant that can answer questions without requiring registration every time.\n\n**Decisions Made:**\n\n1. The team decided to agree on the technical part of the contract with Alfa Bank and start discussing commercial contracts.\n2. They agreed to wait until December 24th for further discussion with Oksana Sorenkova.\n3. The team decided to adjust prices for MHI based on their needs.\n4. Pilot project with Cherkizovo will start in January.\n5. Team needs to coordinate with SB and lawyers before moving forward on pilot projects with Rostec and other companies.\n\n**Assigned Tasks and Deadlines:**\n\n1. **Max:** Coordinate the technical part of the contract with Alfa Bank by December 26th.\n2. **Artyom:** Prepare a draft agreement for Bialowiezh cheeses (no deadline mentioned).\n3. **Lena:** Add Oksana Sorenkova to the supervisor's office in HRD (no deadline mentioned).\n4. **The team:** Review and adjust prices for MHI based on their needs.\n5. **To be determined:** Develop a new tool for hiring and evaluating candidates using artificial intelligence.\n6. **Fill out checklist for PERS data and pass it on to Rostec** (Team, no deadline mentioned)\n7. **Coordinate with SB and lawyers for pilot projects with Rostec and other companies** (Team, no deadline mentioned)\n8. **Write report and provide feedback from pilots** (Zharikov and team, no deadline mentioned)\n\n**Urgent Tasks and Decisions:**\n\n1. Alexei Yurchin will prepare a letter to be sent to the client through unofficial channels (Deadline: Not specified).\n2. The company will provide a fully working solution that covers the client's learning process needs if the contract is terminated.\n3. If the client refuses, they will prepare a motivated refusal and send it to the FAS.\n\n**Urgency Level:** High\n\n**Meeting Minutes:**\n\n* Meeting scheduled for tomorrow at 12:30 with MTS Linky (MTS Linky meeting).\n* Pilot project with Cherkizovo will start in January.\n* Team needs to coordinate with SB and lawyers before moving forward on pilot projects with Rostec and other companies.\n\nNote that some deadlines are not explicitly mentioned, but based on the context, it seems like the company wants to resolve issues quickly.",
+  "total_time(sec)": 19.68,
+  "text_token_count": 11508
+}

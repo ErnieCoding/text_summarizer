@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-08 17:20:27",
+  "document_url": "https://drive.google.com/file/d/1bNJKEKimk2nkAKNEj7JJqNKxGzwqC2_G/view?usp=sharing",
+  "chunk_model": "llama3.1:8b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": 32768,
+    "chunk_prompt": "Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.",
+    "final_summary_prompt": "Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:\n1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.",
+    "temp_chunk": 0.5,
+    "temp_final": 0.7,
+    "chunk_size": 2000,
+    "chunk_overlap(tokens)": 200.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 7,
+    "avg_chunk_output(tokens)": 346,
+    "avg_chunk_summary_time(sec)": 3.02,
+    "final_response(tokens)": 820
+  },
+  "summary": "Here is the synthesized report from the 7 chunks:\n\n**Meeting Minutes: Business Meeting Summary**\n\n**Attendees:** Not explicitly mentioned in all chunks, but assuming key participants are Alfa Bank, MHI (Mass Selection), SoftLine, Museum of St. Petersburg History, Institute for Nuclear Research, and possibly others depending on the context.\n\n**Key Points: 10 Key points of discussion**\n\n1. **Alfa Bank**: Stable status with potential expansion to 2 million users.\n2. **MHI (Mass Selection)**: Coordinating technical project details.\n3. **SoftLine (Bialowiezh cheeses)**: Contract recovery and new contract signing soon.\n4. **Museum of St. Petersburg History**: Extended contract worth 130,000 rubles.\n5. **Institute for Nuclear Research**: Payment due before the New Year; invoice prepared.\n6. **Pilot Program RConf**: Discussing pilot program effectiveness and potential adjustments to client interests.\n7. **Assessment Process**: Implementing voice assistant tool for assessing records with assessors working together simultaneously.\n8. **Technical Specifications (TK)**: Clarification needed on TK in contract, possibly leading to termination or appeal to FAS (Federal Antimonopoly Service).\n9. **Recruitment Platform**: Considering using Astra's tool in combination with RConf to streamline hiring processes.\n10. **Client Feedback and Engagement**: Improving communication and engagement with clients not enthusiastic about the pilot program.\n\n**Decisions Made, Assigned Tasks, and Deadlines**\n\n1. **Meeting with Oksana Sorenkova**: Wait until December 24th for meeting discussion details (Artem).\n2. **MHI Project Coordination**: Max to coordinate technical part of project by 2 pm today.\n3. **Commercial Contract with SoftLine**: Elizabeth to coordinate commercial contract.\n4. **Institute for Nuclear Research**: Nezvanov to talk about quotes and payment (no specific deadline mentioned).\n5. **Pilot Program RConf**: Revise proposal to better align with client interests, explore ways to improve communication and engagement (team effort, no specific person or deadline mentioned).\n6. **Assessment Process**: Implement voice assistant tool, minimize assessors' workload, and maximize efficiency (Max, December 20th for report preparation).\n7. **Technical Specifications (TK)**: Terminate contract to clarify TK and fulfill more accurate needs; offer assistance from Clavier Services (no specific deadline mentioned).\n\n**Urgent Tasks and Decisions**\n\n1. **Meeting with Oksana Sorenkova**: Meet by December 24th for discussion details.\n2. **MHI Project Coordination**: Max must coordinate technical part of project by 2 pm today.\n3. **Pilot Program RConf**: Revise proposal to better align with client interests (team effort, no specific person or deadline mentioned).\n4. **Assessment Process**: Implement voice assistant tool and minimize assessors' workload by December 20th for report preparation.\n5. **Institute for Nuclear Research**: Nezvanov must discuss quotes and payment.\n\n**Action Items for Each Attendee**\n\n1. Artem: Wait until December 24th for meeting discussion details with Oksana Sorenkova.\n2. Max: Coordinate technical part of MHI project by 2 pm today.\n3. Elizabeth: Coordinate commercial contract with SoftLine.\n4. Nezvanov: Discuss quotes and payment with Institute for Nuclear Research (no specific deadline mentioned).\n5. Team (not specified): Revise proposal to better align with client interests, explore ways to improve communication and engagement (Pilot Program RConf).\n\n**Urgent Deadlines**\n\n1. Meeting with Oksana Sorenkova by December 24th.\n2. Max must coordinate technical part of MHI project by 2 pm today.\n3. Report preparation for Assessment Process by December 20th.\n\nNote that some tasks and deadlines are not explicitly mentioned in all chunks, but I've synthesized the key points to provide a comprehensive report.",
+  "total_time(sec)": 28.87,
+  "text_token_count": 11508
+}

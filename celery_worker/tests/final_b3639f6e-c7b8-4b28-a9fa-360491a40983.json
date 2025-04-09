@@ -1,0 +1,28 @@
+{
+  "type": "final",
+  "Author": "ErnestSaak",
+  "date_time": "2025-04-08 17:33:38",
+  "document_url": "https://drive.google.com/file/d/1bNJKEKimk2nkAKNEj7JJqNKxGzwqC2_G/view?usp=sharing",
+  "chunk_model": "llama3.1:8b",
+  "final_model": "llama3.1:8b",
+  "input_params": {
+    "context_length": 32768,
+    "chunk_prompt": "Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.",
+    "final_summary_prompt": "Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:\n1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.",
+    "temp_chunk": 0.3,
+    "temp_final": 0.5,
+    "chunk_size": 6500,
+    "chunk_overlap(tokens)": 200.0,
+    "chunk_output_limit(tokens)": 1500,
+    "final_output_limit(tokens)": 5000
+  },
+  "output_params": {
+    "num_chunks": 2,
+    "avg_chunk_output(tokens)": 340,
+    "avg_chunk_summary_time(sec)": 4.6,
+    "final_response(tokens)": 783
+  },
+  "summary": "**Meeting Minutes Report**\n\n**Meeting Details:**\n\nDate: Not specified\nTime: Not specified\nParticipants: Oksana Sorenkova, Artem, Max, Oleg, and other team members (not specified)\n\n**10 Key Points of the Meeting:**\n\n1.  The status with Alfa Bank is positive, and they have agreed on two stages of implementation.\n2.  Oksana Sorenkova will coordinate with the director of IT security, but it's unclear when she can testify.\n3.  The team has a good understanding of the requirements for the pilot projects with various companies.\n4.  To proceed with the pilot project in Cherkizovo and aim to enter the pilot in January.\n5.  To coordinate with Rostec, MTS, and other companies to finalize the pilot project details.\n6.  Focus on four companies for the pilot project: Cherkizovo, Rostec, MTS, and another company (not specified).\n7.  Artem is assigned to finalize the checklist for PERS data and pass it on to the teams coordinating with Rostec and other companies.\n8.  Create a proposal for the pilot project with MTS, aiming to have a meeting at 12:30 tomorrow.\n9.  Gather feedback from the second week of the pilot project with Zharikov and use it to make adjustments.\n10. The team discussed various business-related topics, including a pilot project, feedback collection, and the development of a chat assistant.\n\n**Decisions Made, Assigned Tasks, and Deadlines:**\n\n*   To proceed with the pilot project in Cherkizovo and aim to enter the pilot in January (deadline: January).\n*   Artem is assigned to finalize the checklist for PERS data and pass it on to the teams coordinating with Rostec and other companies (no specific deadline).\n*   The team will work together to create a proposal for the pilot project with MTS, aiming to have a meeting at 12:30 tomorrow.\n*   To gather feedback from the second week of the pilot project with Zharikov and use it to make adjustments (deadline: Not specified).\n*   Max is assigned to create options for the voice-enabled chat assistant (no specific deadline).\n*   Oleg is assigned to write a letter to Natusi, offering a friendly path for contract termination (implied deadline within the next day).\n\n**Urgent Tasks and Decisions:**\n\nThe following tasks are considered urgent based on their deadlines:\n\n1.  Artem's task to finalize the checklist for PERS data and pass it on to the teams coordinating with Rostec and other companies (no specific deadline).\n2.  The team's proposal for the pilot project with MTS, aiming to have a meeting at 12:30 tomorrow.\n3.  Oleg's letter to Natusi, offering a friendly path for contract termination (implied deadline within the next day).\n\n**Action Items and Follow-up:**\n\n*   Artem: Finalize the checklist for PERS data and pass it on to the teams coordinating with Rostec and other companies (no specific deadline).\n*   Team: Work together to create a proposal for the pilot project with MTS, aiming to have a meeting at 12:30 tomorrow.\n*   Oleg: Write a letter to Natusi, offering a friendly path for contract termination (implied deadline within the next day).\n\n**Next Steps:**\n\nThe team will continue working on the pilot project, voice-enabled chat assistant, and addressing the Natusi contract termination. The meeting ended with a decision to proceed with these tasks and meet the deadlines set forth in this report.\n\nNote: This report was generated based on two chunk summaries of the business meeting. Ensure that all critical details are included in the final report without any loss of information.",
+  "total_time(sec)": 15.97,
+  "text_token_count": 11508
+}
