@@ -230,8 +230,12 @@ def process_document(task_id):
 
     final_summary, final_time = generate_summary(combined_input, temp_final, max_tokens_final, final_prompt, final_summary=True)
 
+    # Retrieve cached prompts for reporting
+    prompts = get_cached_prompts()
+    chunk_prompt_text = prompts.prompts[0]
+    final_prompt_text = prompts.prompts[1]
     final_msg = json.dumps({
-        "version": 1.0,
+        "version": 1.1,
         "description": "Имплементация мета-промптов для whisper транскриптов",
         "type": "final",
         "Author": "ErnestSaak",
@@ -243,10 +247,8 @@ def process_document(task_id):
         "final_model": MODEL_NAME,
         "input_params": {
             "context_length": 32768,
-
-            #TODO: dynamically retrieve generated prompts
-            "chunk_prompt": """СДЕЛАЮ ПОЗЖЕ""",
-            "final_summary_prompt": """СДЕЛАЮ ПОЗЖЕ""",
+            "chunk_prompt": chunk_prompt_text,
+            "final_summary_prompt": final_prompt_text,
             "temp_chunk": temp_chunk,
             "temp_final": temp_final,
             "chunk_size": chunk_size,
