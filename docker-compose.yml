@@ -1,4 +1,4 @@
-version: "3.8"
+
 services: 
   frontend:
     build: 
@@ -11,6 +11,7 @@ services:
     volumes:
       - ./frontend:/app 
       - /app/node_modules
+    init: true
   
   backend:
     build: ./backend
@@ -20,6 +21,7 @@ services:
       - redis
     environment:
       - OLLAMA_HOST=http://ollama:11434
+    init: true
   
   worker:
     build: ./celery_worker
@@ -29,6 +31,7 @@ services:
       - redis
     environment:
       - OLLAMA_HOST=http://ollama:11434
+    init: true
   
   redis:
     image: redis:7
@@ -46,6 +49,7 @@ services:
       - ollama_data:/root/.ollama
     deploy: {} 
     runtime: nvidia
+    init: true
 
   flower:
     image: mher/flower
@@ -55,6 +59,7 @@ services:
       - CELERY_BROKER_URL=redis://redis:6379/0
     depends_on:
       - redis
+    init: true
 
 volumes:
   ollama_data:

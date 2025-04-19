@@ -10,9 +10,10 @@ import re
 from tokenCounter import count_tokens
 import datetime
 import zoneinfo
+from pydantic import BaseModel
 
 OLLAMA_URL = os.getenv("OLLAMA_HOST", "http://ollama:11434")
-MODEL_NAME = "llama3.1:8b"
+MODEL_NAME = "qwen2.5:14b"
 #OLLAMA_URL = "http://host.docker.internal:8003/v1/chat/completions"
 
 
@@ -58,43 +59,93 @@ def split_text(text, chunk_size=1800, overlap=0.3):
 
     return chunks
 
-def generate_summary(text, temperature, max_tokens, rye, custom_prompt=None, chunk_summary=False, final_summary = False):
+#TODO: refactor meta-prompt to include company dictionary
+#TODO: implement a better generation strategy that doesn't limit generation creativity for prompts
+def get_prompts(model_name = MODEL_NAME):
+    """
+    Generates prompt for chunk and final summaries using Ollama structured outputs in JSON format
+    """
+
+    # Глобальный промпт
+    global_prompt = """Внимательно изучи транскрипт записи встречи. Выяви участников встречи, основные тезисы встречи, запиши протокол встречи на основе представленного транскрипта по следующему формату:
+1. 10 ключевых тезисов встречи
+2. Принятые решения, ответственные за их исполнения, сроки
+3. Ближайшие шаги. Отметь наиболее срочные задачи Подробно опиши поставленные задачи каждому сотруднику, укажи сроки исполнения задач."""
+
+    # Мета-промпт
+    meta_prompt = f"""Ниже приведён глобальный промпт, который хорошо работает для анализа полной стенограммы встречи. Преобразуй его в два отдельных промпта без дополнительных инструкций, шагов или полей:
+1.Промпт для обработки одного чанка текста (фрагмента транскрипта):
+\t-Он должен ограничиваться только предоставленным фрагментом, не делать глобальных выводов, извлекать локальные тезисы, задачи, решения, имена участников.
+
+2.Промпт для финальной агрегации:
+\t-Он должен принимать уже обработанные чанки (в виде кратких тезисов, задач и решений) и собирать на их основе финальный протокол встречи — с обобщением, исключением повторов, уточнением сроков и распределением задач. Цель — сохранить смысл и структуру оригинального промпта, но адаптировать его к двухэтапной логике обработки транскрипта.
+
+Верни результат **строго в следующем формате**:
+
+{{
+  "prompts": [
+    "Промпт для обработки одного чанка текста...",
+    "Промпт для финальной агрегации..."
+  ]
+}}
+
+Не добавляй никаких других полей, описаний, нумерации или комментариев. Только JSON-объект с ключом "prompts".
+
+Вот глобальный промпт:
+{global_prompt}"""
+
+    class Prompts(BaseModel):
+        prompts: list[str]
+    
+    payload = {
+        "model": model_name,
+        "prompt": meta_prompt,
+        "temperature": 0.6,
+        "stream": False,
+        "format": "json"
+    }
+
+    try:
+        ollama = "http://ollama:11434"
+        response = requests.post(f"{ollama}/api/generate", json=payload)
+        response.raise_for_status()
+
+        raw_response = response.json()["response"]
+        print(f"Raw response:\n{raw_response}\n")
+
+        prompts = Prompts.model_validate_json(raw_response)
+
+        return prompts
+    except Exception as e:
+        logging.info(f"\nError generating prompts: {e}\n")
+        print(e)
+        return "[PROMPT GENERATION FAILED]"
+    
+PROMPTS = None
+def get_cached_prompts():
+    """
+    Generates and caches prompts to retrieve during generation
+    """
+    global PROMPTS
+    if PROMPTS is None or isinstance(PROMPTS, str):
+        PROMPTS = get_prompts()
+    return PROMPTS
+
+def generate_summary(text, temperature, max_tokens, custom_prompt=None, chunk_summary=False, final_summary = False, model_name = MODEL_NAME):
     if custom_prompt:
         prompt = custom_prompt.replace("{text}", text)
-    elif chunk_summary:
-        if rye:
-            prompt = f"""Summarize this text chunk clearly and accurately. Include:
-
-1. Main plot developments — What happens in this section?
-2. Character progression and relationships — How do key characters act, change, reveal themselves, and interact with one another?
-3. Avoid unnecessary detail or repetition. Focus on what matters for understanding the story.
-
-{text}"""
-        else:
-            prompt = f"""Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.
-{text}"""
     else:
-        if rye:
-            prompt = f"""Synthesize the following chunk summaries into a single, cohesive report of the text while ensuring no loss of critical details of the plot, characters, etc. Do not provide any other information in your answer except described above holistic summary of the whole text.
-- Eliminate redundant information and merge similar themes.
-- Identify overarching patterns and insights that emerge when considering the full text holistically.
+        prompts = get_cached_prompts()
+        if isinstance(PROMPTS, str):
+            print(PROMPTS)
+            return "[SUMMARY_FAILED]", 0.0
+        
+        if chunk_summary:
+            prompt = f"""{prompts.prompts[0]}\n\nФрагмент:\n{text}"""
+        elif final_summary:
+            prompt = f"""{prompts.prompts[1]}\n\n{text}"""
 
-Provide a final summary that includes:
-1. The complete plot progression from start to finish, capturing all key events and details
-2. All character progression, interactions and relationships.
 
-{text}"""
-        else:
-            prompt = f"""Synthesize the following chunk summaries of a business meeting into a single, cohesive report, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create meeting minutes based on the following format:
-1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)
-2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them
-3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.
-{text}"""
-
-    model_name = MODEL_NAME
-    if final_summary:
-        model_name = "llama3.1:8b"
-    
     payload = {
         "model": model_name,
         "prompt": prompt,
@@ -150,7 +201,6 @@ def process_document(task_id):
     max_tokens_final = params.get("max_tokens_final", 5000)
     chunk_prompt = params.get("chunk_prompt", None)
     final_prompt = params.get("final_prompt", None)
-    rye = params.get("Rye")
 
     chunks = split_text(text, chunk_size=chunk_size, overlap=overlap)
     progress = []
@@ -158,7 +208,7 @@ def process_document(task_id):
     sum_token_responses = 0
     chunk_summary_duration = 0
     for i, chunk in enumerate(chunks):
-        summary, duration = generate_summary(chunk, temp_chunk, max_tokens_chunk, rye, chunk_prompt, chunk_summary=True)
+        summary, duration = generate_summary(chunk, temp_chunk, max_tokens_chunk, chunk_prompt, chunk_summary=True)
         
         chunk_summary_duration += duration
         sum_token_responses += count_tokens(text=summary)
@@ -178,32 +228,25 @@ def process_document(task_id):
         f"Chunk {i} Summary:\n{p['summary']}" for i, p in enumerate(valid_chunks, 1)
     ]) or "The document contains multiple summaries that need to be unified."
 
-    final_summary, final_time = generate_summary(combined_input, temp_final, max_tokens_final, rye, final_prompt, final_summary=True)
+    final_summary, final_time = generate_summary(combined_input, temp_final, max_tokens_final, final_prompt, final_summary=True)
 
     final_msg = json.dumps({
+        "version": 1.0,
+        "description": "Имплементация мета-промптов для whisper транскриптов",
         "type": "final",
         "Author": "ErnestSaak",
         "date_time": datetime.datetime.now(zoneinfo.ZoneInfo('America/New_York')).strftime("%Y-%m-%d %H:%M:%S"),
-        "document_url": "https://drive.google.com/file/d/1pbcOsUMlzJD81rEjJ-g5_Uu1DPdlnADw/view?usp=sharing" if rye else "https://drive.google.com/file/d/1bNJKEKimk2nkAKNEj7JJqNKxGzwqC2_G/view?usp=sharing",
+        "document_url": "https://drive.google.com/file/d/1bRy761r67BlAwTZFP_gg-6xe6zmCSkSJ/view?usp=sharing",
         "chunk_model": MODEL_NAME,
-        "final_model": "llama3.1:8b",
+
+        #CHANGE MODEL IF DIFFERENT FOR FINAL SUMMARY
+        "final_model": MODEL_NAME,
         "input_params": {
             "context_length": 32768,
-            "chunk_prompt": """Summarize this text chunk clearly and accurately. Include:
 
-1. Main plot developments — What happens in this section?
-2. Character progression and relationships — How do key characters act, change, reveal themselves, and interact with one another?
-3. Avoid unnecessary detail or repetition. Focus on what matters for understanding the story.""" if rye else "Summarize the following part of a business meeting. Extract key points, decisions made, and any assigned tasks with responsible people and deadlines.",
-            "final_summary_prompt": """Synthesize the following chunk summaries into a single, cohesive analysis of the text while ensuring no loss of critical details of the plot, characters, etc. Do not provide any other information in your answer except described above holistic summary of the whole text.
-- Eliminate redundant information and merge similar themes.
-- Identify overarching patterns and insights that emerge when considering the full text holistically.
-
-Provide a final summary that includes:
-1. The complete plot progression from start to finish, capturing all key events and details
-2. All character progression, interactions and relationships.""" if rye else """Synthesize the following chunk summaries of a business meeting into a single, cohesive analysis, ensuring no loss of critical details of the meeting. Identify the participants' names, key points, and create a meeting report based on the following format:
-1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)
-2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them
-3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.""",
+            #TODO: dynamically retrieve generated prompts
+            "chunk_prompt": """СДЕЛАЮ ПОЗЖЕ""",
+            "final_summary_prompt": """СДЕЛАЮ ПОЗЖЕ""",
             "temp_chunk": temp_chunk,
             "temp_final": temp_final,
             "chunk_size": chunk_size,
