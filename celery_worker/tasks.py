@@ -59,92 +59,105 @@ def split_text(text, chunk_size=1800, overlap=0.3):
 
     return chunks
 
-#TODO: refactor meta-prompt to include company dictionary
+
+#TODO: UNCOMMENT META-PROMPT IMPLEMENTATION
+
+# GLOBAL_PROMPT = """Внимательно изучи транскрипт записи встречи. Выяви участников встречи, основные тезисы встречи, запиши протокол встречи на основе представленного транскрипта по следующему формату:
+# 1. 10 ключевых тезисов встречи
+# 2. Принятые решения, ответственные за их исполнения, сроки
+# 3. Ближайшие шаги. Отметь наиболее срочные задачи Подробно опиши поставленные задачи каждому сотруднику, укажи сроки исполнения задач."""
+
+# META_PROMPT = f"""Ты- опытный менеджер по управлению разработкой, специалист по формированию и документированию заданий для разработчиков. Твоя цель - создать промпты для формирования максимально детально описанных заданий на разработку каждому участнику встречи разработчиков, не пропустив ни одной задачи и ни одного участника. В промптах нужно обращать внимание на обсуждаемые технические проблемы (например, "на Маке у клиентов есть проблема с микрофоном") и давать инструкции по указанию этих проблем в отчете, если это релевантно, соответсвующие задачи по исправлению выявленных проблем, если это упоминается в транскрипте. Ниже приведён глобальный промпт, который хорошо работает для анализа полной стенограммы встречи. Преобразуй его в два отдельных промпта без дополнительных инструкций, шагов или полей:
+# 1.Промпт для обработки одного чанка текста (фрагмента транскрипта):
+# \t-Он должен ограничиваться только предоставленным фрагментом, не делать глобальных выводов, извлекать локальные тезисы, задачи, решения, имена участников.
+
+# 2.Промпт для финальной агрегации:
+# \t-Он должен принимать уже обработанные чанки (в виде кратких тезисов, задач и решений) и собирать на их основе финальный протокол встречи — с обобщением, исключением повторов, уточнением сроков и распределением задач. Цель — сохранить смысл и структуру оригинального промпта, но адаптировать его к двухэтапной логике обработки транскрипта. Финальный промпт должен иметь содержать все пункты из глобального промпта
+
+# Верни результат **строго в следующем формате**:
+
+# {{
+#   "prompts": [
+#     "Промпт для обработки одного чанка текста...",
+#     "Промпт для финальной агрегации..."
+#   ]
+# }}
+
+# Не добавляй никаких других полей, описаний, нумерации или комментариев. Только JSON-объект с ключом "prompts".
+
+# Вот глобальный промпт:
+# {GLOBAL_PROMPT}"""
+
 #TODO: implement a better generation strategy that doesn't limit generation creativity for prompts
-def get_prompts(model_name = MODEL_NAME):
-    """
-    Generates prompt for chunk and final summaries using Ollama structured outputs in JSON format
-    """
+# def get_prompts(model_name = MODEL_NAME):
+#     """
+#     Generates prompt for chunk and final summaries using Ollama structured outputs in JSON format
+#     """
 
-    # Глобальный промпт
-    global_prompt = """Внимательно изучи транскрипт записи встречи. Выяви участников встречи, основные тезисы встречи, запиши протокол встречи на основе представленного транскрипта по следующему формату:
-1. 10 ключевых тезисов встречи
-2. Принятые решения, ответственные за их исполнения, сроки
-3. Ближайшие шаги. Отметь наиболее срочные задачи Подробно опиши поставленные задачи каждому сотруднику, укажи сроки исполнения задач."""
+#     # Мета-промпт
+#     meta_prompt = META_PROMPT
 
-    # Мета-промпт
-    meta_prompt = f"""Ниже приведён глобальный промпт, который хорошо работает для анализа полной стенограммы встречи. Преобразуй его в два отдельных промпта без дополнительных инструкций, шагов или полей:
-1.Промпт для обработки одного чанка текста (фрагмента транскрипта):
-\t-Он должен ограничиваться только предоставленным фрагментом, не делать глобальных выводов, извлекать локальные тезисы, задачи, решения, имена участников.
-
-2.Промпт для финальной агрегации:
-\t-Он должен принимать уже обработанные чанки (в виде кратких тезисов, задач и решений) и собирать на их основе финальный протокол встречи — с обобщением, исключением повторов, уточнением сроков и распределением задач. Цель — сохранить смысл и структуру оригинального промпта, но адаптировать его к двухэтапной логике обработки транскрипта.
-
-Верни результат **строго в следующем формате**:
-
-{{
-  "prompts": [
-    "Промпт для обработки одного чанка текста...",
-    "Промпт для финальной агрегации..."
-  ]
-}}
-
-Не добавляй никаких других полей, описаний, нумерации или комментариев. Только JSON-объект с ключом "prompts".
-
-Вот глобальный промпт:
-{global_prompt}"""
-
-    class Prompts(BaseModel):
-        prompts: list[str]
+#     class Prompts(BaseModel):
+#         prompts: list[str]
     
-    payload = {
-        "model": model_name,
-        "prompt": meta_prompt,
-        "temperature": 0.6,
-        "stream": False,
-        "format": "json"
-    }
+#     payload = {
+#         "model": model_name,
+#         "prompt": meta_prompt,
+#         "temperature": 0.6,
+#         "stream": False,
+#         "format": "json"
+#     }
 
-    try:
-        ollama = "http://ollama:11434"
-        response = requests.post(f"{ollama}/api/generate", json=payload)
-        response.raise_for_status()
+#     try:
+#         ollama = "http://ollama:11434"
+#         response = requests.post(f"{ollama}/api/generate", json=payload)
+#         response.raise_for_status()
 
-        raw_response = response.json()["response"]
-        print(f"Raw response:\n{raw_response}\n")
+#         raw_response = response.json()["response"]
+#         print(f"\nRaw response:\n{raw_response}\n")
 
-        prompts = Prompts.model_validate_json(raw_response)
+#         prompts = Prompts.model_validate_json(raw_response)
 
-        return prompts
-    except Exception as e:
-        logging.info(f"\nError generating prompts: {e}\n")
-        print(e)
-        return "[PROMPT GENERATION FAILED]"
+#         return prompts
+#     except Exception as e:
+#         logging.info(f"\nError generating prompts: {e}\n")
+#         print(e)
+#         return "[PROMPT GENERATION FAILED]"
     
-PROMPTS = None
-def get_cached_prompts():
-    """
-    Generates and caches prompts to retrieve during generation
-    """
-    global PROMPTS
-    if PROMPTS is None or isinstance(PROMPTS, str):
-        PROMPTS = get_prompts()
-    return PROMPTS
+# PROMPTS = None
+# def get_cached_prompts():
+#     """
+#     Generates and caches prompts to retrieve during generation
+#     """
+#     global PROMPTS
+#     if PROMPTS is None or isinstance(PROMPTS, str):
+#         PROMPTS = get_prompts()
+#     return PROMPTS
+
+
+
 
 def generate_summary(text, temperature, max_tokens, custom_prompt=None, chunk_summary=False, final_summary = False, model_name = MODEL_NAME):
+    """
+    Generates summary based on arguments.
+    """
     if custom_prompt:
         prompt = custom_prompt.replace("{text}", text)
     else:
-        prompts = get_cached_prompts()
-        if isinstance(PROMPTS, str):
-            print(PROMPTS)
-            return "[SUMMARY_FAILED]", 0.0
+        #TODO: UNCOMMENT WHEN META-PROMPT IS ENABLED
+        #prompts = get_cached_prompts()
+        # if isinstance(PROMPTS, str):
+        #     print(PROMPTS)
+        #     return "[SUMMARY_FAILED]", 0.0
         
         if chunk_summary:
-            prompt = f"""{prompts.prompts[0]}\n\nФрагмент:\n{text}"""
-        elif final_summary:
-            prompt = f"""{prompts.prompts[1]}\n\n{text}"""
+            prompt = f"""Summarize the following part of a business meeting transcript in russian. First, extract and point out the participants. Never mix participants with other persons mentioned during the meeting. Then, extract key points, decisions made, and any assigned tasks with responsible people and deadlines. Provide your summary in russian. Take into account the following list of participants for this meeting:\n\n\t-Алексей Воронин - head of the startup\n\t-Алексей Жаринов - developer of the web version of the personal account, responsible for developing the web version of the personal account, its interaction with the BigBlueButton VKS servers and the AI ​​module\n\t-Дмитрий Ефремов - developer of the desktop version of the messenger and VKS, responsible for developing the desktop version of the client, interaction of the desktop client with the Bitrix servers, BigBlueButton, and the web version of the personal account\n\t-Герман Румянцев - developer of the server side of the application, responsible for the functionality of the messenger server and authorization, interaction from the application server with LDAP and AD, the functionality of the chatbot inside the messenger for interaction with external applications\n\t-Павел Якушин - UX/UI interface designer\n\t-Мария Попович - tester responsible for testing and giving permission to release versions, documents the errors found and assigns tasks for fixing to developers\n\t-Сергей Стасов - systems engineer, is responsible for the availability of server infrastructure, applications, BigBlueButton and other certificate renewal services\n\t-Степан Травин - head of technical support\n\t-Артем Садыков - head of pilot projects, responsible for solution integration for clients\n\t-Елена Евтеева - project manager\n\t-Максим Перфильев - R&D engineer\n    \nExample of a good answer:\n\nУчастники: \n\tАртем-старший менеджер по продажам, \n\tСаша- менеджер по подажам, \n\tЛена- проектный менеджер, \n\tАлексей Юрьевич- руководитель проекта RConf \n \nПринятые решения:\n\n*Артем*: \n\n\t-Ускорить подписание контракта с Альфа-банком,\n\t-срок - до следующей среды\n\n*Лена*:\n\n\t-Разорвать контракт с МТУСИ\n\t-срок: до следующей недели.\n\nОбсуждались вопросы:\n \n\t1. Контракт с Альфа банком- ускорение\n\t2. Контракт с МТУСИ- разрыв\n\t3. Организация пилотных проектов- метрики успеха
 
+Part of a business meeting:\n\n{text}"""
+        elif final_summary:
+            prompt = f"""Synthesize the following chunk summaries of a business meeting in russian into a single, cohesive analysis, ensuring no loss of critical details of the meeting. First, identify the participants' names, extract their roles. Avoid double mentioning the same participants (i.e. \"Саша\" and \"Александр\" could be the same person). Use the logic of the meeting and the roles of participants to avoid mistakes.\nSecond, extract and point out key points of the meeting.\nThird, create meeting minutes based on the following format:\n\t1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n\t2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n\t3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.\n\nПереведи свой ответ на русский язык. Используй русские наименования.
+
+Chunk summaries:\n\n{text}"""
 
     payload = {
         "model": model_name,
@@ -167,25 +180,29 @@ def generate_summary(text, temperature, max_tokens, custom_prompt=None, chunk_su
     except Exception as e:
         logging.exception(f"Summary generation failed: {e}")
         return "[SUMMARY_FAILED]", 0.0
-    
-def get_context_length():
-    try:
-        response = requests.post(
-            f"{OLLAMA_URL}/api/show",
-            json={"name": MODEL_NAME}
-        )
-        response.raise_for_status()
-        model_info = response.json()
 
-        if "model_info" in model_info:
-            model_info_fields = model_info["model_info"]
-            if "llama.context_length" in model_info_fields:
-                return model_info_fields["llama.context_length"]
+# OPTIMIZED FOR LLAMA ONLY
+# def get_context_length():
+#     """
+#     Dynamically retrieves model's context length.
+#     """
+#     try:
+#         response = requests.post(
+#             f"{OLLAMA_URL}/api/show",
+#             json={"name": MODEL_NAME}
+#         )
+#         response.raise_for_status()
+#         model_info = response.json()
+
+#         if "model_info" in model_info:
+#             model_info_fields = model_info["model_info"]
+#             if "llama.context_length" in model_info_fields:
+#                 return model_info_fields["llama.context_length"]
             
-        return None
-    except Exception as e:
-        print(f"Failed to fetch model context length: {e}")
-        return None
+#         return None
+#     except Exception as e:
+#         print(f"Failed to fetch model context length: {e}")
+#         return None
 
 
 @celery.task(name="tasks.process_document")
@@ -207,7 +224,7 @@ def process_document(task_id):
 
     sum_token_responses = 0
     chunk_summary_duration = 0
-    for i, chunk in enumerate(chunks):
+    for i, chunk in enumerate(chunks): # chunk summaries
         summary, duration = generate_summary(chunk, temp_chunk, max_tokens_chunk, chunk_prompt, chunk_summary=True)
         
         chunk_summary_duration += duration
@@ -228,15 +245,16 @@ def process_document(task_id):
         f"Chunk {i} Summary:\n{p['summary']}" for i, p in enumerate(valid_chunks, 1)
     ]) or "The document contains multiple summaries that need to be unified."
 
-    final_summary, final_time = generate_summary(combined_input, temp_final, max_tokens_final, final_prompt, final_summary=True)
+    final_summary, final_time = generate_summary(combined_input, temp_final, max_tokens_final, final_prompt, final_summary=True) # final summary
 
+    #TODO: UNCOMMENT WHEN USING META-PROMPT  
     # Retrieve cached prompts for reporting
-    prompts = get_cached_prompts()
-    chunk_prompt_text = prompts.prompts[0]
-    final_prompt_text = prompts.prompts[1]
+    # prompts = get_cached_prompts()
+    # chunk_prompt_text = prompts.prompts[0]
+    # final_prompt_text = prompts.prompts[1]
     final_msg = json.dumps({
-        "version": 1.1,
-        "description": "Имплементация мета-промптов для whisper транскриптов",
+        "version": 1.21,
+        "description": "Добавление контекста в оба сгенирированных промпта по отдельности",
         "type": "final",
         "Author": "ErnestSaak",
         "date_time": datetime.datetime.now(zoneinfo.ZoneInfo('America/New_York')).strftime("%Y-%m-%d %H:%M:%S"),
@@ -247,8 +265,11 @@ def process_document(task_id):
         "final_model": MODEL_NAME,
         "input_params": {
             "context_length": 32768,
-            "chunk_prompt": chunk_prompt_text,
-            "final_summary_prompt": final_prompt_text,
+            # TODO: UNCOMMENT WHEN USING META-PROMPT
+            #"global_prompt": GLOBAL_PROMPT,
+            #"meta_prompt": META_PROMPT,
+            "chunk_prompt": """Summarize the following part of a business meeting transcript in russian. First, extract and point out the participants. Never mix participants with other persons mentioned during the meeting. Then, extract key points, decisions made, and any assigned tasks with responsible people and deadlines. Provide your summary in russian. Take into account the following list of participants for this meeting:\n\n\t-Алексей Воронин - head of the startup\n\t-Алексей Жаринов - developer of the web version of the personal account, responsible for developing the web version of the personal account, its interaction with the BigBlueButton VKS servers and the AI ​​module\n\t-Дмитрий Ефремов - developer of the desktop version of the messenger and VKS, responsible for developing the desktop version of the client, interaction of the desktop client with the Bitrix servers, BigBlueButton, and the web version of the personal account\n\t-Герман Румянцев - developer of the server side of the application, responsible for the functionality of the messenger server and authorization, interaction from the application server with LDAP and AD, the functionality of the chatbot inside the messenger for interaction with external applications\n\t-Павел Якушин - UX/UI interface designer\n\t-Мария Попович - tester responsible for testing and giving permission to release versions, documents the errors found and assigns tasks for fixing to developers\n\t-Сергей Стасов - systems engineer, is responsible for the availability of server infrastructure, applications, BigBlueButton and other certificate renewal services\n\t-Степан Травин - head of technical support\n\t-Артем Садыков - head of pilot projects, responsible for solution integration for clients\n\t-Елена Евтеева - project manager\n\t-Максим Перфильев - R&D engineer\n    \nExample of a good answer:\n\nУчастники: \n\tАртем-старший менеджер по продажам, \n\tСаша- менеджер по подажам, \n\tЛена- проектный менеджер, \n\tАлексей Юрьевич- руководитель проекта RConf \n \nПринятые решения:\n\n*Артем*: \n\n\t-Ускорить подписание контракта с Альфа-банком,\n\t-срок - до следующей среды\n\n*Лена*:\n\n\t-Разорвать контракт с МТУСИ\n\t-срок: до следующей недели.\n\nОбсуждались вопросы:\n \n\t1. Контракт с Альфа банком- ускорение\n\t2. Контракт с МТУСИ- разрыв\n\t3. Организация пилотных проектов- метрики успеха""",
+            "final_summary_prompt": """Synthesize the following chunk summaries of a business meeting in russian into a single, cohesive analysis, ensuring no loss of critical details of the meeting. First, identify the participants' names, extract their roles. Avoid double mentioning the same participants (i.e. \"Саша\" and \"Александр\" could be the same person). Use the logic of the meeting and the roles of participants to avoid mistakes.\nSecond, extract and point out key points of the meeting.\nThird, create meeting minutes based on the following format:\n\t1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n\t2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n\t3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.\n\nПереведи свой ответ на русский язык. Используй русские наименования.""",
             "temp_chunk": temp_chunk,
             "temp_final": temp_final,
             "chunk_size": chunk_size,
@@ -267,6 +288,7 @@ def process_document(task_id):
         "text_token_count": count_tokens(text=text)
     }, indent=2)
 
+    # Local save for the tests
     TESTS_DIR = "/tasks/tests"
     os.makedirs(TESTS_DIR, exist_ok=True)
 

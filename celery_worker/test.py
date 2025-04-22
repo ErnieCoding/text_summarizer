@@ -21,7 +21,10 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 TRANSCRIPT_TEXT_FILE = os.path.join(BASE_DIR, "transcribed_dev_meeting.txt")
 
-AUDIO_FILE = os.path.join(BASE_DIR, "Dev_Meeting_Audio.mp3")
+with open(TRANSCRIPT_TEXT_FILE, "r", encoding="utf-8") as file:
+    TRANSCRIPT_TEXT = file.read()
+
+#AUDIO_FILE = os.path.join(BASE_DIR, "Dev_Meeting_Audio.mp3")
 
 DATA_URL = "http://ai.rndl.ru:5017/api/data"
 
@@ -30,7 +33,7 @@ params = {
     "chunk_size":[5000, 5500, 6000, 6500, 7000], 
     "chunk_overlap": [500], 
     "temp_chunk": [0.2, 0.3, 0.4], 
-    "temp_final": [0.3, 0.5, 0.6]
+    "temp_final": [0.4, 0.5, 0.6]
     }
 
 
@@ -50,9 +53,6 @@ combinations = list(product(
 ))
 
 #combinations = random.sample(combinations, 20) # complete random 20 tests
-
-with open(TRANSCRIPT_TEXT_FILE, "r", encoding="utf-8") as file:
-    TRANSCRIPT_TEXT = file.read()
 
 # def run_eval(data):
 #     scorer = rouge_scorer.RougeScorer(['rougeL'], use_stemmer=True)
@@ -124,6 +124,9 @@ with open(TRANSCRIPT_TEXT_FILE, "r", encoding="utf-8") as file:
     
 #     return rouge_l_f1
 
+
+
+# CELERY TASK FOR FILE TRANSCRIPTION
 # def get_file_trascription():
 #     task_id = str(uuid.uuid4())
 
@@ -132,7 +135,6 @@ with open(TRANSCRIPT_TEXT_FILE, "r", encoding="utf-8") as file:
 #     result = celery.send_task("transcription.transcribe_file", args=[task_id])
 
 #     return result
-
 
 
 def test_params(combinations):
