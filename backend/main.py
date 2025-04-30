@@ -6,6 +6,7 @@ import json
 import uuid
 import os
 from flask_cors import CORS
+from itertools import product
 
 app = Flask(__name__)
 CORS(app)
@@ -15,6 +16,29 @@ CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", "redis://redis:6
 
 celery_app = Celery("tasks", broker=CELERY_BROKER_URL, backend=CELERY_RESULT_BACKEND)
 r = redis.Redis(host='redis', port=6379, decode_responses=True)
+
+@app.route("/test", methods=["POST"])
+def test():
+    data = request.get_json()
+    text = data.get("text", "")
+    params = data.get("params", {})
+
+    if not text or not params:
+        return jsonify({"error": "No text or parameters provided"}), 400
+    
+    combinations = list(product(
+    params["chunk_size"],
+    params['chunk_overlap'],
+    params['temp_chunk'],
+    params["temp_final"],
+    ))
+
+    task_id = str(uuid.uuid4())
+    r.set(f"test:{task_id}:text", text)
+    r.set(f"test:{task_id}:combinations", json.dumps(combinations))
+    celery_app.send_task("tasks.test_params", args=[task_id])
+
+    return jsonify({"task_id":task_id})
 
 @app.route("/summarize", methods=["POST"])
 def summarize():

@@ -60,7 +60,7 @@ def split_text(text, chunk_size=1800, overlap=0.3):
     return chunks
 
 
-#TODO: UNCOMMENT META-PROMPT IMPLEMENTATION
+#TODO: UNCOMMENT FOR META-PROMPT IMPLEMENTATION
 
 # GLOBAL_PROMPT = """Внимательно изучи транскрипт записи встречи. Выяви участников встречи, основные тезисы встречи, запиши протокол встречи на основе представленного транскрипта по следующему формату:
 # 1. 10 ключевых тезисов встречи
@@ -155,9 +155,18 @@ def generate_summary(text, temperature, max_tokens, custom_prompt=None, chunk_su
 
 Part of a business meeting:\n\n{text}"""
         elif final_summary:
-            prompt = f"""Synthesize the following chunk summaries of a business meeting in russian into a single, cohesive analysis, ensuring no loss of critical details of the meeting. First, identify the participants' names, extract their roles. Avoid double mentioning the same participants (i.e. \"Саша\" and \"Александр\" could be the same person). Use the logic of the meeting and the roles of participants to avoid mistakes.\nSecond, extract and point out key points of the meeting.\nThird, create meeting minutes based on the following format:\n\t1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n\t2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n\t3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.\n\nПереведи свой ответ на русский язык. Используй русские наименования.
+            model_name = "qwen2.5:32b"
+#             prompt = f"""Synthesize the following chunk summaries of a business meeting in russian into a single, cohesive analysis, ensuring no loss of critical details of the meeting. First, identify the participants' names, extract their roles. Avoid double mentioning the same participants (i.e. \"Саша\" and \"Александр\" could be the same person). Use the logic of the meeting and the roles of participants to avoid mistakes.\nSecond, extract and point out key points of the meeting.\nThird, create meeting minutes based on the following format:\n\t1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n\t2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n\t3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.\n\nПереведи свой ответ на русский язык. Используй русские наименования.
 
-Chunk summaries:\n\n{text}"""
+# Chunk summaries:\n\n{text}"""
+            prompt = f"""Внимательно изучи и сделай резюме транскрипта записи встречи. Во-первых, выяви участников встречи. Не путай участников встречи между собой, используй логику встречи, чтобы точнее определить участников. Затем, определи основные тезисы, которые обсуждались во время встречи, запиши протокол встречи на основе представленного транскрипта по следующему формату:
+\t1. 10 ключевых тезисов встречи
+\t2. Принятые решения, ответственные за их исполнения, сроки
+\t3. Ближайшие шаги. Отметь наиболее срочные задачи Подробно опиши поставленные задачи каждому сотруднику, укажи сроки исполнения задач.
+
+Прими во внимание данный список участников встречи:\n\n\t-Алексей Воронин - head of the startup\n\t-Алексей Жаринов - developer of the web version of the personal account, responsible for developing the web version of the personal account, its interaction with the BigBlueButton VKS servers and the AI ​​module\n\t-Дмитрий Ефремов - developer of the desktop version of the messenger and VKS, responsible for developing the desktop version of the client, interaction of the desktop client with the Bitrix servers, BigBlueButton, and the web version of the personal account\n\t-Герман Румянцев - developer of the server side of the application, responsible for the functionality of the messenger server and authorization, interaction from the application server with LDAP and AD, the functionality of the chatbot inside the messenger for interaction with external applications\n\t-Павел Якушин - UX/UI interface designer\n\t-Мария Попович - tester responsible for testing and giving permission to release versions, documents the errors found and assigns tasks for fixing to developers\n\t-Сергей Стасов - systems engineer, is responsible for the availability of server infrastructure, applications, BigBlueButton and other certificate renewal services\n\t-Степан Травин - head of technical support\n\t-Артем Садыков - head of pilot projects, responsible for solution integration for clients\n\t-Елена Евтеева - project manager\n\t-Максим Перфильев - R&D engineer\n
+
+Транскрипт встречи:\n\n{text}"""
 
     payload = {
         "model": model_name,
@@ -219,33 +228,36 @@ def process_document(task_id):
     chunk_prompt = params.get("chunk_prompt", None)
     final_prompt = params.get("final_prompt", None)
 
-    chunks = split_text(text, chunk_size=chunk_size, overlap=overlap)
-    progress = []
-
-    sum_token_responses = 0
-    chunk_summary_duration = 0
-    for i, chunk in enumerate(chunks): # chunk summaries
-        summary, duration = generate_summary(chunk, temp_chunk, max_tokens_chunk, chunk_prompt, chunk_summary=True)
+    if chunk_size < (count_tokens(text=text) - 2000):
+        chunks = split_text(text, chunk_size=chunk_size, overlap=overlap)
+        progress = []
         
-        chunk_summary_duration += duration
-        sum_token_responses += count_tokens(text=summary)
+        sum_token_responses = 0
+        chunk_summary_duration = 0
+        for i, chunk in enumerate(chunks): # chunk summaries
+            summary, duration = generate_summary(chunk, temp_chunk, max_tokens_chunk, chunk_prompt, chunk_summary=True)
+            
+            chunk_summary_duration += duration
+            sum_token_responses += count_tokens(text=summary)
 
-        progress.append({"chunk": i + 1, "summary": summary, "duration": duration})
-        msg = json.dumps({
-            "type": "chunk",
-            "chunk": i + 1,
-            "total": len(chunks),
-            "summary": summary,
-            "duration": duration
-        })
-        r.publish(f"summarize:{task_id}:events", msg)
+            progress.append({"chunk": i + 1, "summary": summary, "duration": duration})
+            msg = json.dumps({
+                "type": "chunk",
+                "chunk": i + 1,
+                "total": len(chunks),
+                "summary": summary,
+                "duration": duration
+            })
+            r.publish(f"summarize:{task_id}:events", msg)
 
-    valid_chunks = [p for p in progress if p["summary"] and p["summary"] != "[SUMMARY_FAILED]"]
-    combined_input = "\n\n".join([
-        f"Chunk {i} Summary:\n{p['summary']}" for i, p in enumerate(valid_chunks, 1)
-    ]) or "The document contains multiple summaries that need to be unified."
+        valid_chunks = [p for p in progress if p["summary"] and p["summary"] != "[SUMMARY_FAILED]"]
+        combined_input = "\n\n".join([
+            f"Chunk {i} Summary:\n{p['summary']}" for i, p in enumerate(valid_chunks, 1)
+        ]) or "The document contains multiple summaries that need to be unified."
 
-    final_summary, final_time = generate_summary(combined_input, temp_final, max_tokens_final, final_prompt, final_summary=True) # final summary
+        final_summary, final_time = generate_summary(combined_input, temp_final, max_tokens_final, final_prompt, final_summary=True) # final summary
+    else:
+        final_summary, final_time = generate_summary(text, temp_final, max_tokens_final, final_prompt, final_summary=True)
 
     #TODO: UNCOMMENT WHEN USING META-PROMPT  
     # Retrieve cached prompts for reporting
@@ -253,8 +265,8 @@ def process_document(task_id):
     # chunk_prompt_text = prompts.prompts[0]
     # final_prompt_text = prompts.prompts[1]
     final_msg = json.dumps({
-        "version": 1.21,
-        "description": "Добавление контекста в оба сгенирированных промпта по отдельности",
+        "version": 1.42,
+        "description": "АНГЛ ПРОМПТ(с контекстом) Обработка полного текста моделью 32b.",
         "type": "final",
         "Author": "ErnestSaak",
         "date_time": datetime.datetime.now(zoneinfo.ZoneInfo('America/New_York')).strftime("%Y-%m-%d %H:%M:%S"),
@@ -262,30 +274,36 @@ def process_document(task_id):
         "chunk_model": MODEL_NAME,
 
         #CHANGE MODEL IF DIFFERENT FOR FINAL SUMMARY
-        "final_model": MODEL_NAME,
+        "final_model": "qwen2.:32b",
         "input_params": {
             "context_length": 32768,
             # TODO: UNCOMMENT WHEN USING META-PROMPT
             #"global_prompt": GLOBAL_PROMPT,
             #"meta_prompt": META_PROMPT,
-            "chunk_prompt": """Summarize the following part of a business meeting transcript in russian. First, extract and point out the participants. Never mix participants with other persons mentioned during the meeting. Then, extract key points, decisions made, and any assigned tasks with responsible people and deadlines. Provide your summary in russian. Take into account the following list of participants for this meeting:\n\n\t-Алексей Воронин - head of the startup\n\t-Алексей Жаринов - developer of the web version of the personal account, responsible for developing the web version of the personal account, its interaction with the BigBlueButton VKS servers and the AI ​​module\n\t-Дмитрий Ефремов - developer of the desktop version of the messenger and VKS, responsible for developing the desktop version of the client, interaction of the desktop client with the Bitrix servers, BigBlueButton, and the web version of the personal account\n\t-Герман Румянцев - developer of the server side of the application, responsible for the functionality of the messenger server and authorization, interaction from the application server with LDAP and AD, the functionality of the chatbot inside the messenger for interaction with external applications\n\t-Павел Якушин - UX/UI interface designer\n\t-Мария Попович - tester responsible for testing and giving permission to release versions, documents the errors found and assigns tasks for fixing to developers\n\t-Сергей Стасов - systems engineer, is responsible for the availability of server infrastructure, applications, BigBlueButton and other certificate renewal services\n\t-Степан Травин - head of technical support\n\t-Артем Садыков - head of pilot projects, responsible for solution integration for clients\n\t-Елена Евтеева - project manager\n\t-Максим Перфильев - R&D engineer\n    \nExample of a good answer:\n\nУчастники: \n\tАртем-старший менеджер по продажам, \n\tСаша- менеджер по подажам, \n\tЛена- проектный менеджер, \n\tАлексей Юрьевич- руководитель проекта RConf \n \nПринятые решения:\n\n*Артем*: \n\n\t-Ускорить подписание контракта с Альфа-банком,\n\t-срок - до следующей среды\n\n*Лена*:\n\n\t-Разорвать контракт с МТУСИ\n\t-срок: до следующей недели.\n\nОбсуждались вопросы:\n \n\t1. Контракт с Альфа банком- ускорение\n\t2. Контракт с МТУСИ- разрыв\n\t3. Организация пилотных проектов- метрики успеха""",
-            "final_summary_prompt": """Synthesize the following chunk summaries of a business meeting in russian into a single, cohesive analysis, ensuring no loss of critical details of the meeting. First, identify the participants' names, extract their roles. Avoid double mentioning the same participants (i.e. \"Саша\" and \"Александр\" could be the same person). Use the logic of the meeting and the roles of participants to avoid mistakes.\nSecond, extract and point out key points of the meeting.\nThird, create meeting minutes based on the following format:\n\t1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n\t2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n\t3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.\n\nПереведи свой ответ на русский язык. Используй русские наименования.""",
-            "temp_chunk": temp_chunk,
+            
+            "chunk_prompt": None if chunk_size >= (count_tokens(text=text) - 2000) else """Summarize the following part of a business meeting transcript in russian. First, extract and point out the participants. Never mix participants with other persons mentioned during the meeting. Then, extract key points, decisions made, and any assigned tasks with responsible people and deadlines. Provide your summary in russian. Take into account the following list of participants for this meeting:\n\n\t-Алексей Воронин - head of the startup\n\t-Алексей Жаринов - developer of the web version of the personal account, responsible for developing the web version of the personal account, its interaction with the BigBlueButton VKS servers and the AI ​​module\n\t-Дмитрий Ефремов - developer of the desktop version of the messenger and VKS, responsible for developing the desktop version of the client, interaction of the desktop client with the Bitrix servers, BigBlueButton, and the web version of the personal account\n\t-Герман Румянцев - developer of the server side of the application, responsible for the functionality of the messenger server and authorization, interaction from the application server with LDAP and AD, the functionality of the chatbot inside the messenger for interaction with external applications\n\t-Павел Якушин - UX/UI interface designer\n\t-Мария Попович - tester responsible for testing and giving permission to release versions, documents the errors found and assigns tasks for fixing to developers\n\t-Сергей Стасов - systems engineer, is responsible for the availability of server infrastructure, applications, BigBlueButton and other certificate renewal services\n\t-Степан Травин - head of technical support\n\t-Артем Садыков - head of pilot projects, responsible for solution integration for clients\n\t-Елена Евтеева - project manager\n\t-Максим Перфильев - R&D engineer\n    \nExample of a good answer:\n\nУчастники: \n\tАртем-старший менеджер по продажам, \n\tСаша- менеджер по подажам, \n\tЛена- проектный менеджер, \n\tАлексей Юрьевич- руководитель проекта RConf \n \nПринятые решения:\n\n*Артем*: \n\n\t-Ускорить подписание контракта с Альфа-банком,\n\t-срок - до следующей среды\n\n*Лена*:\n\n\t-Разорвать контракт с МТУСИ\n\t-срок: до следующей недели.\n\nОбсуждались вопросы:\n \n\t1. Контракт с Альфа банком- ускорение\n\t2. Контракт с МТУСИ- разрыв\n\t3. Организация пилотных проектов- метрики успеха""",
+            "final_summary_prompt": """Внимательно изучи и сделай резюме транскрипта записи встречи. Во-первых, выяви участников встречи. Не путай участников встречи между собой, используй логику встречи, чтобы точнее определить участников. Затем, определи основные тезисы, которые обсуждались во время встречи, запиши протокол встречи на основе представленного транскрипта по следующему формату:
+\t1. 10 ключевых тезисов встречи
+\t2. Принятые решения, ответственные за их исполнения, сроки
+\t3. Ближайшие шаги. Отметь наиболее срочные задачи Подробно опиши поставленные задачи каждому сотруднику, укажи сроки исполнения задач.
+
+Прими во внимание данный список участников встречи:\n\n\t-Алексей Воронин - head of the startup\n\t-Алексей Жаринов - developer of the web version of the personal account, responsible for developing the web version of the personal account, its interaction with the BigBlueButton VKS servers and the AI ​​module\n\t-Дмитрий Ефремов - developer of the desktop version of the messenger and VKS, responsible for developing the desktop version of the client, interaction of the desktop client with the Bitrix servers, BigBlueButton, and the web version of the personal account\n\t-Герман Румянцев - developer of the server side of the application, responsible for the functionality of the messenger server and authorization, interaction from the application server with LDAP and AD, the functionality of the chatbot inside the messenger for interaction with external applications\n\t-Павел Якушин - UX/UI interface designer\n\t-Мария Попович - tester responsible for testing and giving permission to release versions, documents the errors found and assigns tasks for fixing to developers\n\t-Сергей Стасов - systems engineer, is responsible for the availability of server infrastructure, applications, BigBlueButton and other certificate renewal services\n\t-Степан Травин - head of technical support\n\t-Артем Садыков - head of pilot projects, responsible for solution integration for clients\n\t-Елена Евтеева - project manager\n\t-Максим Перфильев - R&D engineer\n""",
+            "temp_chunk": None if chunk_size >= (count_tokens(text=text) - 2000) else temp_chunk,
             "temp_final": temp_final,
-            "chunk_size": chunk_size,
-            "chunk_overlap(tokens)": overlap * chunk_size, 
-            "chunk_output_limit(tokens)": max_tokens_chunk,
+            "chunk_size": None if chunk_size >= (count_tokens(text=text) - 2000) else chunk_size,
+            "chunk_overlap(tokens)": None if chunk_size >= (count_tokens(text=text) - 2000) else overlap * chunk_size, 
+            "chunk_output_limit(tokens)": None if chunk_size >= (count_tokens(text=text) - 2000) else max_tokens_chunk,
             "final_output_limit(tokens)": max_tokens_final,
         },
         "output_params":{
-            "num_chunks": len(chunks),
-            "avg_chunk_output(tokens)": sum_token_responses // len(chunks),
-            "avg_chunk_summary_time(sec)": round(chunk_summary_duration / len(chunks), 2), 
+            "num_chunks": None if chunk_size >= (count_tokens(text=text) - 2000) else len(chunks),
+            "avg_chunk_output(tokens)": None if chunk_size >= (count_tokens(text=text) - 2000) else sum_token_responses // len(chunks),
+            "avg_chunk_summary_time(sec)": None if chunk_size >= (count_tokens(text=text) - 2000) else round(chunk_summary_duration / len(chunks), 2), 
             "final_response(tokens)": count_tokens(text=final_summary),
         },
         "summary": final_summary,
-        "total_time(sec)": round(final_time + chunk_summary_duration, 2),
-        "text_token_count": count_tokens(text=text)
+        "total_time(sec)": round(final_time, 2) if chunk_size >= (count_tokens(text=text) - 2000) else round(final_time + chunk_summary_duration, 2),
+        "text_size": count_tokens(text=text)
     }, indent=2)
 
     # Local save for the tests

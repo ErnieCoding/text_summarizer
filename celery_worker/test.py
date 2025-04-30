@@ -9,7 +9,8 @@ from rouge_score import rouge_scorer
 import logging
 import requests
 import random
-from transcription import transcribe_file
+from tokenCounter import count_tokens
+#from transcription import transcribe_file
 
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://localhost:6379/0")
 CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", "redis://localhost:6379/0")
@@ -29,9 +30,16 @@ with open(TRANSCRIPT_TEXT_FILE, "r", encoding="utf-8") as file:
 DATA_URL = "http://ai.rndl.ru:5017/api/data"
 
 # MULTIPLE TESTS PARAMS
+# params = {
+#     "chunk_size":[5000, 5500, 6000, 6500, 7000], 
+#     "chunk_overlap": [500], 
+#     "temp_chunk": [0.2, 0.3, 0.4], 
+#     "temp_final": [0.4, 0.5, 0.6]
+#     }
+
 params = {
-    "chunk_size":[5000, 5500, 6000, 6500, 7000], 
-    "chunk_overlap": [500], 
+    "chunk_size":[count_tokens(text=TRANSCRIPT_TEXT)], 
+    "chunk_overlap": [1000], 
     "temp_chunk": [0.2, 0.3, 0.4], 
     "temp_final": [0.4, 0.5, 0.6]
     }
@@ -124,26 +132,16 @@ combinations = list(product(
     
 #     return rouge_l_f1
 
-
-
-# CELERY TASK FOR FILE TRANSCRIPTION
-# def get_file_trascription():
-#     task_id = str(uuid.uuid4())
-
-#     r.set(f"transcribe:{task_id}:filename", AUDIO_FILE)
-
-#     result = celery.send_task("transcription.transcribe_file", args=[task_id])
-
-#     return result
-
-
+@celery.task(name="tasks.test_params")
 def test_params(combinations):
-    text = TRANSCRIPT_TEXT
+    text = r.get(f"test:{task_id}:text")
+    combinations = json.loads(r.get(f"test:{task_id}:combinations"))
+    #text = TRANSCRIPT_TEXT
 
-    text = transcribe_file("Dev_Meeting_Audio.mp3")
+    # text = transcribe_file("Dev_Meeting_Audio.mp3")
 
-    with open("transcribed_dev_meeting.txt", "w+", encoding="utf-8") as file: 
-        file.write(text)
+    # with open("transcribed_dev_meeting.txt", "w+", encoding="utf-8") as file: 
+    #     file.write(text)
 
     for combination in combinations:
         chunk_size, chunk_overlap, temp_chunk, temp_final = combination
@@ -159,9 +157,6 @@ def test_params(combinations):
             "max_tokens_final": 5000
         }
 
-        # if chunk_size >= 5000 and chunk_size <= 8000:
-        #     params_dict["overlap"] = 500 / chunk_size
-        
         r.set(f"summarize:{task_id}:text", text)       
         r.set(f"summarize:{task_id}:params", json.dumps(params_dict))
 
