@@ -27,8 +27,8 @@ def test():
         return jsonify({"error": "No text or parameters provided"}), 400
     
     combinations = list(product(
-    params["chunk_size"],
-    params['chunk_overlap'],
+    params["chunk_size_range"],
+    params["overlap"],
     params['temp_chunk'],
     params["temp_final"],
     ))

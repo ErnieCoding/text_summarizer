@@ -10,6 +10,7 @@ import re
 from tokenCounter import count_tokens
 import datetime
 import zoneinfo
+import uuid
 #from pydantic import BaseModel
 
 OLLAMA_URL = os.getenv("OLLAMA_HOST", "http://ollama:11434")
@@ -327,3 +328,55 @@ def process_document(task_id):
     r.publish(f"summarize:{task_id}:events", final_msg)
 
     return final_msg
+
+DATA_URL = "http://ai.rndl.ru:5017/api/data"
+
+@celery.task(name="tasks.test_params")
+def test_params(task_id):
+    text = r.get(f"test:{task_id}:text")
+    combinations = json.loads(r.get(f"test:{task_id}:combinations"))
+    #text = TRANSCRIPT_TEXT
+
+    # text = transcribe_file("Dev_Meeting_Audio.mp3")
+
+    # with open("transcribed_dev_meeting.txt", "w+", encoding="utf-8") as file: 
+    #     file.write(text)
+
+    for combination in combinations:
+        chunk_size, chunk_overlap, temp_chunk, temp_final = combination
+
+        task_id = str(uuid.uuid4())
+
+        params_dict = {
+            "chunk_size": chunk_size,
+            "overlap": chunk_overlap / chunk_size,
+            "temp_chunk": temp_chunk,
+            "temp_final": temp_final,
+            "max_tokens_chunk": 1500,
+            "max_tokens_final": 5000
+        }
+
+        r.set(f"summarize:{task_id}:text", text)       
+        r.set(f"summarize:{task_id}:params", json.dumps(params_dict))
+
+        result = celery.send_task("tasks.process_document", args=[task_id])
+
+        summary_output = result.get()
+        summary_dict = json.loads(summary_output)
+        #f1_score = run_eval(summary_dict)
+        summary_dict["f1_score"] = "undefined"
+
+        updated_final_output = json.dumps(summary_dict, indent=2)
+
+        try:
+            response = requests.post(
+                DATA_URL,
+                headers={"Content-Type": "application/json"},
+                data=updated_final_output,
+            )
+            response.raise_for_status()
+            logging.info(f"[UPLOAD] Successfully sent summary to {DATA_URL}. Response: {response.text}")
+        except Exception as e:
+            logging.info(f"Error uploading data: {e}")
+
+        time.sleep(5)

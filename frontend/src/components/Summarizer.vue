@@ -1,6 +1,6 @@
 <template>
 
-    <div class="p-6 max-w-3xl mx-auto bg-white shadow rounded-md space-y-6">
+  <div class="p-6 max-w-3xl mx-auto bg-white shadow rounded-md space-y-6">
 
 <h1 class="text-xl font-bold text-gray-800">📝 Саммаризация большого текста</h1>
 
@@ -11,8 +11,12 @@
 
 <div class="grid grid-cols-2 gap-4">
   <div>
-    <label class="block text-sm font-medium text-gray-700">Размер чанка (символов)</label>
-    <input type="number" v-model.number="params.chunk_size" class="w-full border rounded px-2 py-1" />
+    <label class="block text-sm font-medium text-gray-700">Размер чанков (начало)</label>
+    <input type="number" v-model.number="params.chunk_size_range[0]" class="w-full border rounded px-2 py-1" />
+  </div>
+  <div>
+    <label class="block text-sm font-medium text-gray-700">Размер чанков (конец)</label>
+    <input type="number" v-model.number="params.chunk_size_range[1]" class="w-full border rounded px-2 py-1" />
   </div>
   <div>
     <label class="block text-sm font-medium text-gray-700">Overlap (символов)</label>
@@ -88,14 +92,23 @@ const finalSummary = ref("");
 const finalDuration = ref(0);
 
 const params = ref({
-  chunk_size: 1800,
-  overlap: 0.3,
-  temp_chunk: 0.4,
-  temp_final: 0.6,
+  chunk_size_range: [2000, 5000],
+  overlap: [1000],
+  temp_chunk: [0.2, 0.3, 0.4],
+  temp_final: [0.4, 0.5, 0.6],
   chunk_prompt: "",
-
   final_prompt: ""
 });
+
+function getChunkSizeRange() {
+  const chunkSizeRange = [];
+  for(let i = params.value.chunk_size_range[0]; i <= params.value.chunk_size_range[1]; i+=1000){
+    chunkSizeRange.push(i);
+  }
+  return chunkSizeRange;
+}
+
+params.value.chunk_size_range = getChunkSizeRange();
 
 const processedChunks = computed(() => chunkSummaries.value.length);
 
@@ -115,9 +128,11 @@ const submitText = async () => {
   totalChunks.value = 0;
 
   try {
+    //TODO: добавить калькуляцию токенов и слов через API
+    // const tokenEstimate = await axios.post("http://localhost:8000/estimate_tokens", { text: text.value });
     tokenCount.value = estimateTokens(text.value);
     wordCount.value = estimateWord(text.value);
-    const res = await axios.post("http://localhost:8000/summarize", {
+    const res = await axios.post("http://localhost:8000/test", {
       text: text.value,
       params: params.value
     });

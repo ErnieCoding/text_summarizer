@@ -133,7 +133,7 @@ combinations = list(product(
 #     return rouge_l_f1
 
 @celery.task(name="tasks.test_params")
-def test_params(combinations):
+def test_params(task_id):
     text = r.get(f"test:{task_id}:text")
     combinations = json.loads(r.get(f"test:{task_id}:combinations"))
     #text = TRANSCRIPT_TEXT
