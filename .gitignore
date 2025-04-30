@@ -1,5 +1,7 @@
 node_modules/
 
+tests/
+
 __MACOSX/
 
 venv/

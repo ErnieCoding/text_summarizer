@@ -10,7 +10,7 @@ import re
 from tokenCounter import count_tokens
 import datetime
 import zoneinfo
-from pydantic import BaseModel
+#from pydantic import BaseModel
 
 OLLAMA_URL = os.getenv("OLLAMA_HOST", "http://ollama:11434")
 MODEL_NAME = "qwen2.5:14b"
