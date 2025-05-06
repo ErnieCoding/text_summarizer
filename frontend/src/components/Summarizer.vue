@@ -4,9 +4,15 @@
 
 <h1 class="text-xl font-bold text-gray-800">📝 Саммаризация большого текста</h1>
 
-<div>
-  <label class="block mb-1 text-sm font-medium text-gray-700">Введите текст</label>
-  <textarea v-model="text" placeholder="Введите текст" rows="8" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
+<div class="grid grid-cols-2 gap-4">
+  <div>
+    <label class="block mb-1 text-sm font-medium text-gray-700">Введите текст</label>
+    <textarea v-model="text" placeholder="Введите текст" rows="8" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
+  </div>
+  <div>
+    <label for="file" class="block mb-1 text-sm font-medium text-gray-700">Загрузите файл</label>
+    <input type="file" id="file" @change="handleFileChange" class="w-full border rounded px-2 py-1" />
+  </div>
 </div>
 
 <div class="grid grid-cols-2 gap-4">
@@ -24,11 +30,11 @@
   </div>
   <div>
     <label class="block text-sm font-medium text-gray-700">Temperature (чанки)</label>
-    <input type="number" step="0.1" v-model.number="params.temp_chunk" class="w-full border rounded px-2 py-1" />
+    <input type="text" v-model="tempChunkRaw" placeholder="e.g. 0.2, 0.3, 0.4" class="w-full border rounded px-2 py-1" />
   </div>
   <div>
     <label class="block text-sm font-medium text-gray-700">Temperature (финал)</label>
-    <input type="number" step="0.1" v-model.number="params.temp_final" class="w-full border rounded px-2 py-1" />
+    <input type="text" v-model="tempChunkRaw" placeholder="e.g. 0.4, 0.5, 0.6" class="w-full border rounded px-2 py-1" />
   </div>
 </div>
 
@@ -79,7 +85,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import axios from "axios";
 
 const text = ref("");
@@ -91,14 +97,26 @@ const chunkSummaries = ref([]);
 const finalSummary = ref("");
 const finalDuration = ref(0);
 
+const tempChunkRaw = ref("0.2, 0.3, 0.4");
+const tempFinalRaw = ref("0.4, 0.5, 0.6");
+
 const params = ref({
-  chunk_size_range: [2000, 5000],
+  chunk_size_range: [5000, 15000],
   overlap: [1000],
   temp_chunk: [0.2, 0.3, 0.4],
   temp_final: [0.4, 0.5, 0.6],
   chunk_prompt: "",
   final_prompt: ""
 });
+
+watch(tempChunkRaw, (val) =>{
+  params.value.temp_chunk = val.split(",").map(v => parseFloat(v.trim())).filter(v => !isNaN(v))
+})
+
+watch(tempFinalRaw, (val) => {
+  params.value.temp_final = val.split(",").map(v => parseFloat(v.trim())).filter(v => !isNaN(v));
+});
+
 
 function getChunkSizeRange() {
   const chunkSizeRange = [];
@@ -120,7 +138,37 @@ function estimateWord(text) {
   return Math.ceil(text.split(/\s+/).length);
 }
 
+const file = ref(null);
+const submissionType = ref("none");
+
+function handleFileChange(event){
+  file.value = event.target.files[0];
+  if (file.value && text.value.trim() !== ""){
+    alert("Can't submit both text and file at the same time.");
+    file.value = null;
+    return;
+  }
+  submissionType.value = "file";
+}
+
+watch(text, (newText) => {
+  if (newText.trim() !== "" && file.value !== null) {
+    alert("Can't submit both text and file at the same time.");
+    text.value = "";
+    return;
+  }
+  if (newText.trim() !== "") {
+    submissionType.value = "text";
+  }
+});
+
 const submitText = async () => {
+  console.log("submitting...")
+  if (submissionType.value === "none"){
+    alert("Please enter text or upload a file.");
+    return;
+  }
+
   loading.value = true;
   chunkSummaries.value = [];
   finalSummary.value = "";
@@ -130,12 +178,36 @@ const submitText = async () => {
   try {
     //TODO: добавить калькуляцию токенов и слов через API
     // const tokenEstimate = await axios.post("http://localhost:8000/estimate_tokens", { text: text.value });
-    tokenCount.value = estimateTokens(text.value);
-    wordCount.value = estimateWord(text.value);
-    const res = await axios.post("http://localhost:8000/test", {
-      text: text.value,
-      params: params.value
-    });
+    let res;
+
+    if (submissionType.value === "text"){
+      tokenCount.value = estimateTokens(text.value);
+      wordCount.value = estimateWord(text.value);
+
+      res = await axios.post("http://localhost:8000/test", {
+        text: text.value,
+        params: params.value
+      });
+    } else if (submissionType.value === "file") {
+      let transcript;
+      const formData = new FormData();
+      formData.append("file", file.value);
+      formData.append("params", JSON.stringify(params.value));
+
+      transcript = await axios.post("http://localhost:8000/transcribe", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      });
+
+      console.log(transcript.status)
+
+      res = await axios.post("http://localhost:8000/test", {
+        text: transcript.data.transcription,
+        params: params.value
+      });
+    }
+
     const taskId = res.data.task_id;
 
     const eventSource = new EventSource(`http://localhost:8000/stream/${taskId}`);

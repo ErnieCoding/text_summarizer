@@ -266,8 +266,8 @@ def process_document(task_id):
     # chunk_prompt_text = prompts.prompts[0]
     # final_prompt_text = prompts.prompts[1]
     final_msg = json.dumps({
-        "version": 1.42,
-        "description": "АНГЛ ПРОМПТ(с контекстом) Обработка полного текста моделью 32b.",
+        "version": 1.43,
+        "description": "Загрузка файла на фронте с АНГЛ промтом; Обработка полного текста моделью 32b.",
         "type": "final",
         "Author": "ErnestSaak",
         "date_time": datetime.datetime.now(zoneinfo.ZoneInfo('America/New_York')).strftime("%Y-%m-%d %H:%M:%S"),
