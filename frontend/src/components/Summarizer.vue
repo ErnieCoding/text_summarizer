@@ -203,7 +203,7 @@ const submitText = async () => {
       console.log(transcript.status)
 
       res = await axios.post("http://localhost:8000/test", {
-        text: transcript.data.transcription,
+        text: transcript.data,
         params: params.value
       });
     }

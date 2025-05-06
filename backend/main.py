@@ -7,8 +7,6 @@ import uuid
 import os
 from flask_cors import CORS
 from itertools import product
-import whisper
-import torch
 import logging
 
 app = Flask(__name__)
@@ -29,39 +27,30 @@ def transcribe():
     if file.filename == "":
         return {"error": "Empty filename"}, 400
 
-    # params_json = request.form.get("params")
-    # if not params_json:
-    #     return {"error": "Missing params"}, 400
+    params_json = request.form.get("params")
+    if not params_json:
+        return {"error": "Missing params"}, 400
     
-    # try:
-    #     params = json.loads(params_json)
-    # except Exception as e:
-    #     return {"error": f"Invalid params format: {str(e)}"}, 400
+    try:
+        params = json.loads(params_json)
+    except Exception as e:
+        return {"error": f"Invalid params format: {str(e)}"}, 400
     
     os.makedirs("uploads", exist_ok=True)
     file_path = os.path.join("uploads", file.filename)
     file.save(file_path)
     logging.info(f"Saved uploaded file to: {file_path}")
     
-    #Transcription
-    try:
-        logging.info("STARTING TRANSCRIPTION")
+    #Transcription task
+    task_id = str(uuid.uuid4())
+    r.set(f"transcribe:{task_id}:filepath", file_path)
+    result = celery_app.send_task("tasks.transcribe_meeting", args=[task_id])
+    response = result.get()
 
-        logging.info(f"PyTorch version: {torch.__version__}")
-        logging.info(f"CUDA version: {torch.version.cuda}")
-        logging.info(f"CUDA available: {torch.cuda.is_available()}")
-        logging.info(f"cuDNN enabled: {torch.backends.cudnn.enabled}")
-
-        device = "cuda" if torch.cuda.is_available() else "cpu"
-        model = whisper.load_model("large").to(device)
-
-        result = model.transcribe(file_path, fp16=(device == "cuda"))
-
-        logging.info("TRANSCRIPTION COMPLETED")
-        return {"transcription": result["text"], "status": 200}
-    except Exception as e:
-        logging.exception(f"\nERROR PROCESSING FILE {file_path}: {e}\n")
-        return {"transcription":"error", "status": 400} 
+    if response["status"] == 200:
+        return response["transcription"]
+    else:
+        return "ERROR TRANSCRIBING FILE"
 
 
 @app.route("/test", methods=["POST"])

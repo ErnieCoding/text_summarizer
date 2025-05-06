@@ -20,12 +20,10 @@ services:
     depends_on:
       - redis
     volumes:
-      - ./uploads:/app/uploads
+      - ./backend/uploads:/app/uploads
     environment:
       - OLLAMA_HOST=http://ollama:11434
-      - CUDA_VISIBLE_DEVICES=0
     init: true
-    runtime: nvidia
   
   worker:
     build: ./celery_worker
@@ -37,7 +35,14 @@ services:
       - ollama
     environment:
       - OLLAMA_HOST=http://ollama:11434
+      - CUDA_VISIBLE_DEVICES=0
+    #deploy: {}
     init: true
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
   
   redis:
     image: redis:7

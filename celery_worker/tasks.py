@@ -12,6 +12,7 @@ import datetime
 import zoneinfo
 import uuid
 #from pydantic import BaseModel
+import whisper, torch
 
 OLLAMA_URL = os.getenv("OLLAMA_HOST", "http://ollama:11434")
 MODEL_NAME = "qwen2.5:14b"
@@ -380,3 +381,26 @@ def test_params(task_id):
             logging.info(f"Error uploading data: {e}")
 
         time.sleep(5)
+
+@celery.task(name="tasks.transcribe_meeting")
+def transcribe_meeting(task_id):
+    filepath = r.get(f"transcribe:{task_id}:filepath")
+
+    try:
+        logging.info("STARTING TRANSCRIPTION")
+
+        logging.info(f"\nPyTorch version: {torch.__version__}\n")
+        logging.info(f"\nCUDA version: {torch.version.cuda}\n")
+        logging.info(f"\nCUDA available: {torch.cuda.is_available()}\n")
+        logging.info(f"\ncuDNN enabled: {torch.backends.cudnn.enabled}\n")
+
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+        model = whisper.load_model("base").to(device)
+
+        result = model.transcribe(filepath, fp16=(device == "cuda"))
+
+        logging.info(f"TRANSCRIPTION COMPLETED FOR FILE: {filepath}")
+        return {"transcription": result["text"], "status": 200}
+    except Exception as e:
+        logging.exception(f"\nERROR PROCESSING FILE {filepath}: {e}\n")
+        return {"transcription":"error", "status": 400}
