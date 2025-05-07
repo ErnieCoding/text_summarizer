@@ -331,22 +331,21 @@ def process_document(task_id):
     return final_msg
 
 DATA_URL = "http://ai.rndl.ru:5017/api/data"
-
 @celery.task(name="tasks.test_params")
 def test_params(task_id):
     text = r.get(f"test:{task_id}:text")
     combinations = json.loads(r.get(f"test:{task_id}:combinations"))
-    #text = TRANSCRIPT_TEXT
 
-    # text = transcribe_file("Dev_Meeting_Audio.mp3")
+    if not combinations:
+        logging.error(f"[ERROR] No combinations generated for task {task_id}. Params may be invalid.")
+        return
 
-    # with open("transcribed_dev_meeting.txt", "w+", encoding="utf-8") as file: 
-    #     file.write(text)
+    combinations = combinations[:5]
 
     for combination in combinations:
         chunk_size, chunk_overlap, temp_chunk, temp_final = combination
 
-        task_id = str(uuid.uuid4())
+        new_task_id = str(uuid.uuid4())
 
         params_dict = {
             "chunk_size": chunk_size,
@@ -357,13 +356,27 @@ def test_params(task_id):
             "max_tokens_final": 5000
         }
 
-        r.set(f"summarize:{task_id}:text", text)       
-        r.set(f"summarize:{task_id}:params", json.dumps(params_dict))
+        r.set(f"summarize:{new_task_id}:text", text)       
+        r.set(f"summarize:{new_task_id}:params", json.dumps(params_dict))
 
-        result = celery.send_task("tasks.process_document", args=[task_id])
+        result = celery.send_task("tasks.process_document", args=[new_task_id])
 
-        summary_output = result.get()
-        summary_dict = json.loads(summary_output)
+        try:
+            summary_output = result.get()
+        except Exception as e:
+            logging.error(f"[ERROR] Failed to get result for {new_task_id}: {e}")
+            continue
+
+        if not summary_output:
+            logging.warning(f"[WARN] Empty summary output for {new_task_id}")
+            continue
+        
+        try:
+            summary_dict = json.loads(summary_output)
+        except Exception as e:
+            logging.error(f"[ERROR] Could not parse summary for {new_task_id}: {e}")
+            continue
+        
         #f1_score = run_eval(summary_dict)
         summary_dict["f1_score"] = "undefined"
 
@@ -375,10 +388,11 @@ def test_params(task_id):
                 headers={"Content-Type": "application/json"},
                 data=updated_final_output,
             )
+            logging.info(f"[UPLOAD RESPONSE] {response.status_code} - {response.text}")
             response.raise_for_status()
             logging.info(f"[UPLOAD] Successfully sent summary to {DATA_URL}. Response: {response.text}")
         except Exception as e:
-            logging.info(f"Error uploading data: {e}")
+            logging.exception(f"[UPLOAD ERROR] {e}")
 
         time.sleep(5)
 
