@@ -25,8 +25,8 @@
     <input type="number" v-model.number="params.chunk_size_range[1]" class="w-full border rounded px-2 py-1" />
   </div>
   <div>
-    <label class="block text-sm font-medium text-gray-700">Overlap (символов)</label>
-    <input type="number" v-model.number="params.overlap" class="w-full border rounded px-2 py-1" />
+    <label class="block text-sm font-medium text-gray-700">Overlap (токенов)</label>
+    <input type="number" v-model.number="params.overlap[0]" class="w-full border rounded px-2 py-1" />
   </div>
   <div>
     <label class="block text-sm font-medium text-gray-700">Temperature (чанки)</label>
@@ -34,7 +34,7 @@
   </div>
   <div>
     <label class="block text-sm font-medium text-gray-700">Temperature (финал)</label>
-    <input type="text" v-model="tempChunkRaw" placeholder="e.g. 0.4, 0.5, 0.6" class="w-full border rounded px-2 py-1" />
+    <input type="text" v-model="tempFinalRaw" placeholder="e.g. 0.4, 0.5, 0.6" class="w-full border rounded px-2 py-1" />
   </div>
 </div>
 

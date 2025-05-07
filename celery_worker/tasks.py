@@ -139,7 +139,7 @@ def split_text(text, chunk_size=1800, overlap=0.3):
 
 
 
-def generate_summary(text, temperature, max_tokens, custom_prompt=None, chunk_summary=False, final_summary = False, model_name = MODEL_NAME):
+def generate_summary(text, temperature, max_tokens, custom_prompt=None, chunk_summary=False, final_summary = False, whole_text = False, model_name = MODEL_NAME):
     """
     Generates summary based on arguments.
     """
@@ -158,10 +158,8 @@ def generate_summary(text, temperature, max_tokens, custom_prompt=None, chunk_su
 Part of a business meeting:\n\n{text}"""
         elif final_summary:
             model_name = "qwen2.5:32b"
-#             prompt = f"""Synthesize the following chunk summaries of a business meeting in russian into a single, cohesive analysis, ensuring no loss of critical details of the meeting. First, identify the participants' names, extract their roles. Avoid double mentioning the same participants (i.e. \"Саша\" and \"Александр\" could be the same person). Use the logic of the meeting and the roles of participants to avoid mistakes.\nSecond, extract and point out key points of the meeting.\nThird, create meeting minutes based on the following format:\n\t1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n\t2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n\t3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.\n\nПереведи свой ответ на русский язык. Используй русские наименования.
-
-# Chunk summaries:\n\n{text}"""
-            prompt = f"""Внимательно изучи и сделай резюме транскрипта записи встречи. Во-первых, выяви участников встречи. Не путай участников встречи между собой, используй логику встречи, чтобы точнее определить участников. Затем, определи основные тезисы, которые обсуждались во время встречи, запиши протокол встречи на основе представленного транскрипта по следующему формату:
+            if whole_text:
+                prompt = f"""Внимательно изучи и сделай резюме транскрипта записи встречи. Во-первых, выяви участников встречи. Не путай участников встречи между собой, используй логику встречи, чтобы точнее определить участников. Затем, определи основные тезисы, которые обсуждались во время встречи, запиши протокол встречи на основе представленного транскрипта по следующему формату:
 \t1. 10 ключевых тезисов встречи
 \t2. Принятые решения, ответственные за их исполнения, сроки
 \t3. Ближайшие шаги. Отметь наиболее срочные задачи Подробно опиши поставленные задачи каждому сотруднику, укажи сроки исполнения задач.
@@ -169,6 +167,10 @@ Part of a business meeting:\n\n{text}"""
 Прими во внимание данный список участников встречи:\n\n\t-Алексей Воронин - head of the startup\n\t-Алексей Жаринов - developer of the web version of the personal account, responsible for developing the web version of the personal account, its interaction with the BigBlueButton VKS servers and the AI ​​module\n\t-Дмитрий Ефремов - developer of the desktop version of the messenger and VKS, responsible for developing the desktop version of the client, interaction of the desktop client with the Bitrix servers, BigBlueButton, and the web version of the personal account\n\t-Герман Румянцев - developer of the server side of the application, responsible for the functionality of the messenger server and authorization, interaction from the application server with LDAP and AD, the functionality of the chatbot inside the messenger for interaction with external applications\n\t-Павел Якушин - UX/UI interface designer\n\t-Мария Попович - tester responsible for testing and giving permission to release versions, documents the errors found and assigns tasks for fixing to developers\n\t-Сергей Стасов - systems engineer, is responsible for the availability of server infrastructure, applications, BigBlueButton and other certificate renewal services\n\t-Степан Травин - head of technical support\n\t-Артем Садыков - head of pilot projects, responsible for solution integration for clients\n\t-Елена Евтеева - project manager\n\t-Максим Перфильев - R&D engineer\n
 
 Транскрипт встречи:\n\n{text}"""
+            else:
+                prompt = f"""Synthesize the following chunk summaries of a business meeting in russian into a single, cohesive analysis, ensuring no loss of critical details of the meeting. First, identify the participants' names, extract their roles. Avoid double mentioning the same participants (i.e. \"Саша\" and \"Александр\" could be the same person). Use the logic of the meeting and the roles of participants to avoid mistakes.\nSecond, extract and point out key points of the meeting.\nThird, create meeting minutes based on the following format:\n\t1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n\t2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n\t3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.\n\nПереведи свой ответ на русский язык. Используй русские наименования.
+
+Chunk summaries:\n\n{text}"""
 
     payload = {
         "model": model_name,
@@ -192,29 +194,19 @@ Part of a business meeting:\n\n{text}"""
         logging.exception(f"Summary generation failed: {e}")
         return "[SUMMARY_FAILED]", 0.0
 
-# OPTIMIZED FOR LLAMA ONLY
-# def get_context_length():
-#     """
-#     Dynamically retrieves model's context length.
-#     """
-#     try:
-#         response = requests.post(
-#             f"{OLLAMA_URL}/api/show",
-#             json={"name": MODEL_NAME}
-#         )
-#         response.raise_for_status()
-#         model_info = response.json()
-
-#         if "model_info" in model_info:
-#             model_info_fields = model_info["model_info"]
-#             if "llama.context_length" in model_info_fields:
-#                 return model_info_fields["llama.context_length"]
-            
-#         return None
-#     except Exception as e:
-#         print(f"Failed to fetch model context length: {e}")
-#         return None
-
+DATA_URL = "http://ai.rndl.ru:5017/api/data"
+def send_results(test_result):
+    try:
+        response = requests.post(
+            DATA_URL,
+            headers={"Content-Type": "application/json"},
+            data=test_result,
+        )
+        logging.info(f"[UPLOAD RESPONSE] {response.status_code} - {response.text}")
+        response.raise_for_status()
+        logging.info(f"[UPLOAD] Successfully sent summary to {DATA_URL}. Response: {response.text}")
+    except Exception as e:
+        logging.exception(f"[UPLOAD ERROR] {e}")
 
 @celery.task(name="tasks.process_document")
 def process_document(task_id):
@@ -259,7 +251,7 @@ def process_document(task_id):
 
         final_summary, final_time = generate_summary(combined_input, temp_final, max_tokens_final, final_prompt, final_summary=True) # final summary
     else:
-        final_summary, final_time = generate_summary(text, temp_final, max_tokens_final, final_prompt, final_summary=True)
+        final_summary, final_time = generate_summary(text, temp_final, max_tokens_final, final_prompt, final_summary=True, whole_text=True)
 
     #TODO: UNCOMMENT WHEN USING META-PROMPT  
     # Retrieve cached prompts for reporting
@@ -328,9 +320,11 @@ def process_document(task_id):
 
     r.publish(f"summarize:{task_id}:events", final_msg)
 
+    # SEND RESULTS TO DB
+    send_results(final_msg)
+
     return final_msg
 
-DATA_URL = "http://ai.rndl.ru:5017/api/data"
 @celery.task(name="tasks.test_params")
 def test_params(task_id):
     text = r.get(f"test:{task_id}:text")
@@ -339,8 +333,6 @@ def test_params(task_id):
     if not combinations:
         logging.error(f"[ERROR] No combinations generated for task {task_id}. Params may be invalid.")
         return
-
-    combinations = combinations[:5]
 
     for combination in combinations:
         chunk_size, chunk_overlap, temp_chunk, temp_final = combination
@@ -359,40 +351,7 @@ def test_params(task_id):
         r.set(f"summarize:{new_task_id}:text", text)       
         r.set(f"summarize:{new_task_id}:params", json.dumps(params_dict))
 
-        result = celery.send_task("tasks.process_document", args=[new_task_id])
-
-        try:
-            summary_output = result.get()
-        except Exception as e:
-            logging.error(f"[ERROR] Failed to get result for {new_task_id}: {e}")
-            continue
-
-        if not summary_output:
-            logging.warning(f"[WARN] Empty summary output for {new_task_id}")
-            continue
-        
-        try:
-            summary_dict = json.loads(summary_output)
-        except Exception as e:
-            logging.error(f"[ERROR] Could not parse summary for {new_task_id}: {e}")
-            continue
-        
-        #f1_score = run_eval(summary_dict)
-        summary_dict["f1_score"] = "undefined"
-
-        updated_final_output = json.dumps(summary_dict, indent=2)
-
-        try:
-            response = requests.post(
-                DATA_URL,
-                headers={"Content-Type": "application/json"},
-                data=updated_final_output,
-            )
-            logging.info(f"[UPLOAD RESPONSE] {response.status_code} - {response.text}")
-            response.raise_for_status()
-            logging.info(f"[UPLOAD] Successfully sent summary to {DATA_URL}. Response: {response.text}")
-        except Exception as e:
-            logging.exception(f"[UPLOAD ERROR] {e}")
+        celery.send_task("tasks.process_document", args=[new_task_id])
 
         time.sleep(5)
 
