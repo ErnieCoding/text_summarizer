@@ -18,11 +18,11 @@
 <div class="grid grid-cols-2 gap-4">
   <div>
     <label class="block text-sm font-medium text-gray-700">Размер чанков (начало)</label>
-    <input type="number" v-model.number="params.chunk_size_range[0]" class="w-full border rounded px-2 py-1" />
+    <input type="number" v-model.number="chunkStart" class="w-full border rounded px-2 py-1" />
   </div>
   <div>
     <label class="block text-sm font-medium text-gray-700">Размер чанков (конец)</label>
-    <input type="number" v-model.number="params.chunk_size_range[1]" class="w-full border rounded px-2 py-1" />
+    <input type="number" v-model.number="chunkEnd" class="w-full border rounded px-2 py-1" />
   </div>
   <div>
     <label class="block text-sm font-medium text-gray-700">Overlap (токенов)</label>
@@ -88,20 +88,32 @@
 import { ref, computed, watch } from "vue";
 import axios from "axios";
 
+// Text/File input
 const text = ref("");
-const loading = ref(false);
+const file = ref(null);
+const submissionType = ref("none");
+
+// Token/word counters
 const tokenCount = ref(0);
 const wordCount = ref(0);
+
+// Chunk summary and final summary
+const loading = ref(false);
 const totalChunks = ref(0);
 const chunkSummaries = ref([]);
 const finalSummary = ref("");
 const finalDuration = ref(0);
 
+// Temp ranges
 const tempChunkRaw = ref("0.2, 0.3, 0.4");
 const tempFinalRaw = ref("0.4, 0.5, 0.6");
 
+// Chunk size input
+const chunkStart = ref(5000);
+const chunkEnd = ref(15000);
+
 const params = ref({
-  chunk_size_range: [5000, 15000],
+  chunk_size_range: [],
   overlap: [1000],
   temp_chunk: [0.2, 0.3, 0.4],
   temp_final: [0.4, 0.5, 0.6],
@@ -117,17 +129,6 @@ watch(tempFinalRaw, (val) => {
   params.value.temp_final = val.split(",").map(v => parseFloat(v.trim())).filter(v => !isNaN(v));
 });
 
-
-function getChunkSizeRange() {
-  const chunkSizeRange = [];
-  for(let i = params.value.chunk_size_range[0]; i <= params.value.chunk_size_range[1]; i+=1000){
-    chunkSizeRange.push(i);
-  }
-  return chunkSizeRange;
-}
-
-params.value.chunk_size_range = getChunkSizeRange();
-
 const processedChunks = computed(() => chunkSummaries.value.length);
 
 function estimateTokens(text) {
@@ -138,9 +139,7 @@ function estimateWord(text) {
   return Math.ceil(text.split(/\s+/).length);
 }
 
-const file = ref(null);
-const submissionType = ref("none");
-
+// Handle file uploads
 function handleFileChange(event){
   file.value = event.target.files[0];
   if (file.value && text.value.trim() !== ""){
@@ -162,8 +161,17 @@ watch(text, (newText) => {
   }
 });
 
+function getChunkSizeRange(start, end) {
+  const safeStart = Math.min(start, end);
+  const safeEnd = Math.max(start, end);
+  const range = [];
+  for (let i = safeStart; i <= safeEnd; i += 1000) {
+    range.push(i);
+  }
+  return range;
+}
+
 const submitText = async () => {
-  console.log("submitting...")
   if (submissionType.value === "none"){
     alert("Please enter text or upload a file.");
     return;
@@ -174,6 +182,10 @@ const submitText = async () => {
   finalSummary.value = "";
   finalDuration.value = 0;
   totalChunks.value = 0;
+
+  params.value.chunk_size_range = getChunkSizeRange(chunkStart.value, chunkEnd.value);
+
+  console.log("Sending params:", JSON.stringify(params.value, null, 2));
 
   try {
     //TODO: добавить калькуляцию токенов и слов через API

@@ -153,12 +153,54 @@ def generate_summary(text, temperature, max_tokens, custom_prompt=None, chunk_su
         #     return "[SUMMARY_FAILED]", 0.0
         
         if chunk_summary:
-            prompt = f"""Summarize the following part of a business meeting transcript in russian. First, extract and point out the participants. Never mix participants with other persons mentioned during the meeting. Then, extract key points, decisions made, and any assigned tasks with responsible people and deadlines. Provide your summary in russian. Take into account the following list of participants for this meeting:\n\n\t-Алексей Воронин - head of the startup\n\t-Алексей Жаринов - developer of the web version of the personal account, responsible for developing the web version of the personal account, its interaction with the BigBlueButton VKS servers and the AI ​​module\n\t-Дмитрий Ефремов - developer of the desktop version of the messenger and VKS, responsible for developing the desktop version of the client, interaction of the desktop client with the Bitrix servers, BigBlueButton, and the web version of the personal account\n\t-Герман Румянцев - developer of the server side of the application, responsible for the functionality of the messenger server and authorization, interaction from the application server with LDAP and AD, the functionality of the chatbot inside the messenger for interaction with external applications\n\t-Павел Якушин - UX/UI interface designer\n\t-Мария Попович - tester responsible for testing and giving permission to release versions, documents the errors found and assigns tasks for fixing to developers\n\t-Сергей Стасов - systems engineer, is responsible for the availability of server infrastructure, applications, BigBlueButton and other certificate renewal services\n\t-Степан Травин - head of technical support\n\t-Артем Садыков - head of pilot projects, responsible for solution integration for clients\n\t-Елена Евтеева - project manager\n\t-Максим Перфильев - R&D engineer\n    \nExample of a good answer:\n\nУчастники: \n\tАртем-старший менеджер по продажам, \n\tСаша- менеджер по подажам, \n\tЛена- проектный менеджер, \n\tАлексей Юрьевич- руководитель проекта RConf \n \nПринятые решения:\n\n*Артем*: \n\n\t-Ускорить подписание контракта с Альфа-банком,\n\t-срок - до следующей среды\n\n*Лена*:\n\n\t-Разорвать контракт с МТУСИ\n\t-срок: до следующей недели.\n\nОбсуждались вопросы:\n \n\t1. Контракт с Альфа банком- ускорение\n\t2. Контракт с МТУСИ- разрыв\n\t3. Организация пилотных проектов- метрики успеха
+            prompt = f"""You are an advanced linguistic model skilled at extracting and structuring relevant information from unstructured texts. Your goal is to write a structured summary of a part of a job interview given in a form of a meeting transcript in russian language, focusing only on the candidate's answers and narrative.
 
-Part of a business meeting:\n\n{text}"""
+## Principles for creating the summary:
+- Record only information from the candidate
+- Do not include job descriptions, company information, or conditions mentioned by the recruiter
+- Maintain the natural sequence of the conversation
+- Use russian language similar to the author's original style
+
+## Working process:
+1. Carefully study the given part of the interview transcript in russian
+2. Identify the names of the participants and their roles: recruter is asking questions, candidate is answering and telling about his experience
+3. Identify all topics discussed during the interview
+4. For each topic:
+   - Write its title
+   - Identify subtopics
+   - Present the content as close as possible to the candidate's original response
+   - Include specific examples and situations
+5. Check the completeness and accuracy of the information
+
+## Summary structure:
+
+### Interview participants:
+- Names and roles of participants
+
+### Main content:
+Divide by topics, for example:
+- Work experience
+- Technical experience
+- Professional achievements
+- Reasons for job search
+- Personal and communication skills
+- etc.
+
+For each topic:
+- Topic title
+- Subtopics
+- Detailed presentation of the candidate's answers
+- Examples from their experience
+
+Be careful not to mix people mentioned in the transcript with candidate.
+
+Give your answer in russian.
+
+Part of the interview:\n\n{text}"""
         elif final_summary:
             model_name = "qwen2.5:32b"
             if whole_text:
+                # TODO: change prompt for whole text for job interviews
                 prompt = f"""Внимательно изучи и сделай резюме транскрипта записи встречи. Во-первых, выяви участников встречи. Не путай участников встречи между собой, используй логику встречи, чтобы точнее определить участников. Затем, определи основные тезисы, которые обсуждались во время встречи, запиши протокол встречи на основе представленного транскрипта по следующему формату:
 \t1. 10 ключевых тезисов встречи
 \t2. Принятые решения, ответственные за их исполнения, сроки
@@ -168,7 +210,60 @@ Part of a business meeting:\n\n{text}"""
 
 Транскрипт встречи:\n\n{text}"""
             else:
-                prompt = f"""Synthesize the following chunk summaries of a business meeting in russian into a single, cohesive analysis, ensuring no loss of critical details of the meeting. First, identify the participants' names, extract their roles. Avoid double mentioning the same participants (i.e. \"Саша\" and \"Александр\" could be the same person). Use the logic of the meeting and the roles of participants to avoid mistakes.\nSecond, extract and point out key points of the meeting.\nThird, create meeting minutes based on the following format:\n\t1. 10 Key points of the meeting (topics, main decisions, progress, etc. that were discussed during the meeting)\n\t2. Decisions made during the meeting, assigned tasks to participants, and deadlines for each of them\n\t3. Urgent tasks and decisions. Identify the most urgent tasks to be completed based on the deadline, describe assigned tasks for every employee and their respective deadlines.\n\nПереведи свой ответ на русский язык. Используй русские наименования.
+                prompt = f"""#You are an experiences HR recruiter. Your goal is to produce a report about candidate's strengths and weaknesses.
+#Synthesize the following chunk summaries of a job interview given in russian into a single, cohesive analysis, ensuring no loss of critical details of the meeting. 
+First, identify the participants' names, extract their roles. Focus on candidate only. 
+Use the logic of the meeting and the roles of participants to avoid mistakes.
+
+## Principles for creating the summary:
+
+- Record only information from the candidate
+- Do not include job descriptions, company information, or conditions mentioned by the recruiter
+- Maintain the natural sequence of the conversation
+- Use russian language similar to the author's original style
+
+## Working process:
+
+1. Carefully study the transcript summaries in russian
+2. Identify the names of the participants and their roles
+3. Identify all topics discussed during the interview
+4. For each topic:
+   - Write its title
+   - Identify subtopics
+   - Present the content as close as possible to the candidate's original text
+   - Include specific examples and situations
+5. Check the completeness and accuracy of the information
+
+## Summary structure:
+
+### Interview participants:
+- Names and roles of participants
+
+### Main content:
+Divide by topics, for example:
+- Work experience
+- Technical experience
+- Professional achievements
+- Reasons for job search
+- Personal and communication skills
+- etc.
+
+For each topic:
+- Topic title
+- Subtopics
+- Detailed presentation of the candidate's answers
+- Examples from their experience
+
+### Overall conclusion:
+<General conclusion about the candidate's competencies>
+
+### Strengths:
+<Candidate's strengths>
+
+### Weaknesses:
+<Candidate's weaknesses>
+
+Give your response in russian.
 
 Chunk summaries:\n\n{text}"""
 
@@ -259,8 +354,8 @@ def process_document(task_id):
     # chunk_prompt_text = prompts.prompts[0]
     # final_prompt_text = prompts.prompts[1]
     final_msg = json.dumps({
-        "version": 1.43,
-        "description": "Загрузка файла на фронте с АНГЛ промтом; Обработка полного текста моделью 32b.",
+        "version": 1.5,
+        "description": "Саммари рекрутинговой встречи с АНГЛ промптом.",
         "type": "final",
         "Author": "ErnestSaak",
         "date_time": datetime.datetime.now(zoneinfo.ZoneInfo('America/New_York')).strftime("%Y-%m-%d %H:%M:%S"),
@@ -275,13 +370,102 @@ def process_document(task_id):
             #"global_prompt": GLOBAL_PROMPT,
             #"meta_prompt": META_PROMPT,
             
-            "chunk_prompt": None if chunk_size >= (count_tokens(text=text) - 2000) else """Summarize the following part of a business meeting transcript in russian. First, extract and point out the participants. Never mix participants with other persons mentioned during the meeting. Then, extract key points, decisions made, and any assigned tasks with responsible people and deadlines. Provide your summary in russian. Take into account the following list of participants for this meeting:\n\n\t-Алексей Воронин - head of the startup\n\t-Алексей Жаринов - developer of the web version of the personal account, responsible for developing the web version of the personal account, its interaction with the BigBlueButton VKS servers and the AI ​​module\n\t-Дмитрий Ефремов - developer of the desktop version of the messenger and VKS, responsible for developing the desktop version of the client, interaction of the desktop client with the Bitrix servers, BigBlueButton, and the web version of the personal account\n\t-Герман Румянцев - developer of the server side of the application, responsible for the functionality of the messenger server and authorization, interaction from the application server with LDAP and AD, the functionality of the chatbot inside the messenger for interaction with external applications\n\t-Павел Якушин - UX/UI interface designer\n\t-Мария Попович - tester responsible for testing and giving permission to release versions, documents the errors found and assigns tasks for fixing to developers\n\t-Сергей Стасов - systems engineer, is responsible for the availability of server infrastructure, applications, BigBlueButton and other certificate renewal services\n\t-Степан Травин - head of technical support\n\t-Артем Садыков - head of pilot projects, responsible for solution integration for clients\n\t-Елена Евтеева - project manager\n\t-Максим Перфильев - R&D engineer\n    \nExample of a good answer:\n\nУчастники: \n\tАртем-старший менеджер по продажам, \n\tСаша- менеджер по подажам, \n\tЛена- проектный менеджер, \n\tАлексей Юрьевич- руководитель проекта RConf \n \nПринятые решения:\n\n*Артем*: \n\n\t-Ускорить подписание контракта с Альфа-банком,\n\t-срок - до следующей среды\n\n*Лена*:\n\n\t-Разорвать контракт с МТУСИ\n\t-срок: до следующей недели.\n\nОбсуждались вопросы:\n \n\t1. Контракт с Альфа банком- ускорение\n\t2. Контракт с МТУСИ- разрыв\n\t3. Организация пилотных проектов- метрики успеха""",
-            "final_summary_prompt": """Внимательно изучи и сделай резюме транскрипта записи встречи. Во-первых, выяви участников встречи. Не путай участников встречи между собой, используй логику встречи, чтобы точнее определить участников. Затем, определи основные тезисы, которые обсуждались во время встречи, запиши протокол встречи на основе представленного транскрипта по следующему формату:
-\t1. 10 ключевых тезисов встречи
-\t2. Принятые решения, ответственные за их исполнения, сроки
-\t3. Ближайшие шаги. Отметь наиболее срочные задачи Подробно опиши поставленные задачи каждому сотруднику, укажи сроки исполнения задач.
+            "chunk_prompt": None if chunk_size >= (count_tokens(text=text) - 2000) else """You are an advanced linguistic model skilled at extracting and structuring relevant information from unstructured texts. Your goal is to write a structured summary of a part of a job interview given in a form of a meeting transcript in russian language, focusing only on the candidate's answers and narrative.
 
-Прими во внимание данный список участников встречи:\n\n\t-Алексей Воронин - head of the startup\n\t-Алексей Жаринов - developer of the web version of the personal account, responsible for developing the web version of the personal account, its interaction with the BigBlueButton VKS servers and the AI ​​module\n\t-Дмитрий Ефремов - developer of the desktop version of the messenger and VKS, responsible for developing the desktop version of the client, interaction of the desktop client with the Bitrix servers, BigBlueButton, and the web version of the personal account\n\t-Герман Румянцев - developer of the server side of the application, responsible for the functionality of the messenger server and authorization, interaction from the application server with LDAP and AD, the functionality of the chatbot inside the messenger for interaction with external applications\n\t-Павел Якушин - UX/UI interface designer\n\t-Мария Попович - tester responsible for testing and giving permission to release versions, documents the errors found and assigns tasks for fixing to developers\n\t-Сергей Стасов - systems engineer, is responsible for the availability of server infrastructure, applications, BigBlueButton and other certificate renewal services\n\t-Степан Травин - head of technical support\n\t-Артем Садыков - head of pilot projects, responsible for solution integration for clients\n\t-Елена Евтеева - project manager\n\t-Максим Перфильев - R&D engineer\n""",
+## Principles for creating the summary:
+- Record only information from the candidate
+- Do not include job descriptions, company information, or conditions mentioned by the recruiter
+- Maintain the natural sequence of the conversation
+- Use russian language similar to the author's original style
+
+## Working process:
+1. Carefully study the given part of the interview transcript in russian
+2. Identify the names of the participants and their roles: recruter is asking questions, candidate is answering and telling about his experience
+3. Identify all topics discussed during the interview
+4. For each topic:
+   - Write its title
+   - Identify subtopics
+   - Present the content as close as possible to the candidate's original response
+   - Include specific examples and situations
+5. Check the completeness and accuracy of the information
+
+## Summary structure:
+
+### Interview participants:
+- Names and roles of participants
+
+### Main content:
+Divide by topics, for example:
+- Work experience
+- Technical experience
+- Professional achievements
+- Reasons for job search
+- Personal and communication skills
+- etc.
+
+For each topic:
+- Topic title
+- Subtopics
+- Detailed presentation of the candidate's answers
+- Examples from their experience
+
+Be careful not to mix people mentioned in the transcript with candidate.
+
+Give your answer in russian.""",
+            "final_summary_prompt": """#You are an experiences HR recruiter. Your goal is to produce a report about candidate's strengths and weaknesses.
+#Synthesize the following chunk summaries of a job interview given in russian into a single, cohesive analysis, ensuring no loss of critical details of the meeting. 
+First, identify the participants' names, extract their roles. Focus on candidate only. 
+Use the logic of the meeting and the roles of participants to avoid mistakes.
+
+## Principles for creating the summary:
+
+- Record only information from the candidate
+- Do not include job descriptions, company information, or conditions mentioned by the recruiter
+- Maintain the natural sequence of the conversation
+- Use russian language similar to the author's original style
+
+## Working process:
+
+1. Carefully study the transcript summaries in russian
+2. Identify the names of the participants and their roles
+3. Identify all topics discussed during the interview
+4. For each topic:
+   - Write its title
+   - Identify subtopics
+   - Present the content as close as possible to the candidate's original text
+   - Include specific examples and situations
+5. Check the completeness and accuracy of the information
+
+## Summary structure:
+
+### Interview participants:
+- Names and roles of participants
+
+### Main content:
+Divide by topics, for example:
+- Work experience
+- Technical experience
+- Professional achievements
+- Reasons for job search
+- Personal and communication skills
+- etc.
+
+For each topic:
+- Topic title
+- Subtopics
+- Detailed presentation of the candidate's answers
+- Examples from their experience
+
+### Overall conclusion:
+<General conclusion about the candidate's competencies>
+
+### Strengths:
+<Candidate's strengths>
+
+### Weaknesses:
+<Candidate's weaknesses>
+
+Give your response in russian.""",
             "temp_chunk": None if chunk_size >= (count_tokens(text=text) - 2000) else temp_chunk,
             "temp_final": temp_final,
             "chunk_size": None if chunk_size >= (count_tokens(text=text) - 2000) else chunk_size,
@@ -333,8 +517,12 @@ def test_params(task_id):
     if not combinations:
         logging.error(f"[ERROR] No combinations generated for task {task_id}. Params may be invalid.")
         return
+    
+    logging.info(f"\n\n[DEBUG] COMBINATIONS RECEIVED: {combinations}\n\n")
 
+    test_count = 1
     for combination in combinations:
+        logging.warning(f"\n[DEBUG] STARTING TEST #{test_count}\n")
         chunk_size, chunk_overlap, temp_chunk, temp_final = combination
 
         new_task_id = str(uuid.uuid4())
@@ -352,7 +540,8 @@ def test_params(task_id):
         r.set(f"summarize:{new_task_id}:params", json.dumps(params_dict))
 
         celery.send_task("tasks.process_document", args=[new_task_id])
-
+        
+        test_count += 1
         time.sleep(5)
 
 @celery.task(name="tasks.transcribe_meeting")
