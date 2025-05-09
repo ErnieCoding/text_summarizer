@@ -153,48 +153,7 @@ def generate_summary(text, temperature, max_tokens, custom_prompt=None, chunk_su
         #     return "[SUMMARY_FAILED]", 0.0
         
         if chunk_summary:
-            prompt = f"""You are an advanced linguistic model skilled at extracting and structuring relevant information from unstructured texts. Your goal is to write a structured summary of a part of a job interview given in a form of a meeting transcript in russian language, focusing only on the candidate's answers and narrative.
-
-## Principles for creating the summary:
-- Record only information from the candidate
-- Do not include job descriptions, company information, or conditions mentioned by the recruiter
-- Maintain the natural sequence of the conversation
-- Use russian language similar to the author's original style
-
-## Working process:
-1. Carefully study the given part of the interview transcript in russian
-2. Identify the names of the participants and their roles: recruter is asking questions, candidate is answering and telling about his experience
-3. Identify all topics discussed during the interview
-4. For each topic:
-   - Write its title
-   - Identify subtopics
-   - Present the content as close as possible to the candidate's original response
-   - Include specific examples and situations
-5. Check the completeness and accuracy of the information
-
-## Summary structure:
-
-### Interview participants:
-- Names and roles of participants
-
-### Main content:
-Divide by topics, for example:
-- Work experience
-- Technical experience
-- Professional achievements
-- Reasons for job search
-- Personal and communication skills
-- etc.
-
-For each topic:
-- Topic title
-- Subtopics
-- Detailed presentation of the candidate's answers
-- Examples from their experience
-
-Be careful not to mix people mentioned in the transcript with candidate.
-
-Give your answer in russian.
+            prompt = f"""You are an advanced IT developer team leader, an expert in recruiting IT professionals. Your goal is to write a structured summary of a part of a job interview given in a form of a meeting transcript in russian language, focusing only on the candidate's answers and narrative.\n\n## Principles for creating the summary:\n- Record only information from the candidate\n- Do not include job descriptions, company information, or conditions mentioned by the recruiter\n- Maintain the natural sequence of the conversation\n- Use russian language similar to the author's original style\n\n## Working process:\n1. Carefully study the given part of the interview transcript in russian\n2. Identify the names of the participants and their roles: recruter is asking questions, candidate is answering and telling about his experience\n3. Identify all topics discussed during the interview\n4. For each topic:\n   - Write its title\n   - Identify subtopics\n   - Present the content as close as possible to the candidate's original response\n   - Include specific examples and situations\n5. Check the completeness and accuracy of the information from the point of view of IT professional. \n\n## Summary structure:\n\n### Interview participants:\n- Names and roles of participants\n\n### Main content:\nDivide by topics, for example:\n- Work experience\n- Technical experience\n- Professional achievements\n- Reasons for job search\n- Personal and communication skills\n- etc.\n\nFor each topic:\n- Topic title\n- Subtopics\n- Detailed presentation of the candidate's answers\n- Examples from their experience\n\nBe careful not to mix people mentioned in the transcript with candidate.\n\nGive your answer in russian.
 
 Part of the interview:\n\n{text}"""
         elif final_summary:
@@ -210,60 +169,7 @@ Part of the interview:\n\n{text}"""
 
 Транскрипт встречи:\n\n{text}"""
             else:
-                prompt = f"""#You are an experiences HR recruiter. Your goal is to produce a report about candidate's strengths and weaknesses.
-#Synthesize the following chunk summaries of a job interview given in russian into a single, cohesive analysis, ensuring no loss of critical details of the meeting. 
-First, identify the participants' names, extract their roles. Focus on candidate only. 
-Use the logic of the meeting and the roles of participants to avoid mistakes.
-
-## Principles for creating the summary:
-
-- Record only information from the candidate
-- Do not include job descriptions, company information, or conditions mentioned by the recruiter
-- Maintain the natural sequence of the conversation
-- Use russian language similar to the author's original style
-
-## Working process:
-
-1. Carefully study the transcript summaries in russian
-2. Identify the names of the participants and their roles
-3. Identify all topics discussed during the interview
-4. For each topic:
-   - Write its title
-   - Identify subtopics
-   - Present the content as close as possible to the candidate's original text
-   - Include specific examples and situations
-5. Check the completeness and accuracy of the information
-
-## Summary structure:
-
-### Interview participants:
-- Names and roles of participants
-
-### Main content:
-Divide by topics, for example:
-- Work experience
-- Technical experience
-- Professional achievements
-- Reasons for job search
-- Personal and communication skills
-- etc.
-
-For each topic:
-- Topic title
-- Subtopics
-- Detailed presentation of the candidate's answers
-- Examples from their experience
-
-### Overall conclusion:
-<General conclusion about the candidate's competencies>
-
-### Strengths:
-<Candidate's strengths>
-
-### Weaknesses:
-<Candidate's weaknesses>
-
-Give your response in russian.
+                prompt = f"""#You are an experienced IT developers team leader, expert in recruitment of IT professionals in your team. Your goal is to produce a report about candidate's strengths and weaknesses.\n#Synthesize the following chunk summaries of a job interview given in russian into a single, cohesive analysis, ensuring no loss of critical details of the meeting. \nFirst, identify the participants' names, extract their roles. Focus on the candidate only. \nUse the logic of the meeting and the roles of participants to avoid mistakes.\n\n## Principles for creating the summary:\n\n- Record only information from the candidate\n- Do not include job descriptions, company information, or conditions mentioned by the recruiter\n- Maintain the natural sequence of the conversation\n- Use russian language similar to the author's original style\n\n## Working process:\n\n1. Carefully study the transcript summaries in russian\n2. Identify the names of the participants and their roles\n3. Identify all topics discussed during the interview\n4. For each topic:\n   - Write its title\n   - Identify subtopics\n   - Present the content as close as possible to the candidate's original text\n   - Include specific examples and situations important for candidate assessment  \n5. Check the completeness and accuracy of the information\n\n## Summary structure:\n\n### Interview participants:\n- Names and roles of participants\n\n### Main content:\nDivide by topics, for example:\n- Work experience\n- Technical experience\n- Professional achievements\n- Reasons for job search\n- Personal and communication skills\n- etc.\n\nFor each topic:\n- Topic title\n- Subtopics\n- Detailed presentation of the candidate's answers\n- Examples from their experience\n\n### Overall conclusion:\n<General conclusion about the candidate's competencies>\n\n### Strengths:\n<Candidate's strengths>\n\n### Weaknesses:\n<Candidate's weaknesses>\n\nGive your response in russian.
 
 Chunk summaries:\n\n{text}"""
 
@@ -354,8 +260,8 @@ def process_document(task_id):
     # chunk_prompt_text = prompts.prompts[0]
     # final_prompt_text = prompts.prompts[1]
     final_msg = json.dumps({
-        "version": 1.5,
-        "description": "Саммари рекрутинговой встречи с АНГЛ промптом.",
+        "version": 1.51,
+        "description": "Саммари рекрутинговой встречи с обновленными промптами.",
         "type": "final",
         "Author": "ErnestSaak",
         "date_time": datetime.datetime.now(zoneinfo.ZoneInfo('America/New_York')).strftime("%Y-%m-%d %H:%M:%S"),
@@ -370,102 +276,8 @@ def process_document(task_id):
             #"global_prompt": GLOBAL_PROMPT,
             #"meta_prompt": META_PROMPT,
             
-            "chunk_prompt": None if chunk_size >= (count_tokens(text=text) - 2000) else """You are an advanced linguistic model skilled at extracting and structuring relevant information from unstructured texts. Your goal is to write a structured summary of a part of a job interview given in a form of a meeting transcript in russian language, focusing only on the candidate's answers and narrative.
-
-## Principles for creating the summary:
-- Record only information from the candidate
-- Do not include job descriptions, company information, or conditions mentioned by the recruiter
-- Maintain the natural sequence of the conversation
-- Use russian language similar to the author's original style
-
-## Working process:
-1. Carefully study the given part of the interview transcript in russian
-2. Identify the names of the participants and their roles: recruter is asking questions, candidate is answering and telling about his experience
-3. Identify all topics discussed during the interview
-4. For each topic:
-   - Write its title
-   - Identify subtopics
-   - Present the content as close as possible to the candidate's original response
-   - Include specific examples and situations
-5. Check the completeness and accuracy of the information
-
-## Summary structure:
-
-### Interview participants:
-- Names and roles of participants
-
-### Main content:
-Divide by topics, for example:
-- Work experience
-- Technical experience
-- Professional achievements
-- Reasons for job search
-- Personal and communication skills
-- etc.
-
-For each topic:
-- Topic title
-- Subtopics
-- Detailed presentation of the candidate's answers
-- Examples from their experience
-
-Be careful not to mix people mentioned in the transcript with candidate.
-
-Give your answer in russian.""",
-            "final_summary_prompt": """#You are an experiences HR recruiter. Your goal is to produce a report about candidate's strengths and weaknesses.
-#Synthesize the following chunk summaries of a job interview given in russian into a single, cohesive analysis, ensuring no loss of critical details of the meeting. 
-First, identify the participants' names, extract their roles. Focus on candidate only. 
-Use the logic of the meeting and the roles of participants to avoid mistakes.
-
-## Principles for creating the summary:
-
-- Record only information from the candidate
-- Do not include job descriptions, company information, or conditions mentioned by the recruiter
-- Maintain the natural sequence of the conversation
-- Use russian language similar to the author's original style
-
-## Working process:
-
-1. Carefully study the transcript summaries in russian
-2. Identify the names of the participants and their roles
-3. Identify all topics discussed during the interview
-4. For each topic:
-   - Write its title
-   - Identify subtopics
-   - Present the content as close as possible to the candidate's original text
-   - Include specific examples and situations
-5. Check the completeness and accuracy of the information
-
-## Summary structure:
-
-### Interview participants:
-- Names and roles of participants
-
-### Main content:
-Divide by topics, for example:
-- Work experience
-- Technical experience
-- Professional achievements
-- Reasons for job search
-- Personal and communication skills
-- etc.
-
-For each topic:
-- Topic title
-- Subtopics
-- Detailed presentation of the candidate's answers
-- Examples from their experience
-
-### Overall conclusion:
-<General conclusion about the candidate's competencies>
-
-### Strengths:
-<Candidate's strengths>
-
-### Weaknesses:
-<Candidate's weaknesses>
-
-Give your response in russian.""",
+            "chunk_prompt": None if chunk_size >= (count_tokens(text=text) - 2000) else """You are an advanced IT developer team leader, an expert in recruiting IT professionals. Your goal is to write a structured summary of a part of a job interview given in a form of a meeting transcript in russian language, focusing only on the candidate's answers and narrative.\n\n## Principles for creating the summary:\n- Record only information from the candidate\n- Do not include job descriptions, company information, or conditions mentioned by the recruiter\n- Maintain the natural sequence of the conversation\n- Use russian language similar to the author's original style\n\n## Working process:\n1. Carefully study the given part of the interview transcript in russian\n2. Identify the names of the participants and their roles: recruter is asking questions, candidate is answering and telling about his experience\n3. Identify all topics discussed during the interview\n4. For each topic:\n   - Write its title\n   - Identify subtopics\n   - Present the content as close as possible to the candidate's original response\n   - Include specific examples and situations\n5. Check the completeness and accuracy of the information from the point of view of IT professional. \n\n## Summary structure:\n\n### Interview participants:\n- Names and roles of participants\n\n### Main content:\nDivide by topics, for example:\n- Work experience\n- Technical experience\n- Professional achievements\n- Reasons for job search\n- Personal and communication skills\n- etc.\n\nFor each topic:\n- Topic title\n- Subtopics\n- Detailed presentation of the candidate's answers\n- Examples from their experience\n\nBe careful not to mix people mentioned in the transcript with candidate.\n\nGive your answer in russian.""",
+            "final_summary_prompt": """#You are an experienced IT developers team leader, expert in recruitment of IT professionals in your team. Your goal is to produce a report about candidate's strengths and weaknesses.\n#Synthesize the following chunk summaries of a job interview given in russian into a single, cohesive analysis, ensuring no loss of critical details of the meeting. \nFirst, identify the participants' names, extract their roles. Focus on the candidate only. \nUse the logic of the meeting and the roles of participants to avoid mistakes.\n\n## Principles for creating the summary:\n\n- Record only information from the candidate\n- Do not include job descriptions, company information, or conditions mentioned by the recruiter\n- Maintain the natural sequence of the conversation\n- Use russian language similar to the author's original style\n\n## Working process:\n\n1. Carefully study the transcript summaries in russian\n2. Identify the names of the participants and their roles\n3. Identify all topics discussed during the interview\n4. For each topic:\n   - Write its title\n   - Identify subtopics\n   - Present the content as close as possible to the candidate's original text\n   - Include specific examples and situations important for candidate assessment  \n5. Check the completeness and accuracy of the information\n\n## Summary structure:\n\n### Interview participants:\n- Names and roles of participants\n\n### Main content:\nDivide by topics, for example:\n- Work experience\n- Technical experience\n- Professional achievements\n- Reasons for job search\n- Personal and communication skills\n- etc.\n\nFor each topic:\n- Topic title\n- Subtopics\n- Detailed presentation of the candidate's answers\n- Examples from their experience\n\n### Overall conclusion:\n<General conclusion about the candidate's competencies>\n\n### Strengths:\n<Candidate's strengths>\n\n### Weaknesses:\n<Candidate's weaknesses>\n\nGive your response in russian.""",
             "temp_chunk": None if chunk_size >= (count_tokens(text=text) - 2000) else temp_chunk,
             "temp_final": temp_final,
             "chunk_size": None if chunk_size >= (count_tokens(text=text) - 2000) else chunk_size,
