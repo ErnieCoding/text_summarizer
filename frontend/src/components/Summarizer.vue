@@ -15,18 +15,23 @@
   </div>
 </div>
 
+<div>
+  <input type="checkbox" id="checkbox" v-model="params.checked">
+  <label for="checkbox">{{ params.checked ? '✓' : 'X' }} Summary without chunking</label>
+</div>
+
 <div class="grid grid-cols-2 gap-4">
   <div>
     <label class="block text-sm font-medium text-gray-700">Размер чанков (начало)</label>
-    <input type="number" v-model.number="chunkStart" class="w-full border rounded px-2 py-1" />
+    <input type="number" v-model.number="chunkStart" class="w-full border rounded px-2 py-1" :disabled="params.checked"/>
   </div>
   <div>
     <label class="block text-sm font-medium text-gray-700">Размер чанков (конец)</label>
-    <input type="number" v-model.number="chunkEnd" class="w-full border rounded px-2 py-1" />
+    <input type="number" v-model.number="chunkEnd" class="w-full border rounded px-2 py-1" :disabled="params.checked"/>
   </div>
   <div>
     <label class="block text-sm font-medium text-gray-700">Overlap (токенов)</label>
-    <input type="number" v-model.number="params.overlap[0]" class="w-full border rounded px-2 py-1" />
+    <input type="number" v-model.number="params.overlap[0]" class="w-full border rounded px-2 py-1" :disabled="params.checked"/>
   </div>
   <div>
     <label class="block text-sm font-medium text-gray-700">Temperature (чанки)</label>
@@ -118,7 +123,8 @@ const params = ref({
   temp_chunk: [0.2, 0.3, 0.4],
   temp_final: [0.4, 0.5, 0.6],
   chunk_prompt: "",
-  final_prompt: ""
+  final_prompt: "",
+  checked: false
 });
 
 watch(tempChunkRaw, (val) =>{
@@ -185,7 +191,12 @@ const submitText = async () => {
 
   params.value.chunk_size_range = getChunkSizeRange(chunkStart.value, chunkEnd.value);
 
-  console.log("Sending params:", JSON.stringify(params.value, null, 2));
+  if (params.value.checked){
+    console.log("Sending summary of the full text with params: \n");
+  }else{
+    console.log("Sending summary with chunking with params: \n");
+  }
+  console.log("\nPARAMS\n", JSON.stringify(params.value, null, 2));
 
   try {
     //TODO: добавить калькуляцию токенов и слов через API

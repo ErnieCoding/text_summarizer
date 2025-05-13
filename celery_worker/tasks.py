@@ -358,9 +358,12 @@ def test_params(task_id):
 
 @celery.task(name="tasks.transcribe_meeting")
 def transcribe_meeting(task_id):
-    filepath = r.get(f"transcribe:{task_id}:filepath")
+    filename = r.get(f"transcribe:{task_id}:filename")
+    filepath = os.path.join("/shared/uploads", filename)
 
     try:
+        
+        logging.info(f"Saved uploaded file to: {filepath}")
         logging.info("STARTING TRANSCRIPTION")
 
         logging.info(f"\nPyTorch version: {torch.__version__}\n")
@@ -372,6 +375,10 @@ def transcribe_meeting(task_id):
         model = whisper.load_model("base").to(device)
 
         result = model.transcribe(filepath, fp16=(device == "cuda"))
+
+        output_path = os.path.join("/shared/transcripts", f"{filename}.txt")
+        with open(output_path, "w+", encoding="utf-8") as filewrite:
+            filewrite.write(result["text"])
 
         logging.info(f"TRANSCRIPTION COMPLETED FOR FILE: {filepath}")
         return {"transcription": result["text"], "status": 200}

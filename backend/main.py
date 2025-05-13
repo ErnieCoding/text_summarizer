@@ -36,14 +36,12 @@ def transcribe():
     except Exception as e:
         return {"error": f"Invalid params format: {str(e)}"}, 400
     
-    os.makedirs("uploads", exist_ok=True)
-    file_path = os.path.join("uploads", file.filename)
+    file_path = os.path.join("/app/uploads", file.filename)
     file.save(file_path)
-    logging.info(f"Saved uploaded file to: {file_path}")
-    
+
     #Transcription task
     task_id = str(uuid.uuid4())
-    r.set(f"transcribe:{task_id}:filepath", file_path)
+    r.set(f"transcribe:{task_id}:filename", file.filename)
     result = celery_app.send_task("tasks.transcribe_meeting", args=[task_id])
     response = result.get()
 
