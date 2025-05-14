@@ -60,19 +60,29 @@ def test():
     if not text or not params:
         return jsonify({"error": "No text or parameters provided"}), 400
     
-    combinations = list(product(
-    params["chunk_size_range"],
-    params["overlap"],
-    params['temp_chunk'],
-    params["temp_final"],
-    ))
-
     task_id = str(uuid.uuid4())
     r.set(f"test:{task_id}:text", text)
-    r.set(f"test:{task_id}:combinations", json.dumps(combinations))
-    celery_app.send_task("tasks.test_params", args=[task_id])
 
-    return jsonify({"task_id":task_id})
+    if params.get("checked", False):
+        # No chunking
+        r.set(f"test:{task_id}:params", json.dumps(params))
+    else:
+        # Chunking
+        try:
+            combinations = list(product(
+                params["chunk_size_range"],
+                params["overlap"],
+                params["temp_chunk"],
+                params["temp_final"],
+            ))
+            r.set(f"test:{task_id}:combinations", json.dumps(combinations))
+        except KeyError as e:
+            return jsonify({"error": f"Missing key for chunking: {e}"}), 400
+    
+    celery_app.send_task("tasks.test_params", args=[task_id])
+    
+    return jsonify({"task_id": task_id})
+
 
 @app.route("/summarize", methods=["POST"])
 def summarize():

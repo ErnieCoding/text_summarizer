@@ -127,12 +127,23 @@ const params = ref({
   checked: false
 });
 
-watch(tempChunkRaw, (val) =>{
-  params.value.temp_chunk = val.split(",").map(v => parseFloat(v.trim())).filter(v => !isNaN(v))
-})
+watch(tempChunkRaw, (val) => {
+  params.value.temp_chunk = val.split(",").map(v => parseFloat(v.trim())).filter(v => !isNaN(v));
+});
 
 watch(tempFinalRaw, (val) => {
   params.value.temp_final = val.split(",").map(v => parseFloat(v.trim())).filter(v => !isNaN(v));
+});
+
+watch(() => params.value.checked, (isChecked) => {
+  if (isChecked) {
+    delete params.value.chunk_size_range;
+    delete params.value.overlap;
+    params.value.temp_chunk = [0.3];
+    params.value.temp_final = [0.5];
+    tempChunkRaw.value = "0.3";
+    tempFinalRaw.value = "0.5";
+  }
 });
 
 const processedChunks = computed(() => chunkSummaries.value.length);
@@ -146,9 +157,9 @@ function estimateWord(text) {
 }
 
 // Handle file uploads
-function handleFileChange(event){
+function handleFileChange(event) {
   file.value = event.target.files[0];
-  if (file.value && text.value.trim() !== ""){
+  if (file.value && text.value.trim() !== "") {
     alert("Can't submit both text and file at the same time.");
     file.value = null;
     return;
@@ -178,7 +189,7 @@ function getChunkSizeRange(start, end) {
 }
 
 const submitText = async () => {
-  if (submissionType.value === "none"){
+  if (submissionType.value === "none") {
     alert("Please enter text or upload a file.");
     return;
   }
@@ -189,21 +200,20 @@ const submitText = async () => {
   finalDuration.value = 0;
   totalChunks.value = 0;
 
-  params.value.chunk_size_range = getChunkSizeRange(chunkStart.value, chunkEnd.value);
-
-  if (params.value.checked){
-    console.log("Sending summary of the full text with params: \n");
-  }else{
-    console.log("Sending summary with chunking with params: \n");
+  if (!params.value.checked) {
+    params.value.chunk_size_range = getChunkSizeRange(chunkStart.value, chunkEnd.value);
+    params.value.overlap = [1000];
   }
+
+  console.log(params.value.checked
+    ? "Sending summary of the full text with params:"
+    : "Sending summary with chunking with params:");
   console.log("\nPARAMS\n", JSON.stringify(params.value, null, 2));
 
   try {
-    //TODO: добавить калькуляцию токенов и слов через API
-    // const tokenEstimate = await axios.post("http://localhost:8000/estimate_tokens", { text: text.value });
     let res;
 
-    if (submissionType.value === "text"){
+    if (submissionType.value === "text") {
       tokenCount.value = estimateTokens(text.value);
       wordCount.value = estimateWord(text.value);
 
@@ -212,18 +222,18 @@ const submitText = async () => {
         params: params.value
       });
     } else if (submissionType.value === "file") {
-      let transcript;
       const formData = new FormData();
       formData.append("file", file.value);
       formData.append("params", JSON.stringify(params.value));
 
-      transcript = await axios.post("http://localhost:8000/transcribe", formData, {
+      const transcript = await axios.post("http://localhost:8000/transcribe", formData, {
         headers: {
           "Content-Type": "multipart/form-data"
         }
       });
 
-      console.log(transcript.status)
+      console.log("TRANSCRIPTION RESPONSE: ");
+      console.log(transcript.status);
 
       res = await axios.post("http://localhost:8000/test", {
         text: transcript.data,
@@ -232,7 +242,6 @@ const submitText = async () => {
     }
 
     const taskId = res.data.task_id;
-
     const eventSource = new EventSource(`http://localhost:8000/stream/${taskId}`);
 
     eventSource.onmessage = (event) => {

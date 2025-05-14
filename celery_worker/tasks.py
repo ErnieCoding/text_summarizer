@@ -165,8 +165,6 @@ Part of the interview:\n\n{text}"""
 \t2. Принятые решения, ответственные за их исполнения, сроки
 \t3. Ближайшие шаги. Отметь наиболее срочные задачи Подробно опиши поставленные задачи каждому сотруднику, укажи сроки исполнения задач.
 
-Прими во внимание данный список участников встречи:\n\n\t-Алексей Воронин - head of the startup\n\t-Алексей Жаринов - developer of the web version of the personal account, responsible for developing the web version of the personal account, its interaction with the BigBlueButton VKS servers and the AI ​​module\n\t-Дмитрий Ефремов - developer of the desktop version of the messenger and VKS, responsible for developing the desktop version of the client, interaction of the desktop client with the Bitrix servers, BigBlueButton, and the web version of the personal account\n\t-Герман Румянцев - developer of the server side of the application, responsible for the functionality of the messenger server and authorization, interaction from the application server with LDAP and AD, the functionality of the chatbot inside the messenger for interaction with external applications\n\t-Павел Якушин - UX/UI interface designer\n\t-Мария Попович - tester responsible for testing and giving permission to release versions, documents the errors found and assigns tasks for fixing to developers\n\t-Сергей Стасов - systems engineer, is responsible for the availability of server infrastructure, applications, BigBlueButton and other certificate renewal services\n\t-Степан Травин - head of technical support\n\t-Артем Садыков - head of pilot projects, responsible for solution integration for clients\n\t-Елена Евтеева - project manager\n\t-Максим Перфильев - R&D engineer\n
-
 Транскрипт встречи:\n\n{text}"""
             else:
                 prompt = f"""#You are an experienced IT developers team leader, expert in recruitment of IT professionals in your team. Your goal is to produce a report about candidate's strengths and weaknesses.\n#Synthesize the following chunk summaries of a job interview given in russian into a single, cohesive analysis, ensuring no loss of critical details of the meeting. \nFirst, identify the participants' names, extract their roles. Focus on the candidate only. \nUse the logic of the meeting and the roles of participants to avoid mistakes.\n\n## Principles for creating the summary:\n\n- Record only information from the candidate\n- Do not include job descriptions, company information, or conditions mentioned by the recruiter\n- Maintain the natural sequence of the conversation\n- Use russian language similar to the author's original style\n\n## Working process:\n\n1. Carefully study the transcript summaries in russian\n2. Identify the names of the participants and their roles\n3. Identify all topics discussed during the interview\n4. For each topic:\n   - Write its title\n   - Identify subtopics\n   - Present the content as close as possible to the candidate's original text\n   - Include specific examples and situations important for candidate assessment  \n5. Check the completeness and accuracy of the information\n\n## Summary structure:\n\n### Interview participants:\n- Names and roles of participants\n\n### Main content:\nDivide by topics, for example:\n- Work experience\n- Technical experience\n- Professional achievements\n- Reasons for job search\n- Personal and communication skills\n- etc.\n\nFor each topic:\n- Topic title\n- Subtopics\n- Detailed presentation of the candidate's answers\n- Examples from their experience\n\n### Overall conclusion:\n<General conclusion about the candidate's competencies>\n\n### Strengths:\n<Candidate's strengths>\n\n### Weaknesses:\n<Candidate's weaknesses>\n\nGive your response in russian.
@@ -214,22 +212,25 @@ def process_document(task_id):
     text = r.get(f"summarize:{task_id}:text")
     params = json.loads(r.get(f"summarize:{task_id}:params") or "{}")
 
-    chunk_size = params.get("chunk_size", 1800)
-    overlap = params.get("overlap", 0.3)
-    temp_chunk = params.get("temp_chunk", 0.4)
+    whole_text_summary = params.get("checked", False)
     temp_final = params.get("temp_final", 0.6)
-    max_tokens_chunk = params.get("max_tokens_chunk", 1500)
     max_tokens_final = params.get("max_tokens_final", 5000)
-    chunk_prompt = params.get("chunk_prompt", None)
     final_prompt = params.get("final_prompt", None)
 
-    if chunk_size < (count_tokens(text=text) - 2000):
+    if not whole_text_summary:
+        # Chunk summary
+        chunk_size = params.get("chunk_size", 1800)
+        overlap = params.get("overlap", 0.3)
+        temp_chunk = params.get("temp_chunk", 0.4)
+        chunk_prompt = params.get("chunk_prompt", None)
+        max_tokens_chunk = params.get("max_tokens_chunk", 1500)
+
         chunks = split_text(text, chunk_size=chunk_size, overlap=overlap)
         progress = []
         
         sum_token_responses = 0
         chunk_summary_duration = 0
-        for i, chunk in enumerate(chunks): # chunk summaries
+        for i, chunk in enumerate(chunks):
             summary, duration = generate_summary(chunk, temp_chunk, max_tokens_chunk, chunk_prompt, chunk_summary=True)
             
             chunk_summary_duration += duration
@@ -252,6 +253,7 @@ def process_document(task_id):
 
         final_summary, final_time = generate_summary(combined_input, temp_final, max_tokens_final, final_prompt, final_summary=True) # final summary
     else:
+        # No chunking summary
         final_summary, final_time = generate_summary(text, temp_final, max_tokens_final, final_prompt, final_summary=True, whole_text=True)
 
     #TODO: UNCOMMENT WHEN USING META-PROMPT  
@@ -276,23 +278,23 @@ def process_document(task_id):
             #"global_prompt": GLOBAL_PROMPT,
             #"meta_prompt": META_PROMPT,
             
-            "chunk_prompt": None if chunk_size >= (count_tokens(text=text) - 2000) else """You are an advanced IT developer team leader, an expert in recruiting IT professionals. Your goal is to write a structured summary of a part of a job interview given in a form of a meeting transcript in russian language, focusing only on the candidate's answers and narrative.\n\n## Principles for creating the summary:\n- Record only information from the candidate\n- Do not include job descriptions, company information, or conditions mentioned by the recruiter\n- Maintain the natural sequence of the conversation\n- Use russian language similar to the author's original style\n\n## Working process:\n1. Carefully study the given part of the interview transcript in russian\n2. Identify the names of the participants and their roles: recruter is asking questions, candidate is answering and telling about his experience\n3. Identify all topics discussed during the interview\n4. For each topic:\n   - Write its title\n   - Identify subtopics\n   - Present the content as close as possible to the candidate's original response\n   - Include specific examples and situations\n5. Check the completeness and accuracy of the information from the point of view of IT professional. \n\n## Summary structure:\n\n### Interview participants:\n- Names and roles of participants\n\n### Main content:\nDivide by topics, for example:\n- Work experience\n- Technical experience\n- Professional achievements\n- Reasons for job search\n- Personal and communication skills\n- etc.\n\nFor each topic:\n- Topic title\n- Subtopics\n- Detailed presentation of the candidate's answers\n- Examples from their experience\n\nBe careful not to mix people mentioned in the transcript with candidate.\n\nGive your answer in russian.""",
+            "chunk_prompt": None if whole_text_summary else """You are an advanced IT developer team leader, an expert in recruiting IT professionals. Your goal is to write a structured summary of a part of a job interview given in a form of a meeting transcript in russian language, focusing only on the candidate's answers and narrative.\n\n## Principles for creating the summary:\n- Record only information from the candidate\n- Do not include job descriptions, company information, or conditions mentioned by the recruiter\n- Maintain the natural sequence of the conversation\n- Use russian language similar to the author's original style\n\n## Working process:\n1. Carefully study the given part of the interview transcript in russian\n2. Identify the names of the participants and their roles: recruter is asking questions, candidate is answering and telling about his experience\n3. Identify all topics discussed during the interview\n4. For each topic:\n   - Write its title\n   - Identify subtopics\n   - Present the content as close as possible to the candidate's original response\n   - Include specific examples and situations\n5. Check the completeness and accuracy of the information from the point of view of IT professional. \n\n## Summary structure:\n\n### Interview participants:\n- Names and roles of participants\n\n### Main content:\nDivide by topics, for example:\n- Work experience\n- Technical experience\n- Professional achievements\n- Reasons for job search\n- Personal and communication skills\n- etc.\n\nFor each topic:\n- Topic title\n- Subtopics\n- Detailed presentation of the candidate's answers\n- Examples from their experience\n\nBe careful not to mix people mentioned in the transcript with candidate.\n\nGive your answer in russian.""",
             "final_summary_prompt": """#You are an experienced IT developers team leader, expert in recruitment of IT professionals in your team. Your goal is to produce a report about candidate's strengths and weaknesses.\n#Synthesize the following chunk summaries of a job interview given in russian into a single, cohesive analysis, ensuring no loss of critical details of the meeting. \nFirst, identify the participants' names, extract their roles. Focus on the candidate only. \nUse the logic of the meeting and the roles of participants to avoid mistakes.\n\n## Principles for creating the summary:\n\n- Record only information from the candidate\n- Do not include job descriptions, company information, or conditions mentioned by the recruiter\n- Maintain the natural sequence of the conversation\n- Use russian language similar to the author's original style\n\n## Working process:\n\n1. Carefully study the transcript summaries in russian\n2. Identify the names of the participants and their roles\n3. Identify all topics discussed during the interview\n4. For each topic:\n   - Write its title\n   - Identify subtopics\n   - Present the content as close as possible to the candidate's original text\n   - Include specific examples and situations important for candidate assessment  \n5. Check the completeness and accuracy of the information\n\n## Summary structure:\n\n### Interview participants:\n- Names and roles of participants\n\n### Main content:\nDivide by topics, for example:\n- Work experience\n- Technical experience\n- Professional achievements\n- Reasons for job search\n- Personal and communication skills\n- etc.\n\nFor each topic:\n- Topic title\n- Subtopics\n- Detailed presentation of the candidate's answers\n- Examples from their experience\n\n### Overall conclusion:\n<General conclusion about the candidate's competencies>\n\n### Strengths:\n<Candidate's strengths>\n\n### Weaknesses:\n<Candidate's weaknesses>\n\nGive your response in russian.""",
-            "temp_chunk": None if chunk_size >= (count_tokens(text=text) - 2000) else temp_chunk,
+            "temp_chunk": None if whole_text_summary else temp_chunk,
             "temp_final": temp_final,
-            "chunk_size": None if chunk_size >= (count_tokens(text=text) - 2000) else chunk_size,
-            "chunk_overlap(tokens)": None if chunk_size >= (count_tokens(text=text) - 2000) else overlap * chunk_size, 
-            "chunk_output_limit(tokens)": None if chunk_size >= (count_tokens(text=text) - 2000) else max_tokens_chunk,
+            "chunk_size": None if whole_text_summary else chunk_size,
+            "chunk_overlap(tokens)": None if whole_text_summary else overlap * chunk_size, 
+            "chunk_output_limit(tokens)": None if whole_text_summary else max_tokens_chunk,
             "final_output_limit(tokens)": max_tokens_final,
         },
         "output_params":{
-            "num_chunks": None if chunk_size >= (count_tokens(text=text) - 2000) else len(chunks),
-            "avg_chunk_output(tokens)": None if chunk_size >= (count_tokens(text=text) - 2000) else sum_token_responses // len(chunks),
-            "avg_chunk_summary_time(sec)": None if chunk_size >= (count_tokens(text=text) - 2000) else round(chunk_summary_duration / len(chunks), 2), 
+            "num_chunks": None if whole_text_summary else len(chunks),
+            "avg_chunk_output(tokens)": None if whole_text_summary else sum_token_responses // len(chunks),
+            "avg_chunk_summary_time(sec)": None if whole_text_summary else round(chunk_summary_duration / len(chunks), 2), 
             "final_response(tokens)": count_tokens(text=final_summary),
         },
         "summary": final_summary,
-        "total_time(sec)": round(final_time, 2) if chunk_size >= (count_tokens(text=text) - 2000) else round(final_time + chunk_summary_duration, 2),
+        "total_time(sec)": round(final_time, 2) if whole_text_summary else round(final_time + chunk_summary_duration, 2),
         "text_size": count_tokens(text=text)
     }, indent=2)
 
@@ -324,37 +326,60 @@ def process_document(task_id):
 @celery.task(name="tasks.test_params")
 def test_params(task_id):
     text = r.get(f"test:{task_id}:text")
-    combinations = json.loads(r.get(f"test:{task_id}:combinations"))
 
-    if not combinations:
-        logging.error(f"[ERROR] No combinations generated for task {task_id}. Params may be invalid.")
-        return
-    
-    logging.info(f"\n\n[DEBUG] COMBINATIONS RECEIVED: {combinations}\n\n")
+    if r.exists(f"test:{task_id}:params"):
+        # No chunking test
+        params = json.loads(r.get(f"test:{task_id}:params"))
+        if not params:
+            logging.error(f"[ERROR] Empty params for task {task_id}")
+            return
 
-    test_count = 1
-    for combination in combinations:
-        logging.warning(f"\n[DEBUG] STARTING TEST #{test_count}\n")
-        chunk_size, chunk_overlap, temp_chunk, temp_final = combination
+        logging.info(f"\n\n[DEBUG] PARAMS RECEIVED (NO CHUNKING): {params}\n\n")
 
         new_task_id = str(uuid.uuid4())
-
-        params_dict = {
-            "chunk_size": chunk_size,
-            "overlap": chunk_overlap / chunk_size,
-            "temp_chunk": temp_chunk,
-            "temp_final": temp_final,
-            "max_tokens_chunk": 1500,
-            "max_tokens_final": 5000
-        }
-
-        r.set(f"summarize:{new_task_id}:text", text)       
-        r.set(f"summarize:{new_task_id}:params", json.dumps(params_dict))
-
+        r.set(f"summarize:{new_task_id}:text", text)
+        r.set(f"summarize:{new_task_id}:params", json.dumps(params))
         celery.send_task("tasks.process_document", args=[new_task_id])
-        
-        test_count += 1
+
+    elif r.exists(f"test:{task_id}:combinations"):
+        # Chunking test with combinations
+        combinations = json.loads(r.get(f"test:{task_id}:combinations"))
+        if not combinations:
+            logging.error(f"[ERROR] No combinations generated for task {task_id}.")
+            return
+
+        logging.info(f"\n\n[DEBUG] COMBINATIONS RECEIVED: {combinations}\n\n")
+
+        test_count = 1
+        for combination in combinations:
+            logging.warning(f"\n[DEBUG] STARTING COMBINATION TEST #{test_count}\n")
+            chunk_size, chunk_overlap, temp_chunk, temp_final = combination
+
+            params_dict = {
+                "chunk_size": chunk_size,
+                "overlap": chunk_overlap / chunk_size,
+                "temp_chunk": temp_chunk,
+                "temp_final": temp_final,
+                "max_tokens_chunk": 1500,
+                "max_tokens_final": 5000
+            }
+
+            new_task_id = str(uuid.uuid4())
+            r.set(f"summarize:{new_task_id}:text", text)
+            r.set(f"summarize:{new_task_id}:params", json.dumps(params_dict))
+            #celery.send_task("tasks.process_document", args=[new_task_id])
+            try:
+                process_document(new_task_id)
+            except Exception as e:
+                logging.exception(f"Failed to process combination #{test_count}: {e}")
+
+            test_count += 1
+
         time.sleep(5)
+
+    else:
+        logging.error(f"[ERROR] Neither params nor combinations found for task {task_id}")
+
 
 @celery.task(name="tasks.transcribe_meeting")
 def transcribe_meeting(task_id):
