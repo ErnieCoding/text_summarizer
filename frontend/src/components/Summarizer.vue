@@ -31,7 +31,7 @@
   </div>
   <div>
     <label class="block text-sm font-medium text-gray-700">Overlap (токенов)</label>
-    <input type="number" v-model.number="params.overlap[0]" class="w-full border rounded px-2 py-1" :disabled="params.checked"/>
+    <input type="number" v-model.number="overlapValue" class="w-full border rounded px-2 py-1" :disabled="params.checked"/>
   </div>
   <div>
     <label class="block text-sm font-medium text-gray-700">Temperature (чанки)</label>
@@ -117,6 +117,7 @@ const tempFinalRaw = ref("0.4, 0.5, 0.6");
 const chunkStart = ref(5000);
 const chunkEnd = ref(15000);
 
+// Parameters
 const params = ref({
   chunk_size_range: [],
   overlap: [1000],
@@ -125,6 +126,12 @@ const params = ref({
   chunk_prompt: "",
   final_prompt: "",
   checked: false
+});
+
+const overlapValue = ref(params.value.overlap[0]);
+
+watch(overlapValue, (val) => {
+  params.value.overlap = [val];
 });
 
 watch(tempChunkRaw, (val) => {
@@ -143,6 +150,8 @@ watch(() => params.value.checked, (isChecked) => {
     params.value.temp_final = [0.5];
     tempChunkRaw.value = "0.3";
     tempFinalRaw.value = "0.5";
+  } else {
+    params.value.overlap = [overlapValue.value];
   }
 });
 
@@ -202,7 +211,7 @@ const submitText = async () => {
 
   if (!params.value.checked) {
     params.value.chunk_size_range = getChunkSizeRange(chunkStart.value, chunkEnd.value);
-    params.value.overlap = [1000];
+    params.value.overlap = [overlapValue.value];
   }
 
   console.log(params.value.checked

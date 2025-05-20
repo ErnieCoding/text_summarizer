@@ -157,7 +157,7 @@ def generate_summary(text, temperature, max_tokens, custom_prompt=None, chunk_su
 
 Part of the interview:\n\n{text}"""
         elif final_summary:
-            model_name = "qwen2.5:32b"
+            model_name = "qwen2.5:14b"
             if whole_text:
                 # TODO: change prompt for whole text for job interviews
                 prompt = f"""Внимательно изучи и сделай резюме транскрипта записи встречи. Во-первых, выяви участников встречи. Не путай участников встречи между собой, используй логику встречи, чтобы точнее определить участников. Затем, определи основные тезисы, которые обсуждались во время встречи, запиши протокол встречи на основе представленного транскрипта по следующему формату:
@@ -188,7 +188,7 @@ Chunk summaries:\n\n{text}"""
         content = response.json()["response"].strip()
 
         elapsed = round(time.time() - start_time, 2)
-        return content, elapsed
+        return content, elapsed, prompt
     except Exception as e:
         logging.exception(f"Summary generation failed: {e}")
         return "[SUMMARY_FAILED]", 0.0
@@ -254,7 +254,7 @@ def process_document(task_id):
         final_summary, final_time = generate_summary(combined_input, temp_final, max_tokens_final, final_prompt, final_summary=True) # final summary
     else:
         # No chunking summary
-        final_summary, final_time = generate_summary(text, temp_final, max_tokens_final, final_prompt, final_summary=True, whole_text=True)
+        final_summary, final_time, prompt = generate_summary(text, temp_final, max_tokens_final, final_prompt, final_summary=True, whole_text=True)
 
     #TODO: UNCOMMENT WHEN USING META-PROMPT  
     # Retrieve cached prompts for reporting
@@ -262,8 +262,8 @@ def process_document(task_id):
     # chunk_prompt_text = prompts.prompts[0]
     # final_prompt_text = prompts.prompts[1]
     final_msg = json.dumps({
-        "version": 1.51,
-        "description": "Саммари рекрутинговой встречи с обновленными промптами.",
+        "version": 2.1,
+        "description": "Модель 32b, саммари полного интенсива на 2 часа 50 минут с стандартным промптом.",
         "type": "final",
         "Author": "ErnestSaak",
         "date_time": datetime.datetime.now(zoneinfo.ZoneInfo('America/New_York')).strftime("%Y-%m-%d %H:%M:%S"),
@@ -271,7 +271,7 @@ def process_document(task_id):
         "chunk_model": MODEL_NAME,
 
         #CHANGE MODEL IF DIFFERENT FOR FINAL SUMMARY
-        "final_model": "qwen2.:32b",
+        "final_model": "qwen2.:14b",
         "input_params": {
             "context_length": 32768,
             # TODO: UNCOMMENT WHEN USING META-PROMPT
@@ -279,7 +279,7 @@ def process_document(task_id):
             #"meta_prompt": META_PROMPT,
             
             "chunk_prompt": None if whole_text_summary else """You are an advanced IT developer team leader, an expert in recruiting IT professionals. Your goal is to write a structured summary of a part of a job interview given in a form of a meeting transcript in russian language, focusing only on the candidate's answers and narrative.\n\n## Principles for creating the summary:\n- Record only information from the candidate\n- Do not include job descriptions, company information, or conditions mentioned by the recruiter\n- Maintain the natural sequence of the conversation\n- Use russian language similar to the author's original style\n\n## Working process:\n1. Carefully study the given part of the interview transcript in russian\n2. Identify the names of the participants and their roles: recruter is asking questions, candidate is answering and telling about his experience\n3. Identify all topics discussed during the interview\n4. For each topic:\n   - Write its title\n   - Identify subtopics\n   - Present the content as close as possible to the candidate's original response\n   - Include specific examples and situations\n5. Check the completeness and accuracy of the information from the point of view of IT professional. \n\n## Summary structure:\n\n### Interview participants:\n- Names and roles of participants\n\n### Main content:\nDivide by topics, for example:\n- Work experience\n- Technical experience\n- Professional achievements\n- Reasons for job search\n- Personal and communication skills\n- etc.\n\nFor each topic:\n- Topic title\n- Subtopics\n- Detailed presentation of the candidate's answers\n- Examples from their experience\n\nBe careful not to mix people mentioned in the transcript with candidate.\n\nGive your answer in russian.""",
-            "final_summary_prompt": """#You are an experienced IT developers team leader, expert in recruitment of IT professionals in your team. Your goal is to produce a report about candidate's strengths and weaknesses.\n#Synthesize the following chunk summaries of a job interview given in russian into a single, cohesive analysis, ensuring no loss of critical details of the meeting. \nFirst, identify the participants' names, extract their roles. Focus on the candidate only. \nUse the logic of the meeting and the roles of participants to avoid mistakes.\n\n## Principles for creating the summary:\n\n- Record only information from the candidate\n- Do not include job descriptions, company information, or conditions mentioned by the recruiter\n- Maintain the natural sequence of the conversation\n- Use russian language similar to the author's original style\n\n## Working process:\n\n1. Carefully study the transcript summaries in russian\n2. Identify the names of the participants and their roles\n3. Identify all topics discussed during the interview\n4. For each topic:\n   - Write its title\n   - Identify subtopics\n   - Present the content as close as possible to the candidate's original text\n   - Include specific examples and situations important for candidate assessment  \n5. Check the completeness and accuracy of the information\n\n## Summary structure:\n\n### Interview participants:\n- Names and roles of participants\n\n### Main content:\nDivide by topics, for example:\n- Work experience\n- Technical experience\n- Professional achievements\n- Reasons for job search\n- Personal and communication skills\n- etc.\n\nFor each topic:\n- Topic title\n- Subtopics\n- Detailed presentation of the candidate's answers\n- Examples from their experience\n\n### Overall conclusion:\n<General conclusion about the candidate's competencies>\n\n### Strengths:\n<Candidate's strengths>\n\n### Weaknesses:\n<Candidate's weaknesses>\n\nGive your response in russian.""",
+            "final_summary_prompt": prompt,
             "temp_chunk": None if whole_text_summary else temp_chunk,
             "temp_final": temp_final,
             "chunk_size": None if whole_text_summary else chunk_size,
