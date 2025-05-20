@@ -146,7 +146,7 @@ def generate_summary(text, finalModel, temperature, max_tokens, chunkModel = Non
     """
     global CHUNK_PROMPT, FINAL_PROMPT
 
-    if custom_prompt:
+    if custom_prompt and custom_prompt.strip():
         if chunk_summary:
             CHUNK_PROMPT = custom_prompt
         else:
@@ -247,7 +247,14 @@ def process_document(task_id):
         sum_token_responses = 0
         chunk_summary_duration = 0
         for i, chunk in enumerate(chunks):
-            summary, duration = generate_summary(chunk, temp_chunk, max_tokens_chunk, chunk_prompt, chunk_summary=True, chunkModel=chunkModel)
+            summary, duration = generate_summary(
+                text=chunk, 
+                temperature=temp_chunk, 
+                max_tokens=max_tokens_chunk, 
+                custom_prompt=chunk_prompt, 
+                chunk_summary=True, 
+                chunkModel=chunkModel
+            )
             
             chunk_summary_duration += duration
             sum_token_responses += count_tokens(text=summary)
@@ -267,10 +274,25 @@ def process_document(task_id):
             f"Chunk {i} Summary:\n{p['summary']}" for i, p in enumerate(valid_chunks, 1)
         ]) or "The document contains multiple summaries that need to be unified."
 
-        final_summary, final_time = generate_summary(combined_input, finalModel, temp_final, max_tokens_final, final_prompt, final_summary=True) # final summary
+        final_summary, final_time = generate_summary( # final summary
+            text=combined_input, 
+            finalModel=finalModel, 
+            temperature=temp_final, 
+            max_tokens=max_tokens_final, 
+            custom_prompt=final_prompt, 
+            final_summary=True
+        )
     else:
         # No chunking summary
-        final_summary, final_time = generate_summary(text, finalModel, temp_final, max_tokens_final, final_prompt, final_summary=True, whole_text=True)
+        final_summary, final_time = generate_summary(
+            text=text, 
+            finalModel=finalModel, 
+            temperature=temp_final, 
+            max_tokens=max_tokens_final, 
+            custom_prompt=final_prompt, 
+            final_summary=True, 
+            whole_text=True
+        )
 
     #TODO: UNCOMMENT WHEN USING META-PROMPT  
     # Retrieve cached prompts for reporting
