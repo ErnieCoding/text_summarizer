@@ -39,6 +39,7 @@ services:
       - OLLAMA_HOST=http://ollama:11434
       - CUDA_VISIBLE_DEVICES=0
     init: true
+    command: celery -A tasks worker --concurrency=1 --loglevel=INFO
     deploy:
       resources:
         reservations:
@@ -51,8 +52,7 @@ services:
       - "6379:6379"
   
   ollama:
-    build:
-      context: ./ollama
+    image: ollama/ollama
     ports:
       - "11434:11434"
     environment:

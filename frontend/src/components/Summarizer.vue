@@ -4,6 +4,11 @@
 
 <h1 class="text-xl font-bold text-gray-800">📝 Саммаризация большого текста</h1>
 
+<div>
+    <label class="block mb-1 text-sm font-bold text-gray-700">Тестер</label>
+    <input v-model="params.author" placeholder="Ernest Saakian" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" />
+  </div>
+
 <div class="grid grid-cols-2 gap-4">
   <div>
     <label class="block mb-1 text-sm font-medium text-gray-700">Введите текст</label>
@@ -20,6 +25,28 @@
   <label for="checkbox">{{ params.checked ? '✓' : 'X' }} Summary without chunking</label>
 </div>
 
+<label class="block text-sm font-bold text-gray-700">Выбор модели</label>
+<div class="grid grid-cols-2 gap-4"> 
+  <div>
+    <label class="block text-sm font-medium text-gray-700">Для чанков</label>
+    <select v-model="chunkModelOption" class="w-full border rounded px-2 py-1" :disabled="params.checked">
+      <option v-for="option in options" :key="option.value" :value="option.value">
+        {{ option.text }}
+      </option>
+    </select>
+  </div>
+
+  <div>
+    <label class="block text-sm font-medium text-gray-700">Для финального саммари</label>
+    <select v-model="finalModelOption" class="w-full border rounded px-2 py-1">
+      <option v-for="option in options" :key="option.value" :value="option.value">
+        {{ option.text }}
+      </option>
+    </select>
+  </div>
+</div>
+
+<label class="block text-sm font-bold text-gray-700">Выбор параметров</label>
 <div class="grid grid-cols-2 gap-4">
   <div>
     <label class="block text-sm font-medium text-gray-700">Размер чанков (начало)</label>
@@ -51,6 +78,11 @@
 <div>
   <label class="block mb-1 text-sm font-medium text-gray-700">Prompt для финального саммари (опционально)</label>
   <textarea v-model="params.final_prompt" rows="2" class="w-full border rounded px-2 py-1"></textarea>
+</div>
+
+<div>
+    <label class="block mb-1 text-sm font-medium text-gray-700">Описание Теста</label>
+    <textarea v-model="params.description" placeholder="Введите описание теста..." rows="8" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
 </div>
 
 <button @click="submitText"
@@ -117,14 +149,28 @@ const tempFinalRaw = ref("0.4, 0.5, 0.6");
 const chunkStart = ref(5000);
 const chunkEnd = ref(15000);
 
+// Model options
+const chunkModelOption = ref("");
+const finalModelOption = ref("");
+const options = ref(
+  [
+    {text: 'qwen2.5:14b', value: 'qwen2.5:14b'},
+    {text: 'qwen2.5:32b', value: 'qwen2.5:32b'}
+  ]
+);
+
 // Parameters
 const params = ref({
+  author: "RConf",
+  chunkModel: chunkModelOption,
+  finalModel: finalModelOption,
   chunk_size_range: [],
   overlap: [1000],
   temp_chunk: [0.2, 0.3, 0.4],
   temp_final: [0.4, 0.5, 0.6],
   chunk_prompt: "",
   final_prompt: "",
+  description: "",
   checked: false
 });
 
@@ -212,6 +258,8 @@ const submitText = async () => {
   if (!params.value.checked) {
     params.value.chunk_size_range = getChunkSizeRange(chunkStart.value, chunkEnd.value);
     params.value.overlap = [overlapValue.value];
+  } else {
+    params.value.chunkModel = "";
   }
 
   console.log(params.value.checked

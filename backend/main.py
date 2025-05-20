@@ -70,10 +70,14 @@ def test():
         # Chunking
         try:
             combinations = list(product(
+                [params["author"]],
+                [params["chunkModel"]],
+                [params["finalModel"]],
                 params["chunk_size_range"],
                 params["overlap"],
                 params["temp_chunk"],
                 params["temp_final"],
+                [params["description"]],
             ))
             r.set(f"test:{task_id}:combinations", json.dumps(combinations))
         except KeyError as e:
