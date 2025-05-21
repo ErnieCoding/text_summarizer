@@ -140,7 +140,7 @@ def split_text(text, chunk_size=1800, overlap=0.3):
 # Variables to cache selected prompts
 CHUNK_PROMPT = ""
 FINAL_PROMPT = ""
-def generate_summary(text, finalModel, temperature, max_tokens, chunkModel = None, custom_prompt=None, chunk_summary=False, final_summary = False, whole_text = False):
+def generate_summary(text, temperature, max_tokens, finalModel = None, chunkModel = None, custom_prompt=None, chunk_summary=False, final_summary = False, whole_text = False):
     """
     Generates summary based on parameters.
     """
@@ -149,8 +149,10 @@ def generate_summary(text, finalModel, temperature, max_tokens, chunkModel = Non
     if custom_prompt and custom_prompt.strip():
         if chunk_summary:
             CHUNK_PROMPT = custom_prompt
+            model_name = chunkModel
         else:
             FINAL_PROMPT = custom_prompt
+            model_name = finalModel
 
         prompt = custom_prompt.replace("{text}", text)
     else:
@@ -300,7 +302,7 @@ def process_document(task_id):
     # chunk_prompt_text = prompts.prompts[0]
     # final_prompt_text = prompts.prompts[1]
     final_data = {
-        "version": 2.1,
+        "version": 2.21,
         "description": test_description,
         "type": "final",
         "Author": test_author,
@@ -373,7 +375,7 @@ def run_test_batch(task_id):
 
     test_count = 1
     for combo in combinations:
-        author, chunkModel, finalModel, chunk_size, chunk_overlap, temp_chunk, temp_final, description = combo
+        author, chunkModel, finalModel, chunk_size, chunk_overlap, temp_chunk, temp_final, description, chunk_prompt, final_prompt = combo
 
         params = {
             "author": author,
@@ -385,7 +387,9 @@ def run_test_batch(task_id):
             "temp_final": temp_final,
             "max_tokens_chunk": 1500,
             "max_tokens_final": 5000,
-            "description": description
+            "description": description,
+            "chunk_prompt": chunk_prompt,
+            "final_prompt": final_prompt
         }
 
         new_task_id = str(uuid.uuid4())

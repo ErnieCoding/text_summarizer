@@ -159,11 +159,11 @@ const options = ref(
   ]
 );
 
-// Parameters
+// Initial parameters
 const params = ref({
-  author: "RConf",
-  chunkModel: chunkModelOption,
-  finalModel: finalModelOption,
+  author: "ErnestSaakian",
+  chunkModel: "",
+  finalModel: "",
   chunk_size_range: [],
   overlap: [1000],
   temp_chunk: [0.2, 0.3, 0.4],
@@ -258,14 +258,32 @@ const submitText = async () => {
   if (!params.value.checked) {
     params.value.chunk_size_range = getChunkSizeRange(chunkStart.value, chunkEnd.value);
     params.value.overlap = [overlapValue.value];
-  } else {
-    params.value.chunkModel = "";
   }
 
-  console.log(params.value.checked
-    ? "Sending summary of the full text with params:"
-    : "Sending summary with chunking with params:");
-  console.log("\nPARAMS\n", JSON.stringify(params.value, null, 2));
+  const finalParams = {
+    author: params.value.author,
+    finalModel: finalModelOption.value,
+    final_prompt: params.value.final_prompt,
+    description: params.value.description,
+    checked: params.value.checked,
+    temp_final: params.value.temp_final,
+    max_tokens_final: params.value.max_tokens_final,
+
+    // When no chunking option selected
+    ...(params.value.checked ? {} : {
+    chunkModel: chunkModelOption.value,
+    chunk_prompt: params.value.chunk_prompt,
+    chunk_size_range: getChunkSizeRange(chunkStart.value, chunkEnd.value),
+    overlap: [overlapValue.value],
+    temp_chunk: params.value.temp_chunk,
+    max_tokens_chunk: params.value.max_tokens_chunk
+    })
+  };
+
+  console.log(finalParams.checked
+    ? "Sending full-text summary with params:"
+    : "Sending chunked summary with params:");
+  console.log("\n[DEBUG PARAMS]", JSON.stringify(finalParams, null, 2));
 
   try {
     let res;
@@ -276,12 +294,12 @@ const submitText = async () => {
 
       res = await axios.post("http://localhost:8000/test", {
         text: text.value,
-        params: params.value
+        params: finalParams
       });
     } else if (submissionType.value === "file") {
       const formData = new FormData();
       formData.append("file", file.value);
-      formData.append("params", JSON.stringify(params.value));
+      formData.append("params", JSON.stringify(finalParams));
 
       const transcript = await axios.post("http://localhost:8000/transcribe", formData, {
         headers: {
@@ -289,12 +307,11 @@ const submitText = async () => {
         }
       });
 
-      console.log("TRANSCRIPTION RESPONSE: ");
-      console.log(transcript.status);
+      console.log("TRANSCRIPTION RESPONSE STATUS:", transcript.status);
 
       res = await axios.post("http://localhost:8000/test", {
         text: transcript.data,
-        params: params.value
+        params: finalParams
       });
     }
 
@@ -325,7 +342,7 @@ const submitText = async () => {
       eventSource.close();
     };
   } catch (err) {
-    console.error("Ошибка:", err);
+    console.error("🚨 Ошибка отправки:", err);
     loading.value = false;
   }
 };

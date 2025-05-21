@@ -78,6 +78,8 @@ def test():
                 params["temp_chunk"],
                 params["temp_final"],
                 [params["description"]],
+                [params["chunk_prompt"]],
+                [params["final_prompt"]]
             ))
             r.set(f"test:{task_id}:combinations", json.dumps(combinations))
         except KeyError as e:
