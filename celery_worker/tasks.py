@@ -11,7 +11,6 @@ from tokenCounter import count_tokens
 import datetime
 import zoneinfo
 import uuid
-#from pydantic import BaseModel
 import whisper, torch
 
 OLLAMA_URL = os.getenv("OLLAMA_HOST", "http://ollama:11434")
@@ -61,82 +60,6 @@ def split_text(text, chunk_size=1800, overlap=0.3):
 
     return chunks
 
-
-#TODO: UNCOMMENT FOR META-PROMPT IMPLEMENTATION
-
-# GLOBAL_PROMPT = """Внимательно изучи транскрипт записи встречи. Выяви участников встречи, основные тезисы встречи, запиши протокол встречи на основе представленного транскрипта по следующему формату:
-# 1. 10 ключевых тезисов встречи
-# 2. Принятые решения, ответственные за их исполнения, сроки
-# 3. Ближайшие шаги. Отметь наиболее срочные задачи Подробно опиши поставленные задачи каждому сотруднику, укажи сроки исполнения задач."""
-
-# META_PROMPT = f"""Ты- опытный менеджер по управлению разработкой, специалист по формированию и документированию заданий для разработчиков. Твоя цель - создать промпты для формирования максимально детально описанных заданий на разработку каждому участнику встречи разработчиков, не пропустив ни одной задачи и ни одного участника. В промптах нужно обращать внимание на обсуждаемые технические проблемы (например, "на Маке у клиентов есть проблема с микрофоном") и давать инструкции по указанию этих проблем в отчете, если это релевантно, соответсвующие задачи по исправлению выявленных проблем, если это упоминается в транскрипте. Ниже приведён глобальный промпт, который хорошо работает для анализа полной стенограммы встречи. Преобразуй его в два отдельных промпта без дополнительных инструкций, шагов или полей:
-# 1.Промпт для обработки одного чанка текста (фрагмента транскрипта):
-# \t-Он должен ограничиваться только предоставленным фрагментом, не делать глобальных выводов, извлекать локальные тезисы, задачи, решения, имена участников.
-
-# 2.Промпт для финальной агрегации:
-# \t-Он должен принимать уже обработанные чанки (в виде кратких тезисов, задач и решений) и собирать на их основе финальный протокол встречи — с обобщением, исключением повторов, уточнением сроков и распределением задач. Цель — сохранить смысл и структуру оригинального промпта, но адаптировать его к двухэтапной логике обработки транскрипта. Финальный промпт должен иметь содержать все пункты из глобального промпта
-
-# Верни результат **строго в следующем формате**:
-
-# {{
-#   "prompts": [
-#     "Промпт для обработки одного чанка текста...",
-#     "Промпт для финальной агрегации..."
-#   ]
-# }}
-
-# Не добавляй никаких других полей, описаний, нумерации или комментариев. Только JSON-объект с ключом "prompts".
-
-# Вот глобальный промпт:
-# {GLOBAL_PROMPT}"""
-
-#TODO: implement a better generation strategy that doesn't limit generation creativity for prompts
-# def get_prompts(model_name = MODEL_NAME):
-#     """
-#     Generates prompt for chunk and final summaries using Ollama structured outputs in JSON format
-#     """
-
-#     # Мета-промпт
-#     meta_prompt = META_PROMPT
-
-#     class Prompts(BaseModel):
-#         prompts: list[str]
-    
-#     payload = {
-#         "model": model_name,
-#         "prompt": meta_prompt,
-#         "temperature": 0.6,
-#         "stream": False,
-#         "format": "json"
-#     }
-
-#     try:
-#         ollama = "http://ollama:11434"
-#         response = requests.post(f"{ollama}/api/generate", json=payload)
-#         response.raise_for_status()
-
-#         raw_response = response.json()["response"]
-#         print(f"\nRaw response:\n{raw_response}\n")
-
-#         prompts = Prompts.model_validate_json(raw_response)
-
-#         return prompts
-#     except Exception as e:
-#         logging.info(f"\nError generating prompts: {e}\n")
-#         print(e)
-#         return "[PROMPT GENERATION FAILED]"
-    
-# PROMPTS = None
-# def get_cached_prompts():
-#     """
-#     Generates and caches prompts to retrieve during generation
-#     """
-#     global PROMPTS
-#     if PROMPTS is None or isinstance(PROMPTS, str):
-#         PROMPTS = get_prompts()
-#     return PROMPTS
-
-
 # Variables to cache selected prompts
 CHUNK_PROMPT = ""
 FINAL_PROMPT = ""
@@ -150,69 +73,66 @@ def generate_summary(text, temperature, max_tokens, finalModel = None, chunkMode
         if chunk_summary:
             CHUNK_PROMPT = custom_prompt
             model_name = chunkModel
-        else:
+        elif final_summary:
             FINAL_PROMPT = custom_prompt
             model_name = finalModel
 
         prompt = custom_prompt.replace("{text}", text)
-    else:
-        #TODO: UNCOMMENT WHEN META-PROMPT IS ENABLED
-        #prompts = get_cached_prompts()
-        # if isinstance(PROMPTS, str):
-        #     print(PROMPTS)
-        #     return "[SUMMARY_FAILED]", 0.0
-        
+    else: # NOT UPDATED
         if chunk_summary:
             model_name = chunkModel
-            prompt = f"""You are an advanced IT developer team leader, an expert in recruiting IT professionals. Your goal is to write a structured summary of a part of a job interview given in a form of a meeting transcript in russian language, focusing only on the candidate's answers and narrative.\n\n## Principles for creating the summary:\n- Record only information from the candidate\n- Do not include job descriptions, company information, or conditions mentioned by the recruiter\n- Maintain the natural sequence of the conversation\n- Use russian language similar to the author's original style\n\n## Working process:\n1. Carefully study the given part of the interview transcript in russian\n2. Identify the names of the participants and their roles: recruter is asking questions, candidate is answering and telling about his experience\n3. Identify all topics discussed during the interview\n4. For each topic:\n   - Write its title\n   - Identify subtopics\n   - Present the content as close as possible to the candidate's original response\n   - Include specific examples and situations\n5. Check the completeness and accuracy of the information from the point of view of IT professional. \n\n## Summary structure:\n\n### Interview participants:\n- Names and roles of participants\n\n### Main content:\nDivide by topics, for example:\n- Work experience\n- Technical experience\n- Professional achievements\n- Reasons for job search\n- Personal and communication skills\n- etc.\n\nFor each topic:\n- Topic title\n- Subtopics\n- Detailed presentation of the candidate's answers\n- Examples from their experience\n\nBe careful not to mix people mentioned in the transcript with candidate.\n\nGive your answer in russian.
-
-Part of the interview:\n\n{text}"""
+            prompt = f""""""
             CHUNK_PROMPT = prompt
         elif final_summary:
             model_name = finalModel
             if whole_text:
-                # TODO: change prompt for whole text for job interviews
-                prompt = f"""Внимательно изучи и сделай резюме транскрипта записи встречи. Во-первых, выяви участников встречи. Не путай участников встречи между собой, используй логику встречи, чтобы точнее определить участников. Затем, определи основные тезисы, которые обсуждались во время встречи, запиши протокол встречи на основе представленного транскрипта по следующему формату:
-\t1. 10 ключевых тезисов встречи
-\t2. Принятые решения, ответственные за их исполнения, сроки
-\t3. Ближайшие шаги. Отметь наиболее срочные задачи Подробно опиши поставленные задачи каждому сотруднику, укажи сроки исполнения задач.
-
-Транскрипт встречи:\n\n{text}"""
+                prompt = f""""""
             else:
-                prompt = f"""#You are an experienced IT developers team leader, expert in recruitment of IT professionals in your team. Your goal is to produce a report about candidate's strengths and weaknesses.\n#Synthesize the following chunk summaries of a job interview given in russian into a single, cohesive analysis, ensuring no loss of critical details of the meeting. \nFirst, identify the participants' names, extract their roles. Focus on the candidate only. \nUse the logic of the meeting and the roles of participants to avoid mistakes.\n\n## Principles for creating the summary:\n\n- Record only information from the candidate\n- Do not include job descriptions, company information, or conditions mentioned by the recruiter\n- Maintain the natural sequence of the conversation\n- Use russian language similar to the author's original style\n\n## Working process:\n\n1. Carefully study the transcript summaries in russian\n2. Identify the names of the participants and their roles\n3. Identify all topics discussed during the interview\n4. For each topic:\n   - Write its title\n   - Identify subtopics\n   - Present the content as close as possible to the candidate's original text\n   - Include specific examples and situations important for candidate assessment  \n5. Check the completeness and accuracy of the information\n\n## Summary structure:\n\n### Interview participants:\n- Names and roles of participants\n\n### Main content:\nDivide by topics, for example:\n- Work experience\n- Technical experience\n- Professional achievements\n- Reasons for job search\n- Personal and communication skills\n- etc.\n\nFor each topic:\n- Topic title\n- Subtopics\n- Detailed presentation of the candidate's answers\n- Examples from their experience\n\n### Overall conclusion:\n<General conclusion about the candidate's competencies>\n\n### Strengths:\n<Candidate's strengths>\n\n### Weaknesses:\n<Candidate's weaknesses>\n\nGive your response in russian.
-
-Chunk summaries:\n\n{text}"""
+                prompt = f""""""
             FINAL_PROMPT = prompt
+
+    if chunk_summary:
+        num_ctx = count_tokens(prompt) + 1000
+    elif final_summary:
+        num_ctx = 32768
 
     payload = {
         "model": model_name,
         "prompt": prompt,
-        "temperature": temperature,
-        "num_predict": max_tokens,
-        "stream": False
+        "stream": False,
+        "options": {
+            "temperature": temperature,
+            "num_predict": max_tokens,
+            "num_ctx": num_ctx,
+        }
     }
 
     try:
-        logging.info("Starting summary generation via API")
+        logging.info(f"Starting summary generation with num_ctx: {num_ctx}")
         start_time = time.time()
         response = requests.post(f"{OLLAMA_URL}/api/generate", json=payload)
         response.raise_for_status()
+        response_json = response.json()
 
-        content = response.json()["response"].strip()
+        content = response_json.get("response").strip()
 
         elapsed = round(time.time() - start_time, 2)
+
+        prompt_eval_count = response_json.get("prompt_eval_count")
+        logging.info(f"TOKENS PROCESSED: {prompt_eval_count}")
         return content, elapsed
     except Exception as e:
         logging.exception(f"Summary generation failed: {e}")
         return "[SUMMARY_FAILED]", 0.0
 
-DATA_URL = "http://ai.rndl.ru:5017/api/data"
+DATA_URL = "http://llm.rndl.ru:5017/api/data"
 def send_results(test_result):
     try:
+        safe_json = json.dumps(test_result, ensure_ascii=False)
         response = requests.post(
             DATA_URL,
+            data=safe_json.encode("utf-8"),
             headers={"Content-Type": "application/json"},
-            data=test_result,
         )
         logging.info(f"[UPLOAD RESPONSE] {response.status_code} - {response.text}")
         response.raise_for_status()
@@ -232,7 +152,7 @@ def process_document(task_id):
     final_prompt = params.get("final_prompt", None)
     test_author = params.get("author", "RConf")
     test_description = params.get("description", "")
-    finalModel = params.get("finalModel", "qwen2.5:32")
+    finalModel = params.get("finalModel", "qwen2.5:32b")
 
     if not whole_text_summary:
         # Chunk params
@@ -296,28 +216,17 @@ def process_document(task_id):
             whole_text=True
         )
 
-    #TODO: UNCOMMENT WHEN USING META-PROMPT  
-    # Retrieve cached prompts for reporting
-    # prompts = get_cached_prompts()
-    # chunk_prompt_text = prompts.prompts[0]
-    # final_prompt_text = prompts.prompts[1]
     final_data = {
-        "version": 2.21,
+        "version": 2.3,
         "description": test_description,
         "type": "final",
         "Author": test_author,
         "date_time": datetime.datetime.now(zoneinfo.ZoneInfo('America/New_York')).strftime("%Y-%m-%d %H:%M:%S"),
         "document_url": "https://drive.google.com/file/d/1bRy761r67BlAwTZFP_gg-6xe6zmCSkSJ/view?usp=sharing",
         "chunk_model": chunkModel,
-
-        #CHANGE MODEL IF DIFFERENT FOR FINAL SUMMARY
         "final_model": finalModel,
         "input_params": {
             "context_length": 32768,
-            # TODO: UNCOMMENT WHEN USING META-PROMPT
-            #"global_prompt": GLOBAL_PROMPT,
-            #"meta_prompt": META_PROMPT,
-            
             "chunk_prompt": None if whole_text_summary else CHUNK_PROMPT,
             "final_summary_prompt": FINAL_PROMPT,
             "temp_chunk": None if whole_text_summary else temp_chunk,
@@ -337,7 +246,7 @@ def process_document(task_id):
         "total_time(sec)": round(final_time, 2) if whole_text_summary else round(final_time + chunk_summary_duration, 2),
         "text_size": count_tokens(text=text)
     }
-    final_msg = json.dumps(final_data, indent=2)
+    final_msg = json.dumps(final_data, ensure_ascii=False, indent=2)
 
     # Local save for the tests
     TESTS_DIR = "/tasks/tests"
@@ -359,16 +268,17 @@ def process_document(task_id):
 
     r.publish(f"summarize:{task_id}:events", final_msg)
 
+    # CURRENTLY NOT WORKING
     # SEND RESULTS TO DB
-    if final_data["summary"] == "[SUMMARY_FAILED]":
-        logging.error("SUMMARY FAILED, ABORTING UPLOAD")
-        return ""
-    else:
-        send_results(final_msg)
+    # if final_data["summary"] == "[SUMMARY_FAILED]":
+    #     logging.error("SUMMARY FAILED, ABORTING UPLOAD")
+    #     return ""
+    # else:
+    #     send_results(final_data)
 
     return final_msg
 
-# Refactored batch runner outside Celery task
+# Batch runner
 def run_test_batch(task_id):
     text = r.get(f"test:{task_id}:text")
     combinations = json.loads(r.get(f"test:{task_id}:combinations"))
@@ -458,3 +368,82 @@ def transcribe_meeting(task_id):
     except Exception as e:
         logging.exception(f"\nERROR PROCESSING FILE {filepath}: {e}\n")
         return {"transcription":"error", "status": 400}
+    
+
+
+
+
+#from pydantic import BaseModel
+#TODO: UNCOMMENT FOR META-PROMPT IMPLEMENTATION
+
+# GLOBAL_PROMPT = """Внимательно изучи транскрипт записи встречи. Выяви участников встречи, основные тезисы встречи, запиши протокол встречи на основе представленного транскрипта по следующему формату:
+# 1. 10 ключевых тезисов встречи
+# 2. Принятые решения, ответственные за их исполнения, сроки
+# 3. Ближайшие шаги. Отметь наиболее срочные задачи Подробно опиши поставленные задачи каждому сотруднику, укажи сроки исполнения задач."""
+
+# META_PROMPT = f"""Ты- опытный менеджер по управлению разработкой, специалист по формированию и документированию заданий для разработчиков. Твоя цель - создать промпты для формирования максимально детально описанных заданий на разработку каждому участнику встречи разработчиков, не пропустив ни одной задачи и ни одного участника. В промптах нужно обращать внимание на обсуждаемые технические проблемы (например, "на Маке у клиентов есть проблема с микрофоном") и давать инструкции по указанию этих проблем в отчете, если это релевантно, соответсвующие задачи по исправлению выявленных проблем, если это упоминается в транскрипте. Ниже приведён глобальный промпт, который хорошо работает для анализа полной стенограммы встречи. Преобразуй его в два отдельных промпта без дополнительных инструкций, шагов или полей:
+# 1.Промпт для обработки одного чанка текста (фрагмента транскрипта):
+# \t-Он должен ограничиваться только предоставленным фрагментом, не делать глобальных выводов, извлекать локальные тезисы, задачи, решения, имена участников.
+
+# 2.Промпт для финальной агрегации:
+# \t-Он должен принимать уже обработанные чанки (в виде кратких тезисов, задач и решений) и собирать на их основе финальный протокол встречи — с обобщением, исключением повторов, уточнением сроков и распределением задач. Цель — сохранить смысл и структуру оригинального промпта, но адаптировать его к двухэтапной логике обработки транскрипта. Финальный промпт должен иметь содержать все пункты из глобального промпта
+
+# Верни результат **строго в следующем формате**:
+
+# {{
+#   "prompts": [
+#     "Промпт для обработки одного чанка текста...",
+#     "Промпт для финальной агрегации..."
+#   ]
+# }}
+
+# Не добавляй никаких других полей, описаний, нумерации или комментариев. Только JSON-объект с ключом "prompts".
+
+# Вот глобальный промпт:
+# {GLOBAL_PROMPT}"""
+
+#TODO: implement a better generation strategy that doesn't limit generation creativity for prompts
+# def get_prompts(model_name = MODEL_NAME):
+#     """
+#     Generates prompt for chunk and final summaries using Ollama structured outputs in JSON format
+#     """
+
+#     # Мета-промпт
+#     meta_prompt = META_PROMPT
+
+#     class Prompts(BaseModel):
+#         prompts: list[str]
+    
+#     payload = {
+#         "model": model_name,
+#         "prompt": meta_prompt,
+#         "temperature": 0.6,
+#         "stream": False,
+#         "format": "json"
+#     }
+
+#     try:
+#         ollama = "http://ollama:11434"
+#         response = requests.post(f"{ollama}/api/generate", json=payload)
+#         response.raise_for_status()
+
+#         raw_response = response.json()["response"]
+#         print(f"\nRaw response:\n{raw_response}\n")
+
+#         prompts = Prompts.model_validate_json(raw_response)
+
+#         return prompts
+#     except Exception as e:
+#         logging.info(f"\nError generating prompts: {e}\n")
+#         print(e)
+#         return "[PROMPT GENERATION FAILED]"
+    
+# PROMPTS = None
+# def get_cached_prompts():
+#     """
+#     Generates and caches prompts to retrieve during generation
+#     """
+#     global PROMPTS
+#     if PROMPTS is None or isinstance(PROMPTS, str):
+#         PROMPTS = get_prompts()
+#     return PROMPTS

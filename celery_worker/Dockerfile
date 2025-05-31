@@ -14,10 +14,9 @@ RUN pip install --no-cache-dir \
     celery \
     redis \
     requests \
-    tiktoken \
-    pypdf \
     pydantic \
-    openai-whisper
+    openai-whisper \
+    transformers
 
 RUN pip install --no-cache-dir \
     torch torchvision torchaudio \
