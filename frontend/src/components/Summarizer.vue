@@ -156,7 +156,8 @@ const options = ref(
   [
     {text: 'qwen2.5:14b', value: 'qwen2.5:14b'},
     {text: 'qwen2.5:32b', value: 'qwen2.5:32b'},
-    {text: 'qwen2.5:32b-instruct-fp16', value: 'qwen2.5:32b-instruct-fp16'},
+    {text: 'qwen2.5:32b-instruct-fp16 (not functional)', value: 'qwen2.5:32b-instruct-fp16'},
+    {text: 'qwen2.5:14b-instruct-fp16', value: 'qwen2.5:14b-instruct-fp16'},
     {text: 'qwen2.5:32b-instruct-q2_K', value: 'qwen2.5:32b-instruct-q2_K'},
     {text: 'qwen2.5:32b-instruct-q4_K_M', value: 'qwen2.5:32b-instruct-q4_K_M'},
   ]

@@ -81,20 +81,20 @@ def generate_summary(text, temperature, max_tokens, finalModel = None, chunkMode
     else: # NOT UPDATED
         if chunk_summary:
             model_name = chunkModel
-            prompt = f""""""
+            prompt = f"Summarize the following transcript:\n\n{text}"
             CHUNK_PROMPT = prompt
         elif final_summary:
             model_name = finalModel
             if whole_text:
-                prompt = f""""""
+                prompt = f"Summarize the following transcript:\n\n{text}"
             else:
-                prompt = f""""""
+                prompt = f"Summarize the following transcript:\n\n{text}"
             FINAL_PROMPT = prompt
 
     if chunk_summary:
         num_ctx = count_tokens(prompt) + 1000
     elif final_summary:
-        num_ctx = 32768
+        num_ctx = 40000
 
     payload = {
         "model": model_name,
@@ -102,7 +102,7 @@ def generate_summary(text, temperature, max_tokens, finalModel = None, chunkMode
         "stream": False,
         "options": {
             "temperature": temperature,
-            "num_predict": max_tokens,
+            "num_predict": 2500,
             "num_ctx": num_ctx,
         }
     }
@@ -222,8 +222,7 @@ def process_document(task_id):
         "type": "final",
         "Author": test_author,
         "date_time": datetime.datetime.now(zoneinfo.ZoneInfo('America/New_York')).strftime("%Y-%m-%d %H:%M:%S"),
-        "document_url": "https://drive.google.com/file/d/1bRy761r67BlAwTZFP_gg-6xe6zmCSkSJ/view?usp=sharing",
-        "chunk_model": chunkModel,
+        "chunk_model": None if whole_text_summary else chunkModel,
         "final_model": finalModel,
         "input_params": {
             "context_length": 32768,
@@ -249,32 +248,32 @@ def process_document(task_id):
     final_msg = json.dumps(final_data, ensure_ascii=False, indent=2)
 
     # Local save for the tests
-    TESTS_DIR = "/tasks/tests"
-    os.makedirs(TESTS_DIR, exist_ok=True)
+    if final_data["summary"] == "[SUMMARY_FAILED]":
+        logging.error("SUMMARY FAILED, ABORTING SAVE")
+        return ""
+    else:
+        TESTS_DIR = "/tasks/tests"
+        os.makedirs(TESTS_DIR, exist_ok=True)
 
-    filename = f"final_{task_id}.json"
-    file_path = os.path.join(TESTS_DIR, filename)
+        filename = f"final_{task_id}.json"
+        file_path = os.path.join(TESTS_DIR, filename)
 
-    logging.warning(f"[DEBUG] __file__ = {__file__}")
-    logging.warning(f"[DEBUG] TESTS_DIR = {TESTS_DIR}")
-    logging.warning(f"[DEBUG] Writing to file path: {file_path}")
+        logging.warning(f"[DEBUG] __file__ = {__file__}")
+        logging.warning(f"[DEBUG] TESTS_DIR = {TESTS_DIR}")
+        logging.warning(f"[DEBUG] Writing to file path: {file_path}")
 
-    try:
-        with open(file_path, "w+") as file:
-            file.write(final_msg)
-        logging.info(f"[WRITE] Final summary saved to {file_path}")
-    except Exception as e:
-        logging.exception(f"Failed to write final summary to file: {e}")
+        try:
+            with open(file_path, "w+") as file:
+                file.write(final_msg)
+            logging.info(f"[WRITE] Final summary saved to {file_path}")
+        except Exception as e:
+            logging.exception(f"Failed to write final summary to file: {e}")
 
-    r.publish(f"summarize:{task_id}:events", final_msg)
+        r.publish(f"summarize:{task_id}:events", final_msg)
 
-    # CURRENTLY NOT WORKING
-    # SEND RESULTS TO DB
-    # if final_data["summary"] == "[SUMMARY_FAILED]":
-    #     logging.error("SUMMARY FAILED, ABORTING UPLOAD")
-    #     return ""
-    # else:
-    #     send_results(final_data)
+        # CURRENTLY NOT WORKING
+        # SEND RESULTS TO DB
+        # send_results(final_data)
 
     return final_msg
 
