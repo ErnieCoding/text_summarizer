@@ -12,11 +12,11 @@ import logging
 app = Flask(__name__)
 CORS(app)
 
-CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://redis:6379/0")
-CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", "redis://redis:6379/0")
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://localhost:6379/0")
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", "redis://localhost:6379/0")
 
 celery_app = Celery("tasks", broker=CELERY_BROKER_URL, backend=CELERY_RESULT_BACKEND)
-r = redis.Redis(host='redis', port=6379, decode_responses=True)
+r = redis.Redis(host='localhost', port=6379, decode_responses=True)
 
 @app.route("/transcribe", methods=["POST"])
 def transcribe():
@@ -36,7 +36,9 @@ def transcribe():
     except Exception as e:
         return {"error": f"Invalid params format: {str(e)}"}, 400
     
-    file_path = os.path.join("/app/uploads", file.filename)
+    UPLOAD_DIR = "uploads"
+    os.makedirs(UPLOAD_DIR, exist_ok=True)
+    file_path = os.path.join(UPLOAD_DIR, file.filename)
     file.save(file_path)
 
     #Transcription task
@@ -116,3 +118,6 @@ def stream_summary(task_id):
                     break
         pubsub.close()
     return Response(stream_with_context(event_stream()), mimetype='text/event-stream')
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8000)

@@ -13,16 +13,16 @@ import zoneinfo
 import uuid
 import whisper, torch
 
-OLLAMA_URL = os.getenv("OLLAMA_HOST", "http://ollama:11434")
+OLLAMA_URL = os.getenv("OLLAMA_HOST", "http://localhost:11434")
 MODEL_NAME = "qwen2.5:14b"
 #OLLAMA_URL = "http://host.docker.internal:8003/v1/chat/completions"
 
 
-CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://redis:6379/0")
-CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", "redis://redis:6379/0")
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://localhost:6379/0")
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", "redis://localhost:6379/0")
 
 celery = Celery("tasks", broker=CELERY_BROKER_URL, backend=CELERY_RESULT_BACKEND)
-r = redis.Redis(host='redis', port=6379, decode_responses=True)
+r = redis.Redis(host='localhost', port=6379, decode_responses=True)
 
 def split_text(text, chunk_size=1800, overlap=0.3):
     """
@@ -92,9 +92,9 @@ def generate_summary(text, temperature, max_tokens, finalModel = None, chunkMode
             FINAL_PROMPT = prompt
 
     if chunk_summary:
-        num_ctx = count_tokens(prompt) + 1000
+        num_ctx = count_tokens(prompt) + max_tokens
     elif final_summary:
-        num_ctx = 40000
+        num_ctx = count_tokens(prompt) + max_tokens
 
     payload = {
         "model": model_name,
@@ -102,7 +102,7 @@ def generate_summary(text, temperature, max_tokens, finalModel = None, chunkMode
         "stream": False,
         "options": {
             "temperature": temperature,
-            "num_predict": 2500,
+            "num_predict": max_tokens,
             "num_ctx": num_ctx,
         }
     }
@@ -252,7 +252,7 @@ def process_document(task_id):
         logging.error("SUMMARY FAILED, ABORTING SAVE")
         return ""
     else:
-        TESTS_DIR = "/tasks/tests"
+        TESTS_DIR = "tests"
         os.makedirs(TESTS_DIR, exist_ok=True)
 
         filename = f"final_{task_id}.json"
@@ -263,7 +263,7 @@ def process_document(task_id):
         logging.warning(f"[DEBUG] Writing to file path: {file_path}")
 
         try:
-            with open(file_path, "w+") as file:
+            with open(file_path, "w+", encoding="utf-8", errors="replace") as file:
                 file.write(final_msg)
             logging.info(f"[WRITE] Final summary saved to {file_path}")
         except Exception as e:
@@ -295,7 +295,7 @@ def run_test_batch(task_id):
             "temp_chunk": temp_chunk,
             "temp_final": temp_final,
             "max_tokens_chunk": 1500,
-            "max_tokens_final": 5000,
+            "max_tokens_final": 3000,
             "description": description,
             "chunk_prompt": chunk_prompt,
             "final_prompt": final_prompt
@@ -341,7 +341,7 @@ def test_params(task_id):
 @celery.task(name="tasks.transcribe_meeting")
 def transcribe_meeting(task_id):
     filename = r.get(f"transcribe:{task_id}:filename")
-    filepath = os.path.join("/shared/uploads", filename)
+    filepath = os.path.join("uploads", filename)
 
     try:
         
@@ -358,7 +358,7 @@ def transcribe_meeting(task_id):
 
         result = model.transcribe(filepath, fp16=(device == "cuda"))
 
-        output_path = os.path.join("/shared/transcripts", f"{filename}.txt")
+        output_path = os.path.join("transcripts", f"{filename}.txt")
         with open(output_path, "w+", encoding="utf-8") as filewrite:
             filewrite.write(result["text"])
 
