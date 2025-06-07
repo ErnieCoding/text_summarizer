@@ -122,7 +122,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 import axios from "axios";
 
 // Text/File input
@@ -152,16 +152,31 @@ const chunkEnd = ref(6000);
 // Model options
 const chunkModelOption = ref("");
 const finalModelOption = ref("");
-const options = ref(
-  [
-    {text: 'qwen2.5:14b', value: 'qwen2.5:14b'},
-    {text: 'qwen2.5:32b', value: 'qwen2.5:32b'},
-    {text: 'qwen2.5:32b-instruct-fp16 (not functional)', value: 'qwen2.5:32b-instruct-fp16'},
-    {text: 'qwen2.5:14b-instruct-fp16', value: 'qwen2.5:14b-instruct-fp16'},
-    {text: 'qwen2.5:32b-instruct-q2_K', value: 'qwen2.5:32b-instruct-q2_K'},
-    {text: 'qwen2.5:32b-instruct-q4_K_M', value: 'qwen2.5:32b-instruct-q4_K_M'},
-  ]
-);
+
+async function getModels() {
+  try {
+    const res = await axios.get("http://localhost:11434/api/tags");
+    const localModels = [];
+
+    const models = res.data.models;
+
+    for (const model of models) {
+      const modelName = model.model;
+      localModels.push({ text: modelName, value: modelName });
+    }
+
+    return localModels;
+  } catch (err) {
+    console.log("Error retrieving local models:", err);
+    return [];
+  }
+}
+
+const options = ref([]);
+
+onMounted(async () => {
+  options.value = await getModels();
+});
 
 // Initial parameters
 const params = ref({

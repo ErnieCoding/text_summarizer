@@ -63,11 +63,13 @@ def split_text(text, chunk_size=1800, overlap=0.3):
 # Variables to cache selected prompts
 CHUNK_PROMPT = ""
 FINAL_PROMPT = ""
+CHUNK_CTX = 0
+FINAL_CTX = 0
 def generate_summary(text, temperature, max_tokens, finalModel = None, chunkModel = None, custom_prompt=None, chunk_summary=False, final_summary = False, whole_text = False):
     """
     Generates summary based on parameters.
     """
-    global CHUNK_PROMPT, FINAL_PROMPT
+    global CHUNK_PROMPT, FINAL_PROMPT, CHUNK_CTX, FINAL_CTX
 
     if custom_prompt and custom_prompt.strip():
         if chunk_summary:
@@ -93,8 +95,10 @@ def generate_summary(text, temperature, max_tokens, finalModel = None, chunkMode
 
     if chunk_summary:
         num_ctx = count_tokens(prompt) + max_tokens
+        CHUNK_CTX = num_ctx
     elif final_summary:
         num_ctx = count_tokens(prompt) + max_tokens
+        FINAL_CTX = num_ctx
 
     payload = {
         "model": model_name,
@@ -104,7 +108,8 @@ def generate_summary(text, temperature, max_tokens, finalModel = None, chunkMode
             "temperature": temperature,
             "num_predict": max_tokens,
             "num_ctx": num_ctx,
-        }
+        },
+        "think": False,
     }
 
     try:
@@ -113,6 +118,8 @@ def generate_summary(text, temperature, max_tokens, finalModel = None, chunkMode
         response = requests.post(f"{OLLAMA_URL}/api/generate", json=payload)
         response.raise_for_status()
         response_json = response.json()
+
+        logging.info(f"[DEBUG] JSON RESPONSE FROM THE MODEL RECEIVED: \n{json.dumps(response_json, indent=2, ensure_ascii=False)[:500]}")
 
         content = response_json.get("response").strip()
 
@@ -148,7 +155,7 @@ def process_document(task_id):
     # Initial params
     whole_text_summary = params.get("checked", False)
     temp_final = params.get("temp_final", 0.6)
-    max_tokens_final = params.get("max_tokens_final", 5000)
+    max_tokens_final = params.get("max_tokens_final", 6500)
     final_prompt = params.get("final_prompt", None)
     test_author = params.get("author", "RConf")
     test_description = params.get("description", "")
@@ -217,7 +224,7 @@ def process_document(task_id):
         )
 
     final_data = {
-        "version": 2.3,
+        "version": 2.4,
         "description": test_description,
         "type": "final",
         "Author": test_author,
@@ -225,7 +232,8 @@ def process_document(task_id):
         "chunk_model": None if whole_text_summary else chunkModel,
         "final_model": finalModel,
         "input_params": {
-            "context_length": 32768,
+            "context_length_CHUNKS": CHUNK_CTX,
+            "context_length_FINAL": FINAL_CTX,
             "chunk_prompt": None if whole_text_summary else CHUNK_PROMPT,
             "final_summary_prompt": FINAL_PROMPT,
             "temp_chunk": None if whole_text_summary else temp_chunk,
@@ -247,11 +255,11 @@ def process_document(task_id):
     }
     final_msg = json.dumps(final_data, ensure_ascii=False, indent=2)
 
-    # Local save for the tests
-    if final_data["summary"] == "[SUMMARY_FAILED]":
+    if final_data["summary"] == "[SUMMARY_FAILED]" or final_data["summary"] is None:
         logging.error("SUMMARY FAILED, ABORTING SAVE")
         return ""
     else:
+        # Local save for the tests
         TESTS_DIR = "tests"
         os.makedirs(TESTS_DIR, exist_ok=True)
 
@@ -295,7 +303,7 @@ def run_test_batch(task_id):
             "temp_chunk": temp_chunk,
             "temp_final": temp_final,
             "max_tokens_chunk": 1500,
-            "max_tokens_final": 3000,
+            "max_tokens_final": 6500,
             "description": description,
             "chunk_prompt": chunk_prompt,
             "final_prompt": final_prompt
