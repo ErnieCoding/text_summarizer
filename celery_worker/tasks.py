@@ -11,7 +11,7 @@ from tokenCounter import count_tokens
 import datetime
 import zoneinfo
 import uuid
-import whisper, torch
+#import whisper, torch
 
 OLLAMA_URL = os.getenv("OLLAMA_HOST", "http://localhost:11434")
 MODEL_NAME = "qwen2.5:14b"
@@ -109,17 +109,17 @@ def generate_summary(text, temperature, max_tokens, finalModel = None, chunkMode
             "num_predict": max_tokens,
             "num_ctx": num_ctx,
         },
-        "think": False,
+        #"think": True,
     }
 
     try:
-        logging.info(f"Starting summary generation with num_ctx: {num_ctx}")
+        logging.info(f"\nSTARTING SUMMARY GENERATION WITH NUM_CTX: {num_ctx}\n")
+        logging.info(f"\nSTARTING SUMMARY GENERATION WITH MODEL NAME: {model_name}\n")
+        
         start_time = time.time()
         response = requests.post(f"{OLLAMA_URL}/api/generate", json=payload)
         response.raise_for_status()
         response_json = response.json()
-
-        logging.info(f"[DEBUG] JSON RESPONSE FROM THE MODEL RECEIVED: \n{json.dumps(response_json, indent=2, ensure_ascii=False)[:500]}")
 
         content = response_json.get("response").strip()
 
@@ -135,6 +135,7 @@ def generate_summary(text, temperature, max_tokens, finalModel = None, chunkMode
 DATA_URL = "http://llm.rndl.ru:5017/api/data"
 def send_results(test_result):
     try:
+        logging.info("[DEBUG] STARTING UPLOAD SEQUENCE")
         safe_json = json.dumps(test_result, ensure_ascii=False)
         response = requests.post(
             DATA_URL,
@@ -222,9 +223,17 @@ def process_document(task_id):
             final_summary=True, 
             whole_text=True
         )
+    
+    def remove_tagged_text(text, tag):
+        pattern = re.compile(r"<" + tag + r">.*?</" + tag + r">", re.DOTALL)
+        return re.sub(pattern, "", text)
+    
+    final_summary = remove_tagged_text(final_summary, "think")
+
+    logging.info(f"[DEBUG] MODIFIED FINAL SUMMARY: \n {final_summary}")
 
     final_data = {
-        "version": 2.4,
+        "version": 2.5,
         "description": test_description,
         "type": "final",
         "Author": test_author,
@@ -379,9 +388,8 @@ def transcribe_meeting(task_id):
 
 
 
-
-#from pydantic import BaseModel
 #TODO: UNCOMMENT FOR META-PROMPT IMPLEMENTATION
+#from pydantic import BaseModel
 
 # GLOBAL_PROMPT = """Внимательно изучи транскрипт записи встречи. Выяви участников встречи, основные тезисы встречи, запиши протокол встречи на основе представленного транскрипта по следующему формату:
 # 1. 10 ключевых тезисов встречи

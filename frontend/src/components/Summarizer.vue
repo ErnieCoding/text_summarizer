@@ -62,7 +62,7 @@
   </div>
   <div>
     <label class="block text-sm font-medium text-gray-700">Temperature (чанки)</label>
-    <input type="text" v-model="tempChunkRaw" placeholder="e.g. 0.2, 0.3, 0.4" class="w-full border rounded px-2 py-1" />
+    <input type="text" v-model="tempChunkRaw" placeholder="e.g. 0.2, 0.3, 0.4" class="w-full border rounded px-2 py-1" :disabled="params.checked" />
   </div>
   <div>
     <label class="block text-sm font-medium text-gray-700">Temperature (финал)</label>
@@ -72,7 +72,7 @@
 
 <div>
   <label class="block mb-1 text-sm font-medium text-gray-700">Prompt для чанков (опционально)</label>
-  <textarea v-model="params.chunk_prompt" rows="2" class="w-full border rounded px-2 py-1"></textarea>
+  <textarea v-model="params.chunk_prompt" rows="2" class="w-full border rounded px-2 py-1" :disabled="params.checked"></textarea>
 </div>
 
 <div>
@@ -116,6 +116,7 @@
     <div v-if="finalSummary">
       <h2 class="font-bold mt-6">🧠 Финальное саммари:</h2>
       <p class="mt-2">{{ finalSummary }}</p>
+      <p class="mt-2">Модель: {{ finalModelOption }}</p>
       <p class="text-sm text-gray-600">⏱ Время финальной генерации: {{ finalDuration }} сек</p>
     </div>
   </div>
@@ -289,7 +290,7 @@ const submitText = async () => {
     temp_final: params.value.temp_final,
     max_tokens_final: params.value.max_tokens_final,
 
-    // When no chunking option selected
+    // When chunking option selected
     ...(params.value.checked ? {} : {
     chunkModel: chunkModelOption.value,
     chunk_prompt: params.value.chunk_prompt,

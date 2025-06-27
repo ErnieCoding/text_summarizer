@@ -18,6 +18,10 @@ CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", "redis://localho
 celery_app = Celery("tasks", broker=CELERY_BROKER_URL, backend=CELERY_RESULT_BACKEND)
 r = redis.Redis(host='localhost', port=6379, decode_responses=True)
 
+@app.route("/anonymize", methods=["GET"])
+def anonymize():
+    pass
+
 @app.route("/transcribe", methods=["POST"])
 def transcribe():
     if 'file' not in request.files:
