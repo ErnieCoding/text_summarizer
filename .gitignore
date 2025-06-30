@@ -4,6 +4,7 @@ __MACOSX/
 
 venv/
 venv310/
+venv312/
 
 tests/
 uploads/

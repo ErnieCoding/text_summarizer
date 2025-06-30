@@ -11,7 +11,7 @@ from tokenCounter import count_tokens
 import datetime
 import zoneinfo
 import uuid
-#import whisper, torch
+import whisper, torch
 
 OLLAMA_URL = os.getenv("OLLAMA_HOST", "http://localhost:11434")
 MODEL_NAME = "qwen2.5:14b"
@@ -109,7 +109,7 @@ def generate_summary(text, temperature, max_tokens, finalModel = None, chunkMode
             "num_predict": max_tokens,
             "num_ctx": num_ctx,
         },
-        #"think": True,
+        "think": False,
     }
 
     try:
