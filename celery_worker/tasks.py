@@ -12,6 +12,7 @@ import datetime
 import zoneinfo
 import uuid
 import whisper, torch
+import anonymization_test
 
 OLLAMA_URL = os.getenv("OLLAMA_HOST", "http://localhost:11434")
 MODEL_NAME = "qwen2.5:14b"
@@ -60,7 +61,7 @@ def split_text(text, chunk_size=1800, overlap=0.3):
 
     return chunks
 
-# Variables to cache selected prompts
+# Cache for selected prompts
 CHUNK_PROMPT = ""
 FINAL_PROMPT = ""
 CHUNK_CTX = 0
@@ -109,7 +110,7 @@ def generate_summary(text, temperature, max_tokens, finalModel = None, chunkMode
             "num_predict": max_tokens,
             "num_ctx": num_ctx,
         },
-        "think": False,
+        "think": True,
     }
 
     try:
@@ -132,26 +133,43 @@ def generate_summary(text, temperature, max_tokens, finalModel = None, chunkMode
         logging.exception(f"Summary generation failed: {e}")
         return "[SUMMARY_FAILED]", 0.0
 
-DATA_URL = "http://llm.rndl.ru:5017/api/data"
+DATA_URL = "http://ai.rndl.ru:5017/api/data"
 def send_results(test_result):
     try:
         logging.info("[DEBUG] STARTING UPLOAD SEQUENCE")
-        safe_json = json.dumps(test_result, ensure_ascii=False)
+        #safe_json = json.dumps(test_result, ensure_ascii=False)
+
+        start_time = time.time()
         response = requests.post(
             DATA_URL,
-            data=safe_json.encode("utf-8"),
-            headers={"Content-Type": "application/json"},
+            json=test_result,
+            headers={
+                "Content-Type": "application/json",
+                "User-Agent": "curl/7.85.0",
+            },
         )
+        duration = time.time() - start_time
+        logging.info(f"[UPLOAD] Request Duration: {duration} seconds")
+        
         logging.info(f"[UPLOAD RESPONSE] {response.status_code} - {response.text}")
         response.raise_for_status()
         logging.info(f"[UPLOAD] Successfully sent summary to {DATA_URL}. Response: {response.text}")
     except Exception as e:
+        logging.info(f"[UPLOAD RESPONSE] {response.status_code} - {response.text}")
         logging.exception(f"[UPLOAD ERROR] {e}")
 
 @celery.task(name="tasks.process_document")
 def process_document(task_id):
     text = r.get(f"summarize:{task_id}:text")
     params = json.loads(r.get(f"summarize:{task_id}:params") or "{}")
+
+    # Save original transcript for summary
+    orig_dir = os.path.join("tests", "anonymizer_tests", "anonymization")
+    os.makedirs(orig_dir, exist_ok=True)
+    orig_path = os.path.join(orig_dir, f"original_{task_id}.txt")
+    with open(orig_path, "w+", encoding="utf-8", errors="replace") as file:
+        file.write(text)
+    logging.info(f"[SUMMARY] Saved original transcript to {orig_path}")
 
     # Initial params
     whole_text_summary = params.get("checked", False)
@@ -230,10 +248,45 @@ def process_document(task_id):
     
     final_summary = remove_tagged_text(final_summary, "think")
 
-    logging.info(f"[DEBUG] MODIFIED FINAL SUMMARY: \n {final_summary}")
+    # Save summary of original transcript
+    summary_orig_path = os.path.join(orig_dir, f"summary_original_{task_id}.txt")
+    with open(summary_orig_path, "w+", encoding="utf-8", errors="replace") as file:
+        file.write(final_summary)
+    logging.info(f"[SUMMARY] Saved summary of original transcript to {summary_orig_path}")
+
+    reverse_patch_raw = r.get(f"summarize:{task_id}:reverse_patch")
+    if reverse_patch_raw:
+        try:
+            reverse_patch = json.loads(reverse_patch_raw)
+            final_summary_anonymized = deanonymize_summary(final_summary, reverse_patch)
+            # Save summary of anonymized transcript
+            summary_anon_path = os.path.join(orig_dir, f"summary_anonymized_{task_id}.txt")
+            with open(summary_anon_path, "w+", encoding="utf-8", errors="replace") as file:
+                file.write(final_summary_anonymized)
+            logging.info(f"[SUMMARY] Saved summary of anonymized transcript to {summary_anon_path}")
+        except Exception as e:
+            logging.warning(f"[WARN] Failed to deanonymize and save anonymized summary: {e}")
+
+    with open("tests/summary.txt", "w+", encoding="utf-8", errors="replace") as file:
+        file.write(final_summary)
+
+    reverse_patch_raw = r.get(f"summarize:{task_id}:reverse_patch")
+    if reverse_patch_raw:
+        try:
+            reverse_patch = json.loads(reverse_patch_raw)
+            final_summary = deanonymize_summary(final_summary, reverse_patch)
+            # Check for unreverted pseudonyms
+            unreverted = []
+            for pseudonym in reverse_patch.keys():
+                if pseudonym in final_summary:
+                    unreverted.append(pseudonym)
+            if unreverted:
+                logging.warning(f"[DEANONYMIZATION] Unreverted pseudonyms in summary: {unreverted}")
+        except Exception as e:
+            logging.warning(f"[WARN] Failed to deanonymize final summary: {e}")
 
     final_data = {
-        "version": 2.5,
+        "version": 3.1,
         "description": test_description,
         "type": "final",
         "Author": test_author,
@@ -288,8 +341,7 @@ def process_document(task_id):
 
         r.publish(f"summarize:{task_id}:events", final_msg)
 
-        # CURRENTLY NOT WORKING
-        # SEND RESULTS TO DB
+        #SEND RESULTS TO DB
         # send_results(final_data)
 
     return final_msg
@@ -298,6 +350,7 @@ def process_document(task_id):
 def run_test_batch(task_id):
     text = r.get(f"test:{task_id}:text")
     combinations = json.loads(r.get(f"test:{task_id}:combinations"))
+    reverse_patch = r.get(f"test:{task_id}:reverse_patch")
 
     test_count = 1
     for combo in combinations:
@@ -321,6 +374,7 @@ def run_test_batch(task_id):
         new_task_id = str(uuid.uuid4())
         r.set(f"summarize:{new_task_id}:text", text)
         r.set(f"summarize:{new_task_id}:params", json.dumps(params))
+        r.set(f"summarize:{new_task_id}:reverse_patch", json.dumps(reverse_patch or {}, ensure_ascii=False))
 
         try:
             logging.info(f"[BATCH] Waiting for test #{test_count} to finish")
@@ -333,6 +387,7 @@ def run_test_batch(task_id):
 @celery.task(name="tasks.test_params")
 def test_params(task_id):
     text = r.get(f"test:{task_id}:text")
+    reverse_patch = r.get(f"test:{task_id}:reverse_patch")
 
     if r.exists(f"test:{task_id}:params"):
         # No chunking test
@@ -346,6 +401,7 @@ def test_params(task_id):
         new_task_id = str(uuid.uuid4())
         r.set(f"summarize:{new_task_id}:text", text)
         r.set(f"summarize:{new_task_id}:params", json.dumps(params))
+        r.set(f"summarize:{new_task_id}:reverse_patch", reverse_patch)
         celery.send_task("tasks.process_document", args=[new_task_id])
 
     elif r.exists(f"test:{task_id}:combinations"):
@@ -353,6 +409,36 @@ def test_params(task_id):
         run_test_batch(task_id)
     else:
         logging.error(f"[ERROR] Neither params nor combinations found for task {task_id}")
+
+# ANONYMIZATION
+@celery.task(name="tasks.anonymize_text")
+def anonymize_text(task_id):
+    text = r.get(f"test:{task_id}:text")
+
+    # Save original transcript
+    orig_dir = os.path.join("tests", "anonymizer_tests", "anonymization")
+    os.makedirs(orig_dir, exist_ok=True)
+    orig_path = os.path.join(orig_dir, f"original_{task_id}.txt")
+    with open(orig_path, "w+", encoding="utf-8", errors="replace") as file:
+        file.write(text)
+    logging.info(f"[ANON] Saved original transcript to {orig_path}")
+
+    clean_text, reverse_patch = anonymization_test.anon_transcript_from_text(text)
+
+    # Save anonymized transcript
+    anon_path = os.path.join(orig_dir, f"anonymized_{task_id}.txt")
+    with open(anon_path, "w+", encoding="utf-8", errors="replace") as file:
+        file.write(clean_text)
+    logging.info(f"[ANON] Saved anonymized transcript to {anon_path}")
+
+    r.set(f"test:{task_id}:clean_text", clean_text)
+    r.set(f"test:{task_id}:reverse_patch", json.dumps(reverse_patch, ensure_ascii=False))
+
+# DEANONYMIZATION
+def deanonymize_summary(summary_text: str, reverse_patch: dict) -> str:
+    for pseudonym, original in reverse_patch.items():
+        summary_text = summary_text.replace(pseudonym, original)
+    return summary_text
 
 
 @celery.task(name="tasks.transcribe_meeting")
