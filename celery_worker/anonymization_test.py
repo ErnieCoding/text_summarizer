@@ -1,8 +1,8 @@
+#TODO: Refactor lookup logic - dynamically assemble lookup table as entities are found by the model - kinda done, needs testing
+#TODO: Refactor name normalization logic - use Petrovich/other - kinda done, needs testing
+
 #TODO: Refactor text normalization logic completely  - top to bottom anonymization with reverse substitution in the summarizer report
-#TODO: Refactor lookup logic - dynamically assemble lookup table as entities are found by the model
-#TODO: Refactor name normalization logic - use Petrovich/other
 #TODO: Utilize other NER models to recognize entities and add them to the lookup table
-#TODO: Integrate anonymization flow into the tasker/api calls to complete the overall flow of text summarization
 
 import os
 import json
@@ -87,6 +87,7 @@ def normalize_morphologically(text):
     return ''.join(norm_tokens)
 
 # === NOMINATIVE NORMALIZATION ===
+
 def normalize_to_nominative(name, entity_type=None):
     if entity_type == "PERSON":
         parts = name.split()

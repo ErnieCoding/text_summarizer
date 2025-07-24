@@ -249,7 +249,7 @@ def process_document(task_id):
     final_summary = remove_tagged_text(final_summary, "think")
 
     # Save summary of original transcript
-    summary_orig_path = os.path.join(orig_dir, f"summary_original_{task_id}.txt")
+    summary_orig_path = os.path.join(orig_dir, f"summary_anonymized_{task_id}.txt")
     with open(summary_orig_path, "w+", encoding="utf-8", errors="replace") as file:
         file.write(final_summary)
     logging.info(f"[SUMMARY] Saved summary of original transcript to {summary_orig_path}")
@@ -260,7 +260,7 @@ def process_document(task_id):
             reverse_patch = json.loads(reverse_patch_raw)
             final_summary_anonymized = deanonymize_summary(final_summary, reverse_patch)
             # Save summary of anonymized transcript
-            summary_anon_path = os.path.join(orig_dir, f"summary_anonymized_{task_id}.txt")
+            summary_anon_path = os.path.join(orig_dir, f"summary_deanonymized_{task_id}.txt")
             with open(summary_anon_path, "w+", encoding="utf-8", errors="replace") as file:
                 file.write(final_summary_anonymized)
             logging.info(f"[SUMMARY] Saved summary of anonymized transcript to {summary_anon_path}")
