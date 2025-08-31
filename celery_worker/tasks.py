@@ -12,7 +12,7 @@ import datetime
 import zoneinfo
 import uuid
 import whisper, torch
-import anonymization_test
+import anonymization_library
 
 OLLAMA_URL = os.getenv("OLLAMA_HOST", "http://localhost:11434")
 MODEL_NAME = "qwen2.5:14b"
@@ -163,13 +163,13 @@ def process_document(task_id):
     text = r.get(f"summarize:{task_id}:text")
     params = json.loads(r.get(f"summarize:{task_id}:params") or "{}")
 
-    # Save original transcript for summary
-    orig_dir = os.path.join("tests", "anonymizer_tests", "anonymization")
-    os.makedirs(orig_dir, exist_ok=True)
-    orig_path = os.path.join(orig_dir, f"original_{task_id}.txt")
-    with open(orig_path, "w+", encoding="utf-8", errors="replace") as file:
-        file.write(text)
-    logging.info(f"[SUMMARY] Saved original transcript to {orig_path}")
+    # # Save original transcript for summary
+    # orig_dir = os.path.join("tests", "anonymizer_tests", "anonymization")
+    # os.makedirs(orig_dir, exist_ok=True)
+    # orig_path = os.path.join(orig_dir, f"original_{task_id}.txt")
+    # with open(orig_path, "w+", encoding="utf-8", errors="replace") as file:
+    #     file.write(text)
+    # logging.info(f"[SUMMARY] Saved original transcript to {orig_path}")
 
     # Initial params
     whole_text_summary = params.get("checked", False)
@@ -248,42 +248,42 @@ def process_document(task_id):
     
     final_summary = remove_tagged_text(final_summary, "think")
 
-    # Save summary of original transcript
-    summary_orig_path = os.path.join(orig_dir, f"summary_anonymized_{task_id}.txt")
-    with open(summary_orig_path, "w+", encoding="utf-8", errors="replace") as file:
-        file.write(final_summary)
-    logging.info(f"[SUMMARY] Saved summary of original transcript to {summary_orig_path}")
+    # # Save summary of original transcript
+    # summary_orig_path = os.path.join(orig_dir, f"summary_anonymized_{task_id}.txt")
+    # with open(summary_orig_path, "w+", encoding="utf-8", errors="replace") as file:
+    #     file.write(final_summary)
+    # logging.info(f"[SUMMARY] Saved summary of original transcript to {summary_orig_path}")
 
-    reverse_patch_raw = r.get(f"summarize:{task_id}:reverse_patch")
-    if reverse_patch_raw:
-        try:
-            reverse_patch = json.loads(reverse_patch_raw)
-            final_summary_anonymized = deanonymize_summary(final_summary, reverse_patch)
-            # Save summary of anonymized transcript
-            summary_anon_path = os.path.join(orig_dir, f"summary_deanonymized_{task_id}.txt")
-            with open(summary_anon_path, "w+", encoding="utf-8", errors="replace") as file:
-                file.write(final_summary_anonymized)
-            logging.info(f"[SUMMARY] Saved summary of anonymized transcript to {summary_anon_path}")
-        except Exception as e:
-            logging.warning(f"[WARN] Failed to deanonymize and save anonymized summary: {e}")
+    # reverse_patch_raw = r.get(f"summarize:{task_id}:reverse_patch")
+    # if reverse_patch_raw:
+    #     try:
+    #         reverse_patch = json.loads(reverse_patch_raw)
+    #         final_summary_anonymized = deanonymize_summary(final_summary, reverse_patch)
+    #         # Save summary of anonymized transcript
+    #         summary_anon_path = os.path.join(orig_dir, f"summary_deanonymized_{task_id}.txt")
+    #         with open(summary_anon_path, "w+", encoding="utf-8", errors="replace") as file:
+    #             file.write(final_summary_anonymized)
+    #         logging.info(f"[SUMMARY] Saved summary of anonymized transcript to {summary_anon_path}")
+    #     except Exception as e:
+    #         logging.warning(f"[WARN] Failed to deanonymize and save anonymized summary: {e}")
 
-    with open("tests/summary.txt", "w+", encoding="utf-8", errors="replace") as file:
-        file.write(final_summary)
+    # with open("tests/summary.txt", "w+", encoding="utf-8", errors="replace") as file:
+    #     file.write(final_summary)
 
-    reverse_patch_raw = r.get(f"summarize:{task_id}:reverse_patch")
-    if reverse_patch_raw:
-        try:
-            reverse_patch = json.loads(reverse_patch_raw)
-            final_summary = deanonymize_summary(final_summary, reverse_patch)
-            # Check for unreverted pseudonyms
-            unreverted = []
-            for pseudonym in reverse_patch.keys():
-                if pseudonym in final_summary:
-                    unreverted.append(pseudonym)
-            if unreverted:
-                logging.warning(f"[DEANONYMIZATION] Unreverted pseudonyms in summary: {unreverted}")
-        except Exception as e:
-            logging.warning(f"[WARN] Failed to deanonymize final summary: {e}")
+    # reverse_patch_raw = r.get(f"summarize:{task_id}:reverse_patch")
+    # if reverse_patch_raw:
+    #     try:
+    #         reverse_patch = json.loads(reverse_patch_raw)
+    #         final_summary = deanonymize_summary(final_summary, reverse_patch)
+    #         # Check for unreverted pseudonyms
+    #         unreverted = []
+    #         for pseudonym in reverse_patch.keys():
+    #             if pseudonym in final_summary:
+    #                 unreverted.append(pseudonym)
+    #         if unreverted:
+    #             logging.warning(f"[DEANONYMIZATION] Unreverted pseudonyms in summary: {unreverted}")
+    #     except Exception as e:
+    #         logging.warning(f"[WARN] Failed to deanonymize final summary: {e}")
 
     final_data = {
         "version": 3.1,
@@ -423,7 +423,7 @@ def anonymize_text(task_id):
         file.write(text)
     logging.info(f"[ANON] Saved original transcript to {orig_path}")
 
-    clean_text, reverse_patch = anonymization_test.anon_transcript_from_text(text)
+    clean_text, reverse_patch = anonymization_library.anon_transcript_from_text(text)
 
     # Save anonymized transcript
     anon_path = os.path.join(orig_dir, f"anonymized_{task_id}.txt")

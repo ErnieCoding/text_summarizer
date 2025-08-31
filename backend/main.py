@@ -62,22 +62,22 @@ def test():
     data = request.get_json()
     text = data.get("text", "")
 
-    anonymize_task_id = str(uuid.uuid4())
-    r.set(f"test:{anonymize_task_id}:text", text)
+    # anonymize_task_id = str(uuid.uuid4())
+    # r.set(f"test:{anonymize_task_id}:text", text)
 
-    try:
-        result = celery_app.send_task("tasks.anonymize_text", args=[anonymize_task_id])
-        result.get(timeout=30)
+    # try:
+    #     result = celery_app.send_task("tasks.anonymize_text", args=[anonymize_task_id])
+    #     result.get(timeout=30)
 
-        text = r.get(f"test:{anonymize_task_id}:clean_text")
-        reverse_patch = r.get(f"test:{anonymize_task_id}:reverse_patch")
+    #     text = r.get(f"test:{anonymize_task_id}:clean_text")
+    #     reverse_patch = r.get(f"test:{anonymize_task_id}:reverse_patch")
 
-        if not text or not reverse_patch:
-            raise ValueError("No results found in Redis.")
+    #     if not text or not reverse_patch:
+    #         raise ValueError("No results found in Redis.")
         
-        reverse_patch = json.loads(reverse_patch)
-    except Exception as e:
-        return jsonify({"error": f"Anonymization task failed: {str(e)}"}), 500
+    #     reverse_patch = json.loads(reverse_patch)
+    # except Exception as e:
+    #     return jsonify({"error": f"Anonymization task failed: {str(e)}"}), 500
 
     params = data.get("params", {})
 
@@ -109,7 +109,7 @@ def test():
         except KeyError as e:
             return jsonify({"error": f"Missing key for chunking: {e}"}), 400
     
-    r.set(f"test:{task_id}:reverse_patch", json.dumps(reverse_patch)) # reverse_patch for reversing anonymized text
+    # r.set(f"test:{task_id}:reverse_patch", json.dumps(reverse_patch)) # reverse_patch for reversing anonymized text
     celery_app.send_task("tasks.test_params", args=[task_id])
     
     return jsonify({"task_id": task_id})
