@@ -12,7 +12,7 @@ import datetime
 import zoneinfo
 import uuid
 import whisper, torch
-import anonymization_library
+import celery_worker.anonymizer.anonymization_library as anonymization_library
 
 OLLAMA_URL = os.getenv("OLLAMA_HOST", "http://localhost:11434")
 MODEL_NAME = "qwen2.5:14b"
