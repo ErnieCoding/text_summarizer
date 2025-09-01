@@ -5,6 +5,7 @@ __MACOSX/
 venv/
 venv310/
 venv312/
+__pycache__/
 
 tests/
 uploads/
@@ -12,3 +13,6 @@ transcripts/
 prompts/
 audio_recordings/
 video_recordings/
+
+*.txt
+*.json
